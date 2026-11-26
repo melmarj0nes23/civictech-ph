@@ -39,6 +39,9 @@ export function SubmitPage({
     []
   );
   const [updateProject, setUpdateProject] = useState(sortedEntries[0]?.slug ?? '');
+  const [updateStatus, setUpdateStatus] = useState<
+    'No change' | 'Planning' | 'Alpha' | 'Beta' | 'Stable' | 'Archived'
+  >('No change');
   const [updateTitle, setUpdateTitle] = useState('');
   const [updateBody, setUpdateBody] = useState('');
 
@@ -83,6 +86,7 @@ export function SubmitPage({
     params.set('template', 'post-update.yml');
     params.set('title', `Post an update: ${updateTitle.trim()}`);
     params.set('project', updateProject);
+    params.set('status', updateStatus);
     params.set('body', updateBody.trim());
 
     window.open(`${GITHUB_NEW_ISSUE_URL}?${params.toString()}`, '_blank', 'noopener,noreferrer');
@@ -478,23 +482,60 @@ export function SubmitPage({
             onSubmit={handleUpdateSubmit}
             style={{ display: 'flex', flexDirection: 'column', gap: 20 }}
           >
-            <div>
-              <label htmlFor="update-project" style={labelStyle}>
-                {t.submit.updateEntry} *
-              </label>
-              <select
-                id="update-project"
-                required
-                value={updateProject}
-                onChange={(e) => setUpdateProject(e.target.value)}
-                style={inputStyle}
-              >
-                {sortedEntries.map((entry) => (
-                  <option key={entry.slug} value={entry.slug}>
-                    {entry.title}
-                  </option>
-                ))}
-              </select>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
+                gap: 16,
+              }}
+            >
+              <div>
+                <label htmlFor="update-project" style={labelStyle}>
+                  {t.submit.updateEntry} *
+                </label>
+                <select
+                  id="update-project"
+                  required
+                  value={updateProject}
+                  onChange={(e) => setUpdateProject(e.target.value)}
+                  style={inputStyle}
+                >
+                  {sortedEntries.map((entry) => (
+                    <option key={entry.slug} value={entry.slug}>
+                      {entry.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="update-status" style={labelStyle}>
+                  {t.submit.updateStage}
+                </label>
+                <select
+                  id="update-status"
+                  value={updateStatus}
+                  onChange={(e) =>
+                    setUpdateStatus(
+                      e.target.value as
+                        | 'No change'
+                        | 'Planning'
+                        | 'Alpha'
+                        | 'Beta'
+                        | 'Stable'
+                        | 'Archived'
+                    )
+                  }
+                  style={inputStyle}
+                >
+                  <option value="No change">{t.submit.updateStageNoChange}</option>
+                  <option value="Planning">Planning</option>
+                  <option value="Alpha">Alpha</option>
+                  <option value="Beta">Beta</option>
+                  <option value="Stable">Stable</option>
+                  <option value="Archived">Archived</option>
+                </select>
+              </div>
             </div>
 
             <div>

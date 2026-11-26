@@ -11,6 +11,18 @@ body:
       placeholder: budget-portal
     validations:
       required: true
+  - type: dropdown
+    id: status
+    attributes:
+      label: Stage (optional)
+      description: Change the project or CSO stage, or leave as No change.
+      options:
+        - No change
+        - Planning
+        - Alpha
+        - Beta
+        - Stable
+        - Archived
   - type: input
     id: title
     attributes:

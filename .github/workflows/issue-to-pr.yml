@@ -42,6 +42,7 @@ jobs:
 
             if (isUpdate) {
               const projectRaw = extractField('Project or CSO') || extractField('Project');
+              const newStageRaw = extractField('Stage \\(optional\\)');
               const updateTitle = extractField('Update title');
               const updateBody = extractField('What changed');
 
@@ -76,6 +77,15 @@ jobs:
               }
 
               let existing = fs.readFileSync(filePath, 'utf8');
+              const validStages = new Set(['planning', 'alpha', 'beta', 'stable', 'archived']);
+              const stageLower = newStageRaw.toLowerCase();
+              if (validStages.has(stageLower)) {
+                if (/^status:/m.test(existing)) {
+                  existing = existing.replace(/^status:.*$/m, `status: '${stageLower}'`);
+                } else {
+                  existing = existing.replace(/^---\r?\n([\s\S]*?)\r?\n---/, `---\n$1\nstatus: '${stageLower}'\n---`);
+                }
+              }
               if (/^lastUpdated:/m.test(existing)) {
                 existing = existing.replace(/^lastUpdated:.*$/m, `lastUpdated: '${today}'`);
               } else {
