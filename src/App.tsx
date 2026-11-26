@@ -104,7 +104,7 @@ export function App() {
     }
   };
 
-  const navigate = (next: RouteState) => {
+  const navigate = (next: RouteState, hash?: string) => {
     let targetPath = '/';
     if (next.kind === 'civictools') targetPath = '/civictools';
     else if (next.kind === 'submit') targetPath = '/civictools/submit';
@@ -116,11 +116,18 @@ export function App() {
           : `/article/${next.slug}`;
     }
 
-    if (window.location.pathname !== targetPath) {
-      window.history.pushState(null, '', targetPath);
+    const fullUrl = hash ? `${targetPath}${hash}` : targetPath;
+    if (window.location.pathname + window.location.hash !== fullUrl) {
+      window.history.pushState(null, '', fullUrl);
     }
     setRoute(next);
-    window.scrollTo({ top: 0 });
+    if (hash) {
+      requestAnimationFrame(() => {
+        document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
+      });
+    } else {
+      window.scrollTo({ top: 0 });
+    }
   };
 
   if (route.kind === 'article') {
@@ -131,6 +138,7 @@ export function App() {
         onLangChange={handleLangChange}
         onBackHome={() => navigate({ kind: 'home' })}
         onOpenCivicTools={() => navigate({ kind: 'civictools' })}
+        onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
         onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
         onOpenArticle={(slug) => navigate({ kind: 'article', slug })}
       />
@@ -144,6 +152,8 @@ export function App() {
         lang={lang}
         onLangChange={handleLangChange}
         onBackHome={() => navigate({ kind: 'home' })}
+        onOpenCivicTools={() => navigate({ kind: 'civictools' })}
+        onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
         onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
         onOpenArticle={(slug) => navigate({ kind: 'article', slug })}
       />
@@ -157,6 +167,7 @@ export function App() {
         onLangChange={handleLangChange}
         onBackHome={() => navigate({ kind: 'home' })}
         onBackDirectory={() => navigate({ kind: 'civictools' })}
+        onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
         onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
       />
     );
@@ -168,7 +179,7 @@ export function App() {
         lang={lang}
         onLangChange={handleLangChange}
         onBackHome={() => navigate({ kind: 'home' })}
-        onOpenSubmit={() => navigate({ kind: 'submit' })}
+        onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
         onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
       />
     );
@@ -181,6 +192,7 @@ export function App() {
       onOpenArticle={(slug) => navigate({ kind: 'article', slug })}
       onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
       onOpenCivicTools={() => navigate({ kind: 'civictools' })}
+      onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
     />
   );
 }

@@ -4,15 +4,33 @@ import { TRANSLATIONS, type Lang } from '../data/i18n';
 interface FooterProps {
   lang: Lang;
   onBackHome: () => void;
+  onOpenCivicTools: () => void;
+  onOpenSubmit: (hash?: string) => void;
 }
 
-export function Footer({ lang, onBackHome }: FooterProps) {
+export function Footer({
+  lang,
+  onBackHome,
+  onOpenCivicTools,
+  onOpenSubmit,
+}: FooterProps) {
   const t = TRANSLATIONS[lang];
 
   const handleBackHome = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onBackHome();
   };
+
+  const handleOpenCivicTools = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    onOpenCivicTools();
+  };
+
+  const handleOpenSubmit =
+    (hash?: string) => (e: MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      onOpenSubmit(hash);
+    };
 
   return (
     <footer style={{ borderTop: '1px solid #111', marginTop: 8 }}>
@@ -55,6 +73,22 @@ export function Footer({ lang, onBackHome }: FooterProps) {
         </div>
         <div className="footer-links">
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <span style={{ fontWeight: 600 }}>{t.footer.directory}</span>
+            <a href="/civictools" onClick={handleOpenCivicTools} style={{ color: '#555' }}>
+              {t.footer.civicTools}
+            </a>
+            <a href="/civictools/submit" onClick={handleOpenSubmit()} style={{ color: '#555' }}>
+              {t.footer.submitEntry}
+            </a>
+            <a
+              href="/civictools/submit#update"
+              onClick={handleOpenSubmit('#update')}
+              style={{ color: '#555' }}
+            >
+              {t.footer.postUpdate}
+            </a>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <span style={{ fontWeight: 600 }}>{t.footer.about}</span>
             <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
               {t.footer.ourMission}
@@ -68,7 +102,7 @@ export function Footer({ lang, onBackHome }: FooterProps) {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <span style={{ fontWeight: 600 }}>{t.footer.getInvolved}</span>
-            <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
+            <a href="/civictools/submit" onClick={handleOpenSubmit()} style={{ color: '#555' }}>
               {t.footer.volunteer}
             </a>
             <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>

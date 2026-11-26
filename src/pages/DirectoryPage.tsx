@@ -19,7 +19,7 @@ interface DirectoryPageProps {
   lang: Lang;
   onLangChange: (lang: Lang) => void;
   onBackHome: () => void;
-  onOpenSubmit: () => void;
+  onOpenSubmit: (hash?: string) => void;
   onOpenCategory: (slug: CategorySlug) => void;
 }
 
@@ -531,7 +531,12 @@ export function DirectoryPage({
         )}
       </main>
 
-      <Footer lang={lang} onBackHome={onBackHome} />
+      <Footer
+        lang={lang}
+        onBackHome={onBackHome}
+        onOpenCivicTools={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onOpenSubmit={onOpenSubmit}
+      />
     </div>
   );
 }

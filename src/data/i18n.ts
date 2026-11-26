@@ -245,6 +245,10 @@ const en = {
   },
   footer: {
     desc: 'An independent newsroom of BetterGov.ph, the volunteer-run movement for government transparency in the Philippines.',
+    directory: 'Directory',
+    civicTools: 'Civic Tools',
+    submitEntry: 'Submit Project / CSO',
+    postUpdate: 'Post an Update',
     about: 'About',
     ourMission: 'Our mission',
     editorialStandards: 'Editorial standards',
@@ -438,6 +442,10 @@ const fil: TranslationSchema = {
   },
   footer: {
     desc: 'Isang malayang newsroom ng BetterGov.ph, ang kilusang pinatatakbo ng mga boluntaryo para sa transparency ng gobyerno sa Pilipinas.',
+    directory: 'Direktoryo',
+    civicTools: 'Mga Kasangkapan',
+    submitEntry: 'Magsumite ng Proyekto / CSO',
+    postUpdate: 'Mag-post ng Update',
     about: 'Tungkol sa Amin',
     ourMission: 'Aming misyon',
     editorialStandards: 'Pamantayang editoryal',

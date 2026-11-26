@@ -11,6 +11,7 @@ interface HomePageProps {
   onOpenArticle: (slug: string) => void;
   onOpenCategory: (slug: CategorySlug) => void;
   onOpenCivicTools: () => void;
+  onOpenSubmit: (hash?: string) => void;
 }
 
 export function HomePage({
@@ -19,6 +20,7 @@ export function HomePage({
   onOpenArticle,
   onOpenCategory,
   onOpenCivicTools,
+  onOpenSubmit,
 }: HomePageProps) {
   const t = TRANSLATIONS[lang];
 
@@ -986,6 +988,8 @@ export function HomePage({
       <Footer
         lang={lang}
         onBackHome={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onOpenCivicTools={onOpenCivicTools}
+        onOpenSubmit={onOpenSubmit}
       />
     </div>
   );

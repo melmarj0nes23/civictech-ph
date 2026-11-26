@@ -15,6 +15,8 @@ interface CategoryPageProps {
   lang: Lang;
   onLangChange: (lang: Lang) => void;
   onBackHome: () => void;
+  onOpenCivicTools: () => void;
+  onOpenSubmit: (hash?: string) => void;
   onOpenCategory: (slug: CategorySlug) => void;
   onOpenArticle: (slug: string) => void;
 }
@@ -24,6 +26,8 @@ export function CategoryPage({
   lang,
   onLangChange,
   onBackHome,
+  onOpenCivicTools,
+  onOpenSubmit,
   onOpenCategory,
   onOpenArticle,
 }: CategoryPageProps) {
@@ -215,7 +219,12 @@ export function CategoryPage({
         </div>
       </main>
 
-      <Footer lang={lang} onBackHome={onBackHome} />
+      <Footer
+        lang={lang}
+        onBackHome={onBackHome}
+        onOpenCivicTools={onOpenCivicTools}
+        onOpenSubmit={onOpenSubmit}
+      />
     </div>
   );
 }

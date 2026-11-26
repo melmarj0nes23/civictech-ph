@@ -16,6 +16,7 @@ interface ArticlePageProps {
   onLangChange: (lang: Lang) => void;
   onBackHome: () => void;
   onOpenCivicTools: () => void;
+  onOpenSubmit: (hash?: string) => void;
   onOpenCategory: (slug: CategorySlug) => void;
   onOpenArticle: (slug: string) => void;
 }
@@ -26,6 +27,7 @@ export function ArticlePage({
   onLangChange,
   onBackHome,
   onOpenCivicTools,
+  onOpenSubmit,
   onOpenCategory,
   onOpenArticle,
 }: ArticlePageProps) {
@@ -616,7 +618,12 @@ export function ArticlePage({
         </div>
       </section>
 
-      <Footer lang={lang} onBackHome={onBackHome} />
+      <Footer
+        lang={lang}
+        onBackHome={onBackHome}
+        onOpenCivicTools={onOpenCivicTools}
+        onOpenSubmit={onOpenSubmit}
+      />
     </div>
   );
 }

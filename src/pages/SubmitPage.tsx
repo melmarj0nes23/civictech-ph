@@ -13,6 +13,7 @@ interface SubmitPageProps {
   onLangChange: (lang: Lang) => void;
   onBackHome: () => void;
   onBackDirectory: () => void;
+  onOpenSubmit: (hash?: string) => void;
   onOpenCategory: (slug: CategorySlug) => void;
 }
 
@@ -21,6 +22,7 @@ export function SubmitPage({
   onLangChange,
   onBackHome,
   onBackDirectory,
+  onOpenSubmit,
   onOpenCategory,
 }: SubmitPageProps) {
   const t = TRANSLATIONS[lang];
@@ -638,7 +640,12 @@ export function SubmitPage({
         </section>
       </main>
 
-      <Footer lang={lang} onBackHome={onBackHome} />
+      <Footer
+        lang={lang}
+        onBackHome={onBackHome}
+        onOpenCivicTools={onBackDirectory}
+        onOpenSubmit={onOpenSubmit}
+      />
     </div>
   );
 }
