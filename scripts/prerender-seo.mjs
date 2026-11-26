@@ -39,6 +39,40 @@ const ROUTES = [
       'A loose network of engineers, researchers and students is turning thousands of pages of appropriations into something anyone can search, compare and question.',
     type: 'article',
   },
+  ...[
+    ['open-data', 'Open Data'],
+    ['budget', 'Budget'],
+    ['elections', 'Elections'],
+    ['policy', 'Policy'],
+    ['digital-services', 'Digital Services'],
+    ['tools', 'Tools'],
+    ['opinion', 'Opinion'],
+    ['community', 'Community'],
+  ].map(([slug, label]) => ({
+    path: `/category/${slug}`,
+    title: `${label} — Civic Tech by BetterGov.ph`,
+    description: `${label} reporting, tools, and analysis from Civic Tech by BetterGov.ph.`,
+    type: 'website',
+  })),
+  ...[
+    ['transparent-canvassing', 'What a transparent canvassing dashboard should actually show'],
+    ['foi-explained', 'Freedom of Information, explained: how to file a request that gets answered'],
+    ['gov-ph-mobile', 'Why so many .gov.ph websites still break on a phone'],
+    ['spotting-scam-texts', 'A field guide to spotting scam texts that impersonate government agencies'],
+    ['mapping-public-transport', 'Mapping public transport routes when the official data runs out'],
+    ['reading-bicam-report', 'Reading the bicam report: a line-by-line guide for first-timers'],
+    ['barangay-procurement', 'Inside a barangay that put its procurement records online'],
+    ['one-login-gov', 'The case for one login across every government service'],
+    ['last-mile-connectivity', 'Last mile, last in line: who gets left out when services go online'],
+    ['open-data-habit', 'Open data is not a website. It is a habit.'],
+    ['volunteers-built-it', 'Volunteers built it. Now government has to maintain it.'],
+    ['ai-and-hearings', 'Let AI read the bills — but keep humans in the hearing room.'],
+  ].map(([slug, title]) => ({
+    path: `/article/${slug}`,
+    title: `${title} — Civic Tech`,
+    description: `${title} — Civic Tech by BetterGov.ph.`,
+    type: 'article',
+  })),
 ];
 
 function escapeHtml(str) {

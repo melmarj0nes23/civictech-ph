@@ -1,22 +1,40 @@
 import type { MouseEvent } from 'react';
+import {
+  ARTICLES,
+  CATEGORIES,
+  getArticleBySlug,
+  type CategorySlug,
+} from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
 
 const ACCENT = '#0B3D91';
 
 interface ArticlePageProps {
+  articleSlug: string;
   lang: Lang;
   onLangChange: (lang: Lang) => void;
   onBackHome: () => void;
   onOpenCivicTools: () => void;
+  onOpenCategory: (slug: CategorySlug) => void;
+  onOpenArticle: (slug: string) => void;
 }
 
 export function ArticlePage({
+  articleSlug,
   lang,
   onLangChange,
   onBackHome,
   onOpenCivicTools,
+  onOpenCategory,
+  onOpenArticle,
 }: ArticlePageProps) {
   const t = TRANSLATIONS[lang];
+  const article = getArticleBySlug(articleSlug);
+  const isLead = article.slug === 'volunteers-national-budget';
+  const relatedStories = ARTICLES.filter(
+    (a) => a.slug !== article.slug && a.slug !== 'volunteers-national-budget'
+  ).slice(0, 3);
+  const moreStories = ARTICLES.filter((a) => a.slug !== article.slug).slice(3, 6);
 
   const handleBackHome = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -28,10 +46,25 @@ export function ArticlePage({
     onOpenCivicTools();
   };
 
+  const handleCategoryClick =
+    (slug: CategorySlug) => (e: MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      onOpenCategory(slug);
+    };
+
+  const handleArticleClick = (slug: string) => (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    onOpenArticle(slug);
+  };
+
   const handleSwitchLang = (next: Lang) => (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onLangChange(next);
   };
+
+  const firstPara = article.body[lang][0] ?? '';
+  const dropCap = firstPara.charAt(0);
+  const firstParaRest = firstPara.slice(1);
 
   return (
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
@@ -79,28 +112,20 @@ export function ArticlePage({
             </span>
           </div>
           <nav aria-label="Sections" className="compact-nav">
-            <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              {t.nav.openData}
-            </a>
-            <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              {t.nav.budget}
-            </a>
-            <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              {t.nav.elections}
-            </a>
-            <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              {t.nav.policy}
-            </a>
-            <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              {t.nav.tools}
-            </a>
-            <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              {t.nav.opinion}
-            </a>
+            {CATEGORIES.slice(0, 6).map((cat) => (
+              <a
+                key={cat.slug}
+                href={`/category/${cat.slug}`}
+                onClick={handleCategoryClick(cat.slug)}
+                style={{ padding: '12px 0' }}
+              >
+                {cat.label[lang]}
+              </a>
+            ))}
           </nav>
           <div className="compact-actions" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <a
-              href="/article"
+              href={isLead ? '/article' : `/article/${article.slug}`}
               onClick={handleSwitchLang(lang === 'en' ? 'fil' : 'en')}
               style={{ fontSize: 13, color: '#555', fontWeight: 500 }}
             >
@@ -126,7 +151,7 @@ export function ArticlePage({
               color: ACCENT,
             }}
           >
-            {t.article.kicker}
+            {article.kicker[lang]}
           </p>
           <h1
             className="article-title"
@@ -139,7 +164,7 @@ export function ArticlePage({
               letterSpacing: '-0.02em',
             }}
           >
-            {t.home.leadTitle}
+            {article.title[lang]}
           </h1>
           <p
             className="article-deck"
@@ -152,7 +177,7 @@ export function ArticlePage({
               color: '#333',
             }}
           >
-            {t.home.leadDeck}
+            {article.deck[lang]}
           </p>
           <div
             style={{
@@ -168,12 +193,12 @@ export function ArticlePage({
           >
             <span>
               {t.home.byWord}{' '}
-              <span style={{ color: '#111', fontWeight: 600 }}>{t.home.authorPlaceholder}</span>
+              <span style={{ color: '#111', fontWeight: 600 }}>{article.author[lang]}</span>
             </span>
             <span aria-hidden="true">·</span>
-            <span>{t.article.date}</span>
+            <span>{article.date[lang]}</span>
             <span aria-hidden="true">·</span>
-            <span>{t.home.leadReadTime}</span>
+            <span>{article.readTime[lang]}</span>
           </div>
         </div>
 
@@ -196,7 +221,7 @@ export function ArticlePage({
               <circle cx="12" cy="13" r="3.5" />
               <path d="M8 6l1.5-2h5L16 6" />
             </svg>
-            <span>{t.article.heroPhoto}</span>
+            <span>{article.photoLabel[lang]}</span>
           </div>
           <figcaption style={{ marginTop: 10, fontSize: 13, lineHeight: 1.5, color: '#555' }}>
             {t.article.heroCaption}{' '}
@@ -276,6 +301,7 @@ export function ArticlePage({
             <button
               type="button"
               aria-label={t.article.shareCopy}
+              onClick={() => navigator.clipboard?.writeText(window.location.href)}
               style={{
                 width: 44,
                 height: 44,
@@ -325,72 +351,79 @@ export function ArticlePage({
                   color: ACCENT,
                 }}
               >
-                {t.article.dropCapLetter}
+                {dropCap}
               </span>
-              {t.article.p1Rest}
+              {firstParaRest}
             </p>
-            <p>{t.article.p2}</p>
-            <p>{t.article.p3}</p>
+            {article.body[lang].slice(1).map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
 
-            <blockquote
-              style={{
-                margin: '40px 0',
-                padding: '28px 0',
-                borderTop: '2px solid #111',
-                borderBottom: '1px solid #E5E5E5',
-              }}
-            >
-              <p
-                className="article-quote"
+            {article.quote && (
+              <blockquote
                 style={{
-                  margin: 0,
-                  fontSize: 30,
-                  lineHeight: 1.3,
-                  fontStyle: 'italic',
-                  fontWeight: 500,
+                  margin: '40px 0',
+                  padding: '28px 0',
+                  borderTop: '2px solid #111',
+                  borderBottom: '1px solid #E5E5E5',
                 }}
               >
-                {t.article.quote}
-              </p>
-              <footer
-                style={{
-                  marginTop: 14,
-                  fontFamily: 'Inter, sans-serif',
-                  fontSize: 14,
-                  color: '#555',
-                  fontStyle: 'normal',
-                }}
-              >
-                {t.article.quoteSource}
-              </footer>
-            </blockquote>
+                <p
+                  className="article-quote"
+                  style={{
+                    margin: 0,
+                    fontSize: 30,
+                    lineHeight: 1.3,
+                    fontStyle: 'italic',
+                    fontWeight: 500,
+                  }}
+                >
+                  {article.quote.text[lang]}
+                </p>
+                <footer
+                  style={{
+                    marginTop: 14,
+                    fontFamily: 'Inter, sans-serif',
+                    fontSize: 14,
+                    color: '#555',
+                    fontStyle: 'normal',
+                  }}
+                >
+                  {article.quote.source[lang]}
+                </footer>
+              </blockquote>
+            )}
 
-            <h2 style={{ margin: '0 0 16px', fontSize: 30, lineHeight: 1.2, fontWeight: 600 }}>
-              {t.article.subhead}
-            </h2>
-            <p>{t.article.p4}</p>
+            {isLead && (
+              <>
+                <h2 style={{ margin: '0 0 16px', fontSize: 30, lineHeight: 1.2, fontWeight: 600 }}>
+                  {t.article.subhead}
+                </h2>
+                <p>{t.article.p4}</p>
 
-            <figure style={{ margin: '36px 0' }}>
-              <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-                {t.article.inlinePhoto}
-              </div>
-              <figcaption
-                style={{
-                  marginTop: 10,
-                  fontFamily: 'Inter, sans-serif',
-                  fontSize: 13,
-                  lineHeight: 1.5,
-                  color: '#555',
-                }}
-              >
-                {t.article.inlineCaption}{' '}
-                <span style={{ color: '#777' }}>
-                  {t.article.heroCreditPrefix} {t.home.photographerPlaceholder}
-                </span>
-              </figcaption>
-            </figure>
+                <figure style={{ margin: '36px 0' }}>
+                  <div className="ph" style={{ aspectRatio: '3 / 2' }}>
+                    {t.article.inlinePhoto}
+                  </div>
+                  <figcaption
+                    style={{
+                      marginTop: 10,
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: 13,
+                      lineHeight: 1.5,
+                      color: '#555',
+                    }}
+                  >
+                    {t.article.inlineCaption}{' '}
+                    <span style={{ color: '#777' }}>
+                      {t.article.heroCreditPrefix} {t.home.photographerPlaceholder}
+                    </span>
+                  </figcaption>
+                </figure>
 
-            <p>{t.article.p5}</p>
+                <p>{t.article.p5}</p>
+              </>
+            )}
 
             <div
               style={{
@@ -449,56 +482,35 @@ export function ArticlePage({
             >
               {t.article.related}
             </h2>
-            <a
-              href="/"
-              onClick={handleBackHome}
-              style={{ display: 'block', padding: '16px 0', borderBottom: '1px solid #E5E5E5' }}
-            >
-              <div className="ph" style={{ aspectRatio: '3 / 2', marginBottom: 12, fontSize: 11 }}>
-                {t.home.photoShort}
-              </div>
-              <p
+            {relatedStories.map((story, idx) => (
+              <a
+                key={story.slug}
+                href={`/article/${story.slug}`}
+                onClick={handleArticleClick(story.slug)}
                 style={{
-                  margin: 0,
-                  fontFamily: 'Newsreader, Georgia, serif',
-                  fontSize: 19,
-                  lineHeight: 1.25,
-                  fontWeight: 500,
+                  display: 'block',
+                  padding: '16px 0',
+                  borderBottom: idx < relatedStories.length - 1 ? '1px solid #E5E5E5' : 'none',
                 }}
               >
-                {t.home.latest2Title}
-              </p>
-            </a>
-            <a
-              href="/"
-              onClick={handleBackHome}
-              style={{ display: 'block', padding: '16px 0', borderBottom: '1px solid #E5E5E5' }}
-            >
-              <p
-                style={{
-                  margin: 0,
-                  fontFamily: 'Newsreader, Georgia, serif',
-                  fontSize: 19,
-                  lineHeight: 1.25,
-                  fontWeight: 500,
-                }}
-              >
-                {t.home.top2Title}
-              </p>
-            </a>
-            <a href="/" onClick={handleBackHome} style={{ display: 'block', padding: '16px 0' }}>
-              <p
-                style={{
-                  margin: 0,
-                  fontFamily: 'Newsreader, Georgia, serif',
-                  fontSize: 19,
-                  lineHeight: 1.25,
-                  fontWeight: 500,
-                }}
-              >
-                {t.home.opinion1}
-              </p>
-            </a>
+                {idx === 0 && (
+                  <div className="ph" style={{ aspectRatio: '3 / 2', marginBottom: 12, fontSize: 11 }}>
+                    {t.home.photoShort}
+                  </div>
+                )}
+                <p
+                  style={{
+                    margin: 0,
+                    fontFamily: 'Newsreader, Georgia, serif',
+                    fontSize: 19,
+                    lineHeight: 1.25,
+                    fontWeight: 500,
+                  }}
+                >
+                  {story.title[lang]}
+                </p>
+              </a>
+            ))}
           </aside>
         </div>
 
@@ -528,7 +540,7 @@ export function ArticlePage({
             {t.home.photoShort}
           </div>
           <div>
-            <p style={{ margin: 0, fontWeight: 600, fontSize: 15 }}>{t.home.authorPlaceholder}</p>
+            <p style={{ margin: 0, fontWeight: 600, fontSize: 15 }}>{article.author[lang]}</p>
             <p style={{ margin: '4px 0 0', fontSize: 14, lineHeight: 1.5, color: '#555' }}>
               {t.article.authorBio}
             </p>
@@ -565,90 +577,41 @@ export function ArticlePage({
             gap: 32,
           }}
         >
-          <a href="/" onClick={handleBackHome} style={{ display: 'block' }}>
-            <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-              {t.home.latest1Photo}
-            </div>
-            <p
-              style={{
-                margin: '14px 0 6px',
-                fontSize: 11,
-                fontWeight: 600,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                color: ACCENT,
-              }}
+          {moreStories.map((story) => (
+            <a
+              key={story.slug}
+              href={`/article/${story.slug}`}
+              onClick={handleArticleClick(story.slug)}
+              style={{ display: 'block' }}
             >
-              {t.nav.openData}
-            </p>
-            <p
-              style={{
-                margin: 0,
-                fontFamily: 'Newsreader, Georgia, serif',
-                fontSize: 22,
-                lineHeight: 1.2,
-                fontWeight: 500,
-              }}
-            >
-              {t.home.latest1Title}
-            </p>
-          </a>
-          <a href="/" onClick={handleBackHome} style={{ display: 'block' }}>
-            <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-              {t.home.latest3Photo}
-            </div>
-            <p
-              style={{
-                margin: '14px 0 6px',
-                fontSize: 11,
-                fontWeight: 600,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                color: ACCENT,
-              }}
-            >
-              {t.nav.community}
-            </p>
-            <p
-              style={{
-                margin: 0,
-                fontFamily: 'Newsreader, Georgia, serif',
-                fontSize: 22,
-                lineHeight: 1.2,
-                fontWeight: 500,
-              }}
-            >
-              {t.home.latest3Title}
-            </p>
-          </a>
-          <a href="/" onClick={handleBackHome} style={{ display: 'block' }}>
-            <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-              {t.home.latest4Photo}
-            </div>
-            <p
-              style={{
-                margin: '14px 0 6px',
-                fontSize: 11,
-                fontWeight: 600,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                color: ACCENT,
-              }}
-            >
-              {t.nav.digitalServices}
-            </p>
-            <p
-              style={{
-                margin: 0,
-                fontFamily: 'Newsreader, Georgia, serif',
-                fontSize: 22,
-                lineHeight: 1.2,
-                fontWeight: 500,
-              }}
-            >
-              {t.home.latest4Title}
-            </p>
-          </a>
+              <div className="ph" style={{ aspectRatio: '3 / 2' }}>
+                {story.photoLabel[lang]}
+              </div>
+              <p
+                style={{
+                  margin: '14px 0 6px',
+                  fontSize: 11,
+                  fontWeight: 600,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  color: ACCENT,
+                }}
+              >
+                {story.kicker[lang]}
+              </p>
+              <p
+                style={{
+                  margin: 0,
+                  fontFamily: 'Newsreader, Georgia, serif',
+                  fontSize: 22,
+                  lineHeight: 1.2,
+                  fontWeight: 500,
+                }}
+              >
+                {story.title[lang]}
+              </p>
+            </a>
+          ))}
         </div>
       </section>
 

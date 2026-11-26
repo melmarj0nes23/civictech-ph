@@ -1,4 +1,5 @@
 import { useMemo, useState, type MouseEvent } from 'react';
+import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { DIRECTORY_ENTRIES } from '../data/directory';
 import { getLocalizedSummary } from '../data/directoryI18n';
 import {
@@ -18,6 +19,7 @@ interface DirectoryPageProps {
   onLangChange: (lang: Lang) => void;
   onBackHome: () => void;
   onOpenSubmit: () => void;
+  onOpenCategory: (slug: CategorySlug) => void;
 }
 
 export function DirectoryPage({
@@ -25,6 +27,7 @@ export function DirectoryPage({
   onLangChange,
   onBackHome,
   onOpenSubmit,
+  onOpenCategory,
 }: DirectoryPageProps) {
   const t = TRANSLATIONS[lang];
   const [search, setSearch] = useState('');
@@ -133,24 +136,19 @@ export function DirectoryPage({
             </span>
           </div>
           <nav aria-label="Sections" className="compact-nav">
-            <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              {t.nav.openData}
-            </a>
-            <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              {t.nav.budget}
-            </a>
-            <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              {t.nav.elections}
-            </a>
-            <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              {t.nav.policy}
-            </a>
-            <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              {t.nav.tools}
-            </a>
-            <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              {t.nav.opinion}
-            </a>
+            {CATEGORIES.slice(0, 6).map((cat) => (
+              <a
+                key={cat.slug}
+                href={`/category/${cat.slug}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  onOpenCategory(cat.slug);
+                }}
+                style={{ padding: '12px 0' }}
+              >
+                {cat.label[lang]}
+              </a>
+            ))}
           </nav>
           <div className="compact-actions" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <a

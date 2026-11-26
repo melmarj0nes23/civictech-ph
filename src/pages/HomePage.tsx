@@ -1,4 +1,5 @@
 import type { MouseEvent } from 'react';
+import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
 
 const ACCENT = '#0B3D91';
@@ -6,7 +7,8 @@ const ACCENT = '#0B3D91';
 interface HomePageProps {
   lang: Lang;
   onLangChange: (lang: Lang) => void;
-  onOpenArticle: () => void;
+  onOpenArticle: (slug: string) => void;
+  onOpenCategory: (slug: CategorySlug) => void;
   onOpenCivicTools: () => void;
 }
 
@@ -14,14 +16,21 @@ export function HomePage({
   lang,
   onLangChange,
   onOpenArticle,
+  onOpenCategory,
   onOpenCivicTools,
 }: HomePageProps) {
   const t = TRANSLATIONS[lang];
 
-  const handleOpenArticle = (e: MouseEvent<HTMLAnchorElement>) => {
+  const handleOpenArticle = (slug: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    onOpenArticle();
+    onOpenArticle(slug);
   };
+
+  const handleOpenCategory =
+    (slug: CategorySlug) => (e: MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      onOpenCategory(slug);
+    };
 
   const handleOpenCivicTools = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -175,30 +184,16 @@ export function HomePage({
             fontWeight: 500,
           }}
         >
-          <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            {t.nav.openData}
-          </a>
-          <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            {t.nav.budget}
-          </a>
-          <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            {t.nav.elections}
-          </a>
-          <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            {t.nav.policy}
-          </a>
-          <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            {t.nav.digitalServices}
-          </a>
-          <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            {t.nav.tools}
-          </a>
-          <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            {t.nav.opinion}
-          </a>
-          <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            {t.nav.community}
-          </a>
+          {CATEGORIES.map((cat) => (
+            <a
+              key={cat.slug}
+              href={`/category/${cat.slug}`}
+              onClick={handleOpenCategory(cat.slug)}
+              style={{ padding: '14px 0' }}
+            >
+              {cat.label[lang]}
+            </a>
+          ))}
         </div>
       </nav>
 
@@ -214,7 +209,11 @@ export function HomePage({
           }}
         >
           <article style={{ flex: '999 1 560px', minWidth: 0 }}>
-            <a href="/article" onClick={handleOpenArticle} style={{ display: 'block' }}>
+            <a
+              href="/article"
+              onClick={handleOpenArticle('volunteers-national-budget')}
+              style={{ display: 'block' }}
+            >
               <div
                 className="ph"
                 style={{
@@ -263,7 +262,7 @@ export function HomePage({
                 letterSpacing: '-0.015em',
               }}
             >
-              <a href="/article" onClick={handleOpenArticle}>
+              <a href="/article" onClick={handleOpenArticle('volunteers-national-budget')}>
                 {t.home.leadTitle}
               </a>
             </h2>
@@ -309,8 +308,8 @@ export function HomePage({
               {t.home.topStories}
             </p>
             <a
-              href="/"
-              onClick={handleStayHome}
+              href="/article/transparent-canvassing"
+              onClick={handleOpenArticle('transparent-canvassing')}
               style={{
                 display: 'flex',
                 gap: 16,
@@ -348,8 +347,8 @@ export function HomePage({
               </div>
             </a>
             <a
-              href="/"
-              onClick={handleStayHome}
+              href="/article/foi-explained"
+              onClick={handleOpenArticle('foi-explained')}
               style={{
                 display: 'flex',
                 gap: 16,
@@ -387,8 +386,8 @@ export function HomePage({
               </div>
             </a>
             <a
-              href="/"
-              onClick={handleStayHome}
+              href="/article/gov-ph-mobile"
+              onClick={handleOpenArticle('gov-ph-mobile')}
               style={{
                 display: 'flex',
                 gap: 16,
@@ -425,7 +424,11 @@ export function HomePage({
                 {t.home.photoShort}
               </div>
             </a>
-            <a href="/" onClick={handleStayHome} style={{ display: 'flex', gap: 16, padding: '18px 0' }}>
+            <a
+              href="/article/spotting-scam-texts"
+              onClick={handleOpenArticle('spotting-scam-texts')}
+              style={{ display: 'flex', gap: 16, padding: '18px 0' }}
+            >
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p
                   style={{
@@ -497,7 +500,11 @@ export function HomePage({
             }}
           >
             <article>
-              <a href="/" onClick={handleStayHome} style={{ display: 'block' }}>
+              <a
+                href="/article/mapping-public-transport"
+                onClick={handleOpenArticle('mapping-public-transport')}
+                style={{ display: 'block' }}
+              >
                 <div className="ph" style={{ aspectRatio: '3 / 2' }}>
                   {t.home.latest1Photo}
                 </div>
@@ -530,7 +537,11 @@ export function HomePage({
               </a>
             </article>
             <article>
-              <a href="/" onClick={handleStayHome} style={{ display: 'block' }}>
+              <a
+                href="/article/reading-bicam-report"
+                onClick={handleOpenArticle('reading-bicam-report')}
+                style={{ display: 'block' }}
+              >
                 <div className="ph" style={{ aspectRatio: '3 / 2' }}>
                   {t.home.latest2Photo}
                 </div>
@@ -563,7 +574,11 @@ export function HomePage({
               </a>
             </article>
             <article>
-              <a href="/" onClick={handleStayHome} style={{ display: 'block' }}>
+              <a
+                href="/article/barangay-procurement"
+                onClick={handleOpenArticle('barangay-procurement')}
+                style={{ display: 'block' }}
+              >
                 <div className="ph" style={{ aspectRatio: '3 / 2' }}>
                   {t.home.latest3Photo}
                 </div>
@@ -596,7 +611,11 @@ export function HomePage({
               </a>
             </article>
             <article>
-              <a href="/" onClick={handleStayHome} style={{ display: 'block' }}>
+              <a
+                href="/article/one-login-gov"
+                onClick={handleOpenArticle('one-login-gov')}
+                style={{ display: 'block' }}
+              >
                 <div className="ph" style={{ aspectRatio: '3 / 2' }}>
                   {t.home.latest4Photo}
                 </div>
@@ -670,7 +689,10 @@ export function HomePage({
                 fontWeight: 500,
               }}
             >
-              <a href="/" onClick={handleStayHome}>
+              <a
+                href="/article/last-mile-connectivity"
+                onClick={handleOpenArticle('last-mile-connectivity')}
+              >
                 {t.home.featureTitle}
               </a>
             </h2>
@@ -728,7 +750,11 @@ export function HomePage({
                 paddingTop: 16,
               }}
             >
-              <a href="/" onClick={handleStayHome} style={{ display: 'block' }}>
+              <a
+                href="/article/open-data-habit"
+                onClick={handleOpenArticle('open-data-habit')}
+                style={{ display: 'block' }}
+              >
                 <p
                   style={{
                     margin: 0,
@@ -744,7 +770,11 @@ export function HomePage({
                   {t.home.columnistPlaceholder}
                 </p>
               </a>
-              <a href="/" onClick={handleStayHome} style={{ display: 'block' }}>
+              <a
+                href="/article/volunteers-built-it"
+                onClick={handleOpenArticle('volunteers-built-it')}
+                style={{ display: 'block' }}
+              >
                 <p
                   style={{
                     margin: 0,
@@ -760,7 +790,11 @@ export function HomePage({
                   {t.home.columnistPlaceholder}
                 </p>
               </a>
-              <a href="/" onClick={handleStayHome} style={{ display: 'block' }}>
+              <a
+                href="/article/ai-and-hearings"
+                onClick={handleOpenArticle('ai-and-hearings')}
+                style={{ display: 'block' }}
+              >
                 <p
                   style={{
                     margin: 0,
