@@ -7,7 +7,7 @@ const rootDir = path.resolve(__dirname, '..');
 const distDir = path.join(rootDir, 'dist');
 const baseHtmlPath = path.join(distDir, 'index.html');
 
-const SITE_URL = 'https://civictech.ph';
+const SITE_URL = 'https://civictech-ph.pages.dev';
 const OG_IMAGE = `${SITE_URL}/logo.png`;
 
 const ROUTES = [

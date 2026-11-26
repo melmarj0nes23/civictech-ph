@@ -4395,6 +4395,50 @@
     "featured": false
   },
   {
+    "slug": "action-for-economic-reforms",
+    "kind": "cso",
+    "title": "Action for Economic Reforms (AER)",
+    "summary": "Independent policy research and advocacy organization working on fiscal policy, tax reform, macroeconomic governance, and social protection.",
+    "status": "stable",
+    "sectors": [
+      "Business & Economy",
+      "Taxes & Finance"
+    ],
+    "legacySectors": [
+      "Business & Economy",
+      "Taxes & Finance"
+    ],
+    "tags": [
+      "Fiscal Policy",
+      "Taxation",
+      "Economic Research"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://aer.ph"
+  },
+  {
+    "slug": "altmobility-ph",
+    "kind": "cso",
+    "title": "AltMobility PH",
+    "summary": "Civil society advocacy group pushing for people-first public transport, active mobility, and inclusive urban transport policy in the Philippines.",
+    "status": "stable",
+    "sectors": [
+      "Infrastructure & Transport"
+    ],
+    "legacySectors": [
+      "Infrastructure & Transport"
+    ],
+    "tags": [
+      "Public Transport",
+      "Active Mobility",
+      "Policy"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://www.altmobility.ph"
+  },
+  {
     "slug": "bantay-kita",
     "kind": "cso",
     "title": "Bantay Kita",
@@ -4418,6 +4462,94 @@
     "website": "https://www.bantaykita.ph"
   },
   {
+    "slug": "cdrc",
+    "kind": "cso",
+    "title": "Citizens' Disaster Response Center (CDRC)",
+    "summary": "Philippine non-governmental organization pioneering community-based disaster management, preparedness, and emergency relief.",
+    "status": "stable",
+    "sectors": [
+      "Disaster & Recovery",
+      "Social & Welfare"
+    ],
+    "legacySectors": [
+      "Disaster & Recovery",
+      "Social & Welfare"
+    ],
+    "tags": [
+      "Disaster Response",
+      "Community Resilience"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://www.cdrc-phil.com"
+  },
+  {
+    "slug": "ctuhr",
+    "kind": "cso",
+    "title": "Center for Trade Union and Human Rights (CTUHR)",
+    "summary": "Non-profit research and advocacy organization documenting labor rights violations, wage standards, and workplace conditions across the Philippines.",
+    "status": "stable",
+    "sectors": [
+      "Labor & Employment",
+      "Law & Justice"
+    ],
+    "legacySectors": [
+      "Labor & Employment",
+      "Law & Justice"
+    ],
+    "tags": [
+      "Labor Rights",
+      "Workers",
+      "Human Rights"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://ctuhr.org"
+  },
+  {
+    "slug": "e-net-philippines",
+    "kind": "cso",
+    "title": "E-Net Philippines",
+    "summary": "Civil Society Network for Education Reforms advocating for inclusive, equitable, and accessible quality education across Philippine communities.",
+    "status": "stable",
+    "sectors": [
+      "Education"
+    ],
+    "legacySectors": [
+      "Education"
+    ],
+    "tags": [
+      "Education Reform",
+      "Advocacy"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://enetphil.org"
+  },
+  {
+    "slug": "foundation-for-media-alternatives",
+    "kind": "cso",
+    "title": "Foundation for Media Alternatives (FMA)",
+    "summary": "Non-profit organization defending digital rights, data privacy, online safety, and equitable ICT access in the Philippines.",
+    "status": "stable",
+    "sectors": [
+      "Public Safety",
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Public Safety",
+      "Government Services"
+    ],
+    "tags": [
+      "Digital Rights",
+      "Privacy",
+      "Cybersecurity"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://fma.ph"
+  },
+  {
     "slug": "g-watch",
     "kind": "cso",
     "title": "Government Watch (G-Watch)",
@@ -4439,6 +4571,48 @@
     "maintainers": [],
     "dateAdded": "2026-11-27",
     "website": "https://www.g-watch.org"
+  },
+  {
+    "slug": "hain",
+    "kind": "cso",
+    "title": "Health Action Information Network (HAIN)",
+    "summary": "Philippine non-profit organization conducting public health research, community health education, and health policy advocacy.",
+    "status": "stable",
+    "sectors": [
+      "Health"
+    ],
+    "legacySectors": [
+      "Health"
+    ],
+    "tags": [
+      "Public Health",
+      "Research",
+      "Advocacy"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://www.hain.org"
+  },
+  {
+    "slug": "haribon-foundation",
+    "kind": "cso",
+    "title": "Haribon Foundation",
+    "summary": "Pioneer Philippine environmental conservation CSO working on biodiversity protection, forest restoration, and community-led natural resource stewardship.",
+    "status": "stable",
+    "sectors": [
+      "Agriculture & Environment"
+    ],
+    "legacySectors": [
+      "Agriculture & Environment"
+    ],
+    "tags": [
+      "Environment",
+      "Conservation",
+      "Biodiversity"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://haribon.org.ph"
   },
   {
     "slug": "kontra-daya",

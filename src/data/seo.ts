@@ -5,7 +5,7 @@ export interface PageSeo {
   type: 'website' | 'article';
 }
 
-export const SITE_URL = 'https://civictech.ph';
+export const SITE_URL = 'https://civictech-ph.pages.dev';
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.png`;
 
 export const ROUTE_SEO: Record<'home' | 'civictools' | 'article', PageSeo> = {

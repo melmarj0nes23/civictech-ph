@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://civictech.ph/sitemap.xml
+Sitemap: https://civictech-ph.pages.dev/sitemap.xml
