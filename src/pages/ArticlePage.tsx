@@ -28,12 +28,20 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
               href="/"
               onClick={handleBackHome}
               style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
                 fontFamily: 'Newsreader, Georgia, serif',
                 fontSize: 32,
                 fontWeight: 600,
                 letterSpacing: '-0.01em',
               }}
             >
+              <img
+                src="/logo.png"
+                alt="Civic Tech logo"
+                style={{ height: 28, width: 'auto', display: 'block' }}
+              />
               Civic Tech
             </a>
             <span

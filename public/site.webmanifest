@@ -1,0 +1,26 @@
+{
+  "name": "Civic Tech by BetterGov.ph",
+  "short_name": "Civic Tech",
+  "description": "Philippine civic tech projects, CSOs, and reporting on open government and public data.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0B3D91",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "228x200",
+      "type": "image/png"
+    }
+  ]
+}

@@ -76,19 +76,34 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
         }}
       >
         <p className="masthead-date">Wednesday, 25 November 2026</p>
-        <h1
-          className="masthead-title"
+        <div
           style={{
-            margin: 0,
-            fontFamily: 'Newsreader, Georgia, serif',
-            fontWeight: 600,
-            fontSize: 84,
-            lineHeight: 1,
-            letterSpacing: '-0.02em',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 16,
           }}
         >
-          Civic Tech
-        </h1>
+          <img
+            src="/logo.png"
+            alt="Civic Tech logo"
+            className="masthead-logo"
+            style={{ height: 64, width: 'auto', display: 'block' }}
+          />
+          <h1
+            className="masthead-title"
+            style={{
+              margin: 0,
+              fontFamily: 'Newsreader, Georgia, serif',
+              fontWeight: 600,
+              fontSize: 84,
+              lineHeight: 1,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Civic Tech
+          </h1>
+        </div>
         <p
           style={{
             margin: '14px 0 0',
