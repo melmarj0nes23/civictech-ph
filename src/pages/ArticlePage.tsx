@@ -1,4 +1,5 @@
 import type { MouseEvent } from 'react';
+import { Footer } from '../components/Footer';
 import {
   ARTICLES,
   CATEGORIES,
@@ -615,36 +616,7 @@ export function ArticlePage({
         </div>
       </section>
 
-      <footer style={{ borderTop: '1px solid #E5E5E5' }}>
-        <div
-          style={{
-            maxWidth: 1240,
-            margin: '0 auto',
-            padding: 24,
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 12,
-            justifyContent: 'space-between',
-            fontSize: 13,
-            color: '#555',
-          }}
-        >
-          <span>{t.article.footerText}</span>
-          <span>
-            <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
-              {t.footer.editorialStandards}
-            </a>{' '}
-            &nbsp;·&nbsp;{' '}
-            <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
-              {t.footer.corrections}
-            </a>{' '}
-            &nbsp;·&nbsp;{' '}
-            <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
-              {t.article.sendTip}
-            </a>
-          </span>
-        </div>
-      </footer>
+      <Footer lang={lang} onBackHome={onBackHome} />
     </div>
   );
 }
