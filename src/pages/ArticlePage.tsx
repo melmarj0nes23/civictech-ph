@@ -1,13 +1,23 @@
 import type { MouseEvent } from 'react';
+import { TRANSLATIONS, type Lang } from '../data/i18n';
 
 const ACCENT = '#0B3D91';
 
 interface ArticlePageProps {
+  lang: Lang;
+  onLangChange: (lang: Lang) => void;
   onBackHome: () => void;
   onOpenCivicTools: () => void;
 }
 
-export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) {
+export function ArticlePage({
+  lang,
+  onLangChange,
+  onBackHome,
+  onOpenCivicTools,
+}: ArticlePageProps) {
+  const t = TRANSLATIONS[lang];
+
   const handleBackHome = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onBackHome();
@@ -16,6 +26,11 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
   const handleOpenCivicTools = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onOpenCivicTools();
+  };
+
+  const handleSwitchLang = (next: Lang) => (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    onLangChange(next);
   };
 
   return (
@@ -52,7 +67,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                 color: '#555',
               }}
             >
-              by{' '}
+              {t.byPrefix}{' '}
               <a
                 href="https://bettergov.ph"
                 target="_blank"
@@ -65,27 +80,36 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
           </div>
           <nav aria-label="Sections" className="compact-nav">
             <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              Open Data
+              {t.nav.openData}
             </a>
             <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              Budget
+              {t.nav.budget}
             </a>
             <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              Elections
+              {t.nav.elections}
             </a>
             <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              Policy
+              {t.nav.policy}
             </a>
             <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              Tools
+              {t.nav.tools}
             </a>
             <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              Opinion
+              {t.nav.opinion}
             </a>
           </nav>
-          <a href="/" onClick={handleBackHome} className="compact-subscribe">
-            Subscribe
-          </a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <a
+              href="/article"
+              onClick={handleSwitchLang(lang === 'en' ? 'fil' : 'en')}
+              style={{ fontSize: 13, color: '#555', fontWeight: 500 }}
+            >
+              {lang === 'en' ? 'FIL' : 'EN'}
+            </a>
+            <a href="/" onClick={handleBackHome} className="compact-subscribe">
+              {t.subscribe}
+            </a>
+          </div>
         </div>
       </header>
 
@@ -102,7 +126,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
               color: ACCENT,
             }}
           >
-            Open Data · Feature
+            {t.article.kicker}
           </p>
           <h1
             className="article-title"
@@ -115,7 +139,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
               letterSpacing: '-0.02em',
             }}
           >
-            The volunteers rebuilding how Filipinos read the national budget
+            {t.home.leadTitle}
           </h1>
           <p
             className="article-deck"
@@ -128,8 +152,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
               color: '#333',
             }}
           >
-            A loose network of engineers, researchers and students is turning thousands of pages of
-            appropriations into something anyone can search, compare and question.
+            {t.home.leadDeck}
           </p>
           <div
             style={{
@@ -144,12 +167,13 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
             }}
           >
             <span>
-              By <span style={{ color: '#111', fontWeight: 600 }}>[Author name]</span>
+              {t.home.byWord}{' '}
+              <span style={{ color: '#111', fontWeight: 600 }}>{t.home.authorPlaceholder}</span>
             </span>
             <span aria-hidden="true">·</span>
-            <span>25 November 2026</span>
+            <span>{t.article.date}</span>
             <span aria-hidden="true">·</span>
-            <span>8 min read</span>
+            <span>{t.home.leadReadTime}</span>
           </div>
         </div>
 
@@ -172,13 +196,13 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
               <circle cx="12" cy="13" r="3.5" />
               <path d="M8 6l1.5-2h5L16 6" />
             </svg>
-            <span>
-              Hero photo · Volunteers at a laptop-strewn table during a civic hackathon in Manila
-            </span>
+            <span>{t.article.heroPhoto}</span>
           </div>
           <figcaption style={{ marginTop: 10, fontSize: 13, lineHeight: 1.5, color: '#555' }}>
-            Volunteers compare appropriations line items during a weekend build session.{' '}
-            <span style={{ color: '#777' }}>Photo: [Photographer] for Civic Tech</span>
+            {t.article.heroCaption}{' '}
+            <span style={{ color: '#777' }}>
+              {t.article.heroCreditPrefix} {t.home.photographerPlaceholder} {t.article.heroCreditSuffix}
+            </span>
           </figcaption>
         </figure>
 
@@ -197,7 +221,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
           <aside aria-label="Share" className="share-rail">
             <button
               type="button"
-              aria-label="Share on Facebook"
+              aria-label={t.article.shareFb}
               style={{
                 width: 44,
                 height: 44,
@@ -224,7 +248,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
             </button>
             <button
               type="button"
-              aria-label="Share on X"
+              aria-label={t.article.shareX}
               style={{
                 width: 44,
                 height: 44,
@@ -251,7 +275,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
             </button>
             <button
               type="button"
-              aria-label="Copy link"
+              aria-label={t.article.shareCopy}
               style={{
                 width: 44,
                 height: 44,
@@ -301,21 +325,12 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                   color: ACCENT,
                 }}
               >
-                E
+                {t.article.dropCapLetter}
               </span>
-              very year, the General Appropriations Act arrives as a wall of PDFs. For most
-              citizens — and many journalists — the question of where public money goes ends there,
-              at a document too large to read and too fragmented to search.
+              {t.article.p1Rest}
             </p>
-            <p>
-              That is the problem a group of volunteers set out to fix. Working evenings and
-              weekends, they extract tables from scanned pages, reconcile agency names that change
-              from year to year, and publish the result as open data that anyone can download.
-            </p>
-            <p>
-              [Article body continues. Replace with the reported story — interviews, context on the
-              budget cycle, and what the data now makes possible for reporters and local officials.]
-            </p>
+            <p>{t.article.p2}</p>
+            <p>{t.article.p3}</p>
 
             <blockquote
               style={{
@@ -335,7 +350,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                   fontWeight: 500,
                 }}
               >
-                “If people can’t find the line item, they can’t ask the question.”
+                {t.article.quote}
               </p>
               <footer
                 style={{
@@ -346,22 +361,18 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                   fontStyle: 'normal',
                 }}
               >
-                — [Name], volunteer data lead
+                {t.article.quoteSource}
               </footer>
             </blockquote>
 
             <h2 style={{ margin: '0 0 16px', fontSize: 30, lineHeight: 1.2, fontWeight: 600 }}>
-              From PDF to public record
+              {t.article.subhead}
             </h2>
-            <p>
-              [Section copy. Explain the pipeline in plain language: how documents are collected,
-              checked against official sources, and versioned so changes between the proposed and
-              enacted budget are visible.]
-            </p>
+            <p>{t.article.p4}</p>
 
             <figure style={{ margin: '36px 0' }}>
               <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-                Inline photo · A volunteer marking up a printed budget document
+                {t.article.inlinePhoto}
               </div>
               <figcaption
                 style={{
@@ -372,11 +383,14 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                   color: '#555',
                 }}
               >
-                [Caption]. <span style={{ color: '#777' }}>Photo: [Photographer]</span>
+                {t.article.inlineCaption}{' '}
+                <span style={{ color: '#777' }}>
+                  {t.article.heroCreditPrefix} {t.home.photographerPlaceholder}
+                </span>
               </figcaption>
             </figure>
 
-            <p>[Section copy continues.]</p>
+            <p>{t.article.p5}</p>
 
             <div
               style={{
@@ -396,10 +410,10 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                   color: ACCENT,
                 }}
               >
-                Explore the data
+                {t.article.exploreEyebrow}
               </p>
               <p style={{ margin: '0 0 16px', fontSize: 16, lineHeight: 1.5, color: '#222' }}>
-                Search every line item in the national budget on the BetterGov.ph Open Data Portal.
+                {t.article.exploreDesc}
               </p>
               <a
                 href="/civictools"
@@ -415,7 +429,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                   fontWeight: 600,
                 }}
               >
-                Open the Budget Explorer →
+                {t.article.exploreCta}
               </a>
             </div>
           </div>
@@ -433,14 +447,15 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                 paddingBottom: 10,
               }}
             >
-              Related
+              {t.article.related}
             </h2>
             <a
-              href="#"
+              href="/"
+              onClick={handleBackHome}
               style={{ display: 'block', padding: '16px 0', borderBottom: '1px solid #E5E5E5' }}
             >
               <div className="ph" style={{ aspectRatio: '3 / 2', marginBottom: 12, fontSize: 11 }}>
-                Photo
+                {t.home.photoShort}
               </div>
               <p
                 style={{
@@ -451,11 +466,12 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                   fontWeight: 500,
                 }}
               >
-                Reading the bicam report: a line-by-line guide for first-timers
+                {t.home.latest2Title}
               </p>
             </a>
             <a
-              href="#"
+              href="/"
+              onClick={handleBackHome}
               style={{ display: 'block', padding: '16px 0', borderBottom: '1px solid #E5E5E5' }}
             >
               <p
@@ -467,10 +483,10 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                   fontWeight: 500,
                 }}
               >
-                Freedom of Information, explained: how to file a request that gets answered
+                {t.home.top2Title}
               </p>
             </a>
-            <a href="#" style={{ display: 'block', padding: '16px 0' }}>
+            <a href="/" onClick={handleBackHome} style={{ display: 'block', padding: '16px 0' }}>
               <p
                 style={{
                   margin: 0,
@@ -480,7 +496,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                   fontWeight: 500,
                 }}
               >
-                Open data is not a website. It is a habit.
+                {t.home.opinion1}
               </p>
             </a>
           </aside>
@@ -509,12 +525,12 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
               padding: 0,
             }}
           >
-            Photo
+            {t.home.photoShort}
           </div>
           <div>
-            <p style={{ margin: 0, fontWeight: 600, fontSize: 15 }}>[Author name]</p>
+            <p style={{ margin: 0, fontWeight: 600, fontSize: 15 }}>{t.home.authorPlaceholder}</p>
             <p style={{ margin: '4px 0 0', fontSize: 14, lineHeight: 1.5, color: '#555' }}>
-              [Short bio — beat, background and how to reach them.]
+              {t.article.authorBio}
             </p>
           </div>
         </div>
@@ -540,7 +556,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
             textTransform: 'uppercase',
           }}
         >
-          More from Civic Tech
+          {t.article.moreHeading}
         </h2>
         <div
           style={{
@@ -549,9 +565,9 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
             gap: 32,
           }}
         >
-          <a href="#" style={{ display: 'block' }}>
+          <a href="/" onClick={handleBackHome} style={{ display: 'block' }}>
             <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-              Photo · Jeepney traffic along a Manila avenue
+              {t.home.latest1Photo}
             </div>
             <p
               style={{
@@ -563,7 +579,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                 color: ACCENT,
               }}
             >
-              Open Data
+              {t.nav.openData}
             </p>
             <p
               style={{
@@ -574,12 +590,12 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                 fontWeight: 500,
               }}
             >
-              Mapping public transport routes when the official data runs out
+              {t.home.latest1Title}
             </p>
           </a>
-          <a href="#" style={{ display: 'block' }}>
+          <a href="/" onClick={handleBackHome} style={{ display: 'block' }}>
             <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-              Photo · Barangay hall with residents queuing outside
+              {t.home.latest3Photo}
             </div>
             <p
               style={{
@@ -591,7 +607,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                 color: ACCENT,
               }}
             >
-              Community
+              {t.nav.community}
             </p>
             <p
               style={{
@@ -602,12 +618,12 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                 fontWeight: 500,
               }}
             >
-              Inside a barangay that put its procurement records online
+              {t.home.latest3Title}
             </p>
           </a>
-          <a href="#" style={{ display: 'block' }}>
+          <a href="/" onClick={handleBackHome} style={{ display: 'block' }}>
             <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-              Photo · Close-up of a phone showing an e-government app
+              {t.home.latest4Photo}
             </div>
             <p
               style={{
@@ -619,7 +635,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                 color: ACCENT,
               }}
             >
-              Digital Services
+              {t.nav.digitalServices}
             </p>
             <p
               style={{
@@ -630,7 +646,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                 fontWeight: 500,
               }}
             >
-              The case for one login across every government service
+              {t.home.latest4Title}
             </p>
           </a>
         </div>
@@ -650,18 +666,18 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
             color: '#555',
           }}
         >
-          <span>Civic Tech is an independent newsroom of BetterGov.ph.</span>
+          <span>{t.article.footerText}</span>
           <span>
-            <a href="#" style={{ color: '#555' }}>
-              Editorial standards
+            <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
+              {t.footer.editorialStandards}
             </a>{' '}
             &nbsp;·&nbsp;{' '}
-            <a href="#" style={{ color: '#555' }}>
-              Corrections
+            <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
+              {t.footer.corrections}
             </a>{' '}
             &nbsp;·&nbsp;{' '}
-            <a href="#" style={{ color: '#555' }}>
-              Send a tip
+            <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
+              {t.article.sendTip}
             </a>
           </span>
         </div>

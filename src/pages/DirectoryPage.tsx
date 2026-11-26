@@ -1,5 +1,12 @@
 import { useMemo, useState, type MouseEvent } from 'react';
 import { DIRECTORY_ENTRIES } from '../data/directory';
+import { getLocalizedSummary } from '../data/directoryI18n';
+import {
+  SECTOR_LABELS,
+  STATUS_LABELS,
+  TRANSLATIONS,
+  type Lang,
+} from '../data/i18n';
 import type { EntryKind } from '../data/schema';
 import { SECTORS, type Sector } from '../data/sectors';
 
@@ -7,10 +14,13 @@ const ACCENT = '#0B3D91';
 const PAGE_SIZE = 24;
 
 interface DirectoryPageProps {
+  lang: Lang;
+  onLangChange: (lang: Lang) => void;
   onBackHome: () => void;
 }
 
-export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
+export function DirectoryPage({ lang, onLangChange, onBackHome }: DirectoryPageProps) {
+  const t = TRANSLATIONS[lang];
   const [search, setSearch] = useState('');
   const [kindFilter, setKindFilter] = useState<EntryKind | 'all'>('all');
   const [sectorFilter, setSectorFilter] = useState<Sector | 'all'>('all');
@@ -19,6 +29,11 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
   const handleBackHome = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onBackHome();
+  };
+
+  const handleSwitchLang = (next: Lang) => (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    onLangChange(next);
   };
 
   const sectorCounts = useMemo(() => {
@@ -39,15 +54,23 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
       if (kindFilter !== 'all' && entry.kind !== kindFilter) return false;
       if (sectorFilter !== 'all' && !entry.sectors.includes(sectorFilter)) return false;
       if (!q) return true;
+      const localizedSummary = getLocalizedSummary(
+        entry.slug,
+        entry.summary,
+        lang,
+        entry.summaryFil
+      ).toLowerCase();
       return (
         entry.title.toLowerCase().includes(q) ||
-        entry.summary.toLowerCase().includes(q) ||
+        localizedSummary.includes(q) ||
         (entry.owner?.toLowerCase().includes(q) ?? false) ||
-        entry.sectors.some((s) => s.toLowerCase().includes(q)) ||
-        entry.tags.some((t) => t.toLowerCase().includes(q))
+        entry.sectors.some(
+          (s) => s.toLowerCase().includes(q) || SECTOR_LABELS[s][lang].toLowerCase().includes(q)
+        ) ||
+        entry.tags.some((tag) => tag.toLowerCase().includes(q))
       );
     });
-  }, [search, kindFilter, sectorFilter]);
+  }, [search, kindFilter, sectorFilter, lang]);
 
   const visibleEntries = filtered.slice(0, visibleCount);
   const projectCount = DIRECTORY_ENTRIES.filter((e) => e.kind === 'project').length;
@@ -87,7 +110,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 color: '#555',
               }}
             >
-              by{' '}
+              {t.byPrefix}{' '}
               <a
                 href="https://bettergov.ph"
                 target="_blank"
@@ -100,27 +123,36 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
           </div>
           <nav aria-label="Sections" className="compact-nav">
             <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              Open Data
+              {t.nav.openData}
             </a>
             <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              Budget
+              {t.nav.budget}
             </a>
             <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              Elections
+              {t.nav.elections}
             </a>
             <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              Policy
+              {t.nav.policy}
             </a>
             <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              Tools
+              {t.nav.tools}
             </a>
             <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
-              Opinion
+              {t.nav.opinion}
             </a>
           </nav>
-          <a href="/" onClick={handleBackHome} className="compact-subscribe">
-            Subscribe
-          </a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <a
+              href="/civictools"
+              onClick={handleSwitchLang(lang === 'en' ? 'fil' : 'en')}
+              style={{ fontSize: 13, color: '#555', fontWeight: 500 }}
+            >
+              {lang === 'en' ? 'FIL' : 'EN'}
+            </a>
+            <a href="/" onClick={handleBackHome} className="compact-subscribe">
+              {t.subscribe}
+            </a>
+          </div>
         </div>
       </header>
 
@@ -149,7 +181,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 color: ACCENT,
               }}
             >
-              civictech.ph · 15 Sectors
+              {t.directory.kicker}
             </p>
             <h1
               className="directory-title"
@@ -162,7 +194,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 letterSpacing: '-0.02em',
               }}
             >
-              Civic Tech &amp; CSO Directory
+              {t.directory.title}
             </h1>
             <p
               style={{
@@ -173,8 +205,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 color: '#444',
               }}
             >
-              {DIRECTORY_ENTRIES.length} civic tech projects and Civil Society Organizations
-              migrated from OpenBayan.org and organized across 15 Philippine sectors.
+              {DIRECTORY_ENTRIES.length} {t.directory.subtitleSuffix}
             </p>
           </div>
 
@@ -193,7 +224,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
               fontSize: 13,
             }}
           >
-            Submit via GitHub →
+            {t.directory.submitViaGithub}
           </a>
         </div>
 
@@ -222,7 +253,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
               minWidth: 0,
             }}
           >
-            <span className="filter-show-label">Show</span>
+            <span className="filter-show-label">{t.directory.showWord}</span>
             <select
               aria-label="Filter by type"
               value={kindFilter}
@@ -245,12 +276,18 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 textOverflow: 'ellipsis',
               }}
             >
-              <option value="all">All Entries ({DIRECTORY_ENTRIES.length})</option>
-              <option value="project">Civic Tech Projects ({projectCount})</option>
-              <option value="cso">CSOs ({csoCount})</option>
+              <option value="all">
+                {t.directory.allEntries} ({DIRECTORY_ENTRIES.length})
+              </option>
+              <option value="project">
+                {t.directory.civicTechProjects} ({projectCount})
+              </option>
+              <option value="cso">
+                {t.directory.csos} ({csoCount})
+              </option>
             </select>
 
-            <span style={{ flexShrink: 0 }}>in</span>
+            <span style={{ flexShrink: 0 }}>{t.directory.inWord}</span>
             <select
               aria-label="Filter by sector"
               value={sectorFilter}
@@ -273,10 +310,10 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 textOverflow: 'ellipsis',
               }}
             >
-              <option value="all">Every Sector</option>
+              <option value="all">{t.directory.everySector}</option>
               {SECTORS.map((sector) => (
                 <option key={sector} value={sector}>
-                  {sector} ({sectorCounts.get(sector) ?? 0})
+                  {SECTOR_LABELS[sector][lang]} ({sectorCounts.get(sector) ?? 0})
                 </option>
               ))}
             </select>
@@ -285,8 +322,8 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
           <input
             type="search"
             className="directory-search"
-            aria-label="Search projects and CSOs"
-            placeholder="Search projects, CSOs, or tags..."
+            aria-label={t.directory.searchPlaceholder}
+            placeholder={t.directory.searchPlaceholder}
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -320,7 +357,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 fontSize: 22,
               }}
             >
-              No matching entries found.
+              {t.directory.noResults}
             </p>
             <button
               type="button"
@@ -337,13 +374,14 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 cursor: 'pointer',
               }}
             >
-              Reset filters
+              {t.directory.resetFilters}
             </button>
           </div>
         ) : (
           <>
             <p style={{ margin: '0 0 16px', fontSize: 13, color: '#555' }}>
-              Showing {visibleEntries.length} of {filtered.length} entries
+              {t.directory.showing} {visibleEntries.length} {t.directory.ofWord} {filtered.length}{' '}
+              {t.directory.entriesWord}
             </p>
 
             <div
@@ -385,17 +423,16 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                           color: ACCENT,
                         }}
                       >
-                        {entry.sectors.join(' · ')}
+                        {entry.sectors.map((s) => SECTOR_LABELS[s][lang]).join(' · ')}
                       </p>
                       <span
                         style={{
                           fontSize: 12,
                           color: '#555',
-                          textTransform: 'capitalize',
                           flexShrink: 0,
                         }}
                       >
-                        {entry.status}
+                        {STATUS_LABELS[entry.status]?.[lang] ?? entry.status}
                       </span>
                     </div>
                     <h2
@@ -410,7 +447,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                       {entry.title}
                     </h2>
                     <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: '#444' }}>
-                      {entry.summary}
+                      {getLocalizedSummary(entry.slug, entry.summary, lang, entry.summaryFil)}
                     </p>
                   </div>
 
@@ -453,7 +490,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                           rel="noreferrer"
                           style={{ color: ACCENT, fontWeight: 600 }}
                         >
-                          Visit →
+                          {t.directory.visit}
                         </a>
                       )}
                     </div>
@@ -477,7 +514,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                     cursor: 'pointer',
                   }}
                 >
-                  Show more ({filtered.length - visibleCount} remaining)
+                  {t.directory.showMore} ({filtered.length - visibleCount} {t.directory.remaining})
                 </button>
               </div>
             )}
@@ -518,33 +555,32 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 maxWidth: 380,
               }}
             >
-              An independent newsroom of BetterGov.ph, the volunteer-run movement for government
-              transparency in the Philippines.
+              {t.footer.desc}
             </p>
           </div>
           <div className="footer-links">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <span style={{ fontWeight: 600 }}>About</span>
+              <span style={{ fontWeight: 600 }}>{t.footer.about}</span>
               <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
-                Our mission
+                {t.footer.ourMission}
               </a>
               <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
-                Editorial standards
+                {t.footer.editorialStandards}
               </a>
               <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
-                Corrections
+                {t.footer.corrections}
               </a>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <span style={{ fontWeight: 600 }}>Get involved</span>
+              <span style={{ fontWeight: 600 }}>{t.footer.getInvolved}</span>
               <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
-                Volunteer
+                {t.footer.volunteer}
               </a>
               <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
-                Send a tip
+                {t.footer.sendATip}
               </a>
               <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
-                Contact
+                {t.footer.contact}
               </a>
             </div>
           </div>

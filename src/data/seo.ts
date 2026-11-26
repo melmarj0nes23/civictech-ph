@@ -1,7 +1,9 @@
+import type { Lang, Localized } from './i18n';
+
 export interface PageSeo {
   path: string;
-  title: string;
-  description: string;
+  title: Localized;
+  description: Localized;
   type: 'website' | 'article';
 }
 
@@ -11,29 +13,47 @@ export const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.png`;
 export const ROUTE_SEO: Record<'home' | 'civictools' | 'article', PageSeo> = {
   home: {
     path: '/',
-    title: 'Civic Tech - An Independent Newsroom by BetterGov.ph',
-    description:
-      'A directory of Philippine civic tech projects and Civil Society Organizations (CSOs) across 15 sectors, plus independent reporting on open data and digital government.',
+    title: {
+      en: 'Civic Tech - An Independent Newsroom by BetterGov.ph',
+      fil: 'Civic Tech - Malayang Newsroom ng BetterGov.ph',
+    },
+    description: {
+      en: 'A directory of Philippine civic tech projects and Civil Society Organizations (CSOs) across 15 sectors, plus independent reporting on open data and digital government.',
+      fil: 'Direktoryo ng mga proyektong civic tech at Civil Society Organization (CSO) sa 15 sektor sa Pilipinas, kasama ang malayang pag-uulat sa bukas na datos at digital na gobyerno.',
+    },
     type: 'website',
   },
   civictools: {
     path: '/civictools',
-    title: 'Civic Tech & CSO Directory — Civic Tech by BetterGov.ph',
-    description:
-      'Explore 200+ Philippine civic tech projects and Civil Society Organizations (CSOs) across 15 public-interest sectors.',
+    title: {
+      en: 'Civic Tech & CSO Directory — Civic Tech by BetterGov.ph',
+      fil: 'Direktoryo ng Civic Tech at CSO — Civic Tech ng BetterGov.ph',
+    },
+    description: {
+      en: 'Explore 200+ Philippine civic tech projects and Civil Society Organizations (CSOs) across 15 public-interest sectors.',
+      fil: 'Tuklasin ang 200+ proyektong civic tech at Civil Society Organization (CSO) sa 15 sektor sa Pilipinas.',
+    },
     type: 'website',
   },
   article: {
     path: '/article',
-    title: 'The volunteers rebuilding how Filipinos read the national budget — Civic Tech',
-    description:
-      'A loose network of engineers, researchers and students is turning thousands of pages of appropriations into something anyone can search, compare and question.',
+    title: {
+      en: 'The volunteers rebuilding how Filipinos read the national budget — Civic Tech',
+      fil: 'Ang mga boluntaryong nagbabago kung paano binabasa ng Pilipino ang pambansang badyet — Civic Tech',
+    },
+    description: {
+      en: 'A loose network of engineers, researchers and students is turning thousands of pages of appropriations into something anyone can search, compare and question.',
+      fil: 'Isang grupo ng mga inhinyero, mananaliksik at estudyante ang nagpapalit sa libu-libong pahina ng badyet upang madaling mahanap, maikumpara at mausisa ng sinuman.',
+    },
     type: 'article',
   },
 };
 
-export function applyDocumentSeo(seo: PageSeo) {
-  document.title = seo.title;
+export function applyDocumentSeo(seo: PageSeo, lang: Lang = 'en') {
+  const title = seo.title[lang];
+  const description = seo.description[lang];
+  document.documentElement.lang = lang === 'fil' ? 'tl' : 'en';
+  document.title = title;
 
   const setMeta = (selector: string, attr: 'name' | 'property', key: string, content: string) => {
     let el = document.head.querySelector<HTMLMetaElement>(selector);
@@ -45,13 +65,13 @@ export function applyDocumentSeo(seo: PageSeo) {
     el.setAttribute('content', content);
   };
 
-  setMeta('meta[name="description"]', 'name', 'description', seo.description);
+  setMeta('meta[name="description"]', 'name', 'description', description);
   setMeta('meta[property="og:type"]', 'property', 'og:type', seo.type);
   setMeta('meta[property="og:url"]', 'property', 'og:url', `${SITE_URL}${seo.path}`);
-  setMeta('meta[property="og:title"]', 'property', 'og:title', seo.title);
-  setMeta('meta[property="og:description"]', 'property', 'og:description', seo.description);
-  setMeta('meta[name="twitter:title"]', 'name', 'twitter:title', seo.title);
-  setMeta('meta[name="twitter:description"]', 'name', 'twitter:description', seo.description);
+  setMeta('meta[property="og:title"]', 'property', 'og:title', title);
+  setMeta('meta[property="og:description"]', 'property', 'og:description', description);
+  setMeta('meta[name="twitter:title"]', 'name', 'twitter:title', title);
+  setMeta('meta[name="twitter:description"]', 'name', 'twitter:description', description);
 
   let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
   if (!canonical) {

@@ -128,6 +128,7 @@ function readCollection(subDir, kind) {
       kind,
       title: data.title || slug,
       summary: data.summary || '',
+      ...(data.summary_fil ? { summaryFil: data.summary_fil } : {}),
       status: data.status || 'beta',
       sectors,
       legacySectors,

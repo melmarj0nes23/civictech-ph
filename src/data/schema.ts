@@ -30,6 +30,7 @@ export interface DirectoryEntry {
   kind: EntryKind;
   title: string;
   summary: string;
+  summaryFil?: string;
   status: Status;
   sectors: Sector[];
   legacySectors: string[];

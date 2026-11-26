@@ -1,13 +1,23 @@
 import type { MouseEvent } from 'react';
+import { TRANSLATIONS, type Lang } from '../data/i18n';
 
 const ACCENT = '#0B3D91';
 
 interface HomePageProps {
+  lang: Lang;
+  onLangChange: (lang: Lang) => void;
   onOpenArticle: () => void;
   onOpenCivicTools: () => void;
 }
 
-export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
+export function HomePage({
+  lang,
+  onLangChange,
+  onOpenArticle,
+  onOpenCivicTools,
+}: HomePageProps) {
+  const t = TRANSLATIONS[lang];
+
   const handleOpenArticle = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onOpenArticle();
@@ -27,22 +37,43 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
     e.preventDefault();
   };
 
+  const handleSwitchLang = (next: Lang) => (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    onLangChange(next);
+  };
+
   return (
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
       {/* Utility bar */}
       <div style={{ borderBottom: '1px solid #E5E5E5' }}>
         <div className="utility-bar-inner">
-          <span className="utility-date">Wednesday, 25 November 2026</span>
+          <span className="utility-date">{t.dateLabel}</span>
           <div className="utility-actions">
             <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-              <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
-                English
+              <a
+                href="/"
+                onClick={handleSwitchLang('en')}
+                aria-current={lang === 'en' ? 'true' : undefined}
+                style={{
+                  color: lang === 'en' ? '#111' : '#555',
+                  fontWeight: lang === 'en' ? 600 : 400,
+                }}
+              >
+                {t.english}
+              </a>
+              <a
+                href="/"
+                onClick={handleSwitchLang('fil')}
+                aria-current={lang === 'fil' ? 'true' : undefined}
+                style={{
+                  color: lang === 'fil' ? '#111' : '#555',
+                  fontWeight: lang === 'fil' ? 600 : 400,
+                }}
+              >
+                {t.filipino}
               </a>
               <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
-                Filipino
-              </a>
-              <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
-                Sign in
+                {t.signIn}
               </a>
             </div>
             <a
@@ -60,7 +91,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 alignItems: 'center',
               }}
             >
-              Subscribe
+              {t.subscribe}
             </a>
           </div>
         </div>
@@ -75,7 +106,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
           textAlign: 'center',
         }}
       >
-        <p className="masthead-date">Wednesday, 25 November 2026</p>
+        <p className="masthead-date">{t.dateLabel}</p>
         <div
           style={{
             display: 'inline-flex',
@@ -113,7 +144,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
             color: '#555',
           }}
         >
-          by{' '}
+          {t.byPrefix}{' '}
           <a
             href="https://bettergov.ph"
             target="_blank"
@@ -122,7 +153,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
           >
             BetterGov.ph
           </a>{' '}
-          &nbsp;·&nbsp; Technology, data and open government in the Philippines
+          &nbsp;·&nbsp; {t.taglineSuffix}
         </p>
       </header>
 
@@ -145,28 +176,28 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
           }}
         >
           <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            Open Data
+            {t.nav.openData}
           </a>
           <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            Budget
+            {t.nav.budget}
           </a>
           <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            Elections
+            {t.nav.elections}
           </a>
           <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            Policy
+            {t.nav.policy}
           </a>
           <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            Digital Services
+            {t.nav.digitalServices}
           </a>
           <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            Tools
+            {t.nav.tools}
           </a>
           <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            Opinion
+            {t.nav.opinion}
           </a>
           <a href="/" onClick={handleStayHome} style={{ padding: '14px 0' }}>
-            Community
+            {t.nav.community}
           </a>
         </div>
       </nav>
@@ -206,10 +237,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                   <circle cx="12" cy="13" r="3.5" />
                   <path d="M8 6l1.5-2h5L16 6" />
                 </svg>
-                <span>
-                  Lead photo · Volunteers at a laptop-strewn table during a civic hackathon in
-                  Manila
-                </span>
+                <span>{t.home.leadPhoto}</span>
               </div>
             </a>
             <p
@@ -222,7 +250,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 color: ACCENT,
               }}
             >
-              Open Data
+              {t.nav.openData}
             </p>
             <h2
               className="hero-title"
@@ -236,7 +264,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
               }}
             >
               <a href="/article" onClick={handleOpenArticle}>
-                The volunteers rebuilding how Filipinos read the national budget
+                {t.home.leadTitle}
               </a>
             </h2>
             <p
@@ -249,17 +277,17 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 maxWidth: 720,
               }}
             >
-              A loose network of engineers, researchers and students is turning thousands of pages
-              of appropriations into something anyone can search, compare and question.
+              {t.home.leadDeck}
             </p>
             <p style={{ margin: '16px 0 0', fontSize: 13, color: '#555' }}>
-              By <span style={{ color: '#111', fontWeight: 600 }}>[Author name]</span> &nbsp;·&nbsp;
-              8 min read
+              {t.home.byWord}{' '}
+              <span style={{ color: '#111', fontWeight: 600 }}>{t.home.authorPlaceholder}</span>{' '}
+              &nbsp;·&nbsp; {t.home.leadReadTime}
             </p>
           </article>
 
           <aside
-            aria-label="Top stories"
+            aria-label={t.home.topStories}
             style={{
               flex: '1 1 320px',
               minWidth: 0,
@@ -278,10 +306,11 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 paddingBottom: 10,
               }}
             >
-              Top stories
+              {t.home.topStories}
             </p>
             <a
-              href="#"
+              href="/"
+              onClick={handleStayHome}
               style={{
                 display: 'flex',
                 gap: 16,
@@ -300,7 +329,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     color: ACCENT,
                   }}
                 >
-                  Elections
+                  {t.nav.elections}
                 </p>
                 <p
                   style={{
@@ -311,15 +340,16 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  What a transparent canvassing dashboard should actually show
+                  {t.home.top1Title}
                 </p>
               </div>
               <div className="ph" style={{ width: 96, height: 96, flex: 'none', fontSize: 10 }}>
-                Photo
+                {t.home.photoShort}
               </div>
             </a>
             <a
-              href="#"
+              href="/"
+              onClick={handleStayHome}
               style={{
                 display: 'flex',
                 gap: 16,
@@ -338,7 +368,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     color: ACCENT,
                   }}
                 >
-                  Policy
+                  {t.nav.policy}
                 </p>
                 <p
                   style={{
@@ -349,15 +379,16 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  Freedom of Information, explained: how to file a request that gets answered
+                  {t.home.top2Title}
                 </p>
               </div>
               <div className="ph" style={{ width: 96, height: 96, flex: 'none', fontSize: 10 }}>
-                Photo
+                {t.home.photoShort}
               </div>
             </a>
             <a
-              href="#"
+              href="/"
+              onClick={handleStayHome}
               style={{
                 display: 'flex',
                 gap: 16,
@@ -376,7 +407,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     color: ACCENT,
                   }}
                 >
-                  Digital Services
+                  {t.nav.digitalServices}
                 </p>
                 <p
                   style={{
@@ -387,14 +418,14 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  Why so many .gov.ph websites still break on a phone
+                  {t.home.top3Title}
                 </p>
               </div>
               <div className="ph" style={{ width: 96, height: 96, flex: 'none', fontSize: 10 }}>
-                Photo
+                {t.home.photoShort}
               </div>
             </a>
-            <a href="#" style={{ display: 'flex', gap: 16, padding: '18px 0' }}>
+            <a href="/" onClick={handleStayHome} style={{ display: 'flex', gap: 16, padding: '18px 0' }}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p
                   style={{
@@ -406,7 +437,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     color: ACCENT,
                   }}
                 >
-                  Tools
+                  {t.nav.tools}
                 </p>
                 <p
                   style={{
@@ -417,17 +448,17 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  A field guide to spotting scam texts that impersonate government agencies
+                  {t.home.top4Title}
                 </p>
               </div>
               <div className="ph" style={{ width: 96, height: 96, flex: 'none', fontSize: 10 }}>
-                Photo
+                {t.home.photoShort}
               </div>
             </a>
           </aside>
         </section>
 
-        {/* Latest --> */}
+        {/* Latest */}
         <section
           aria-labelledby="latest"
           style={{ padding: '40px 0', borderBottom: '1px solid #E5E5E5' }}
@@ -452,10 +483,10 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 textTransform: 'uppercase',
               }}
             >
-              Latest
+              {t.home.latest}
             </h2>
-            <a href="#" style={{ fontSize: 13, color: '#555' }}>
-              View all →
+            <a href="/" onClick={handleStayHome} style={{ fontSize: 13, color: '#555' }}>
+              {t.home.viewAll}
             </a>
           </div>
           <div
@@ -466,9 +497,9 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
             }}
           >
             <article>
-              <a href="#" style={{ display: 'block' }}>
+              <a href="/" onClick={handleStayHome} style={{ display: 'block' }}>
                 <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-                  Photo · Jeepney traffic along a Manila avenue
+                  {t.home.latest1Photo}
                 </div>
                 <p
                   style={{
@@ -480,7 +511,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     color: ACCENT,
                   }}
                 >
-                  Open Data
+                  {t.nav.openData}
                 </p>
                 <h3
                   style={{
@@ -491,17 +522,17 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  Mapping public transport routes when the official data runs out
+                  {t.home.latest1Title}
                 </h3>
                 <p style={{ margin: '10px 0 0', fontSize: 15, lineHeight: 1.5, color: '#444' }}>
-                  How commuter-sourced maps are filling gaps that agencies have yet to publish.
+                  {t.home.latest1Deck}
                 </p>
               </a>
             </article>
             <article>
-              <a href="#" style={{ display: 'block' }}>
+              <a href="/" onClick={handleStayHome} style={{ display: 'block' }}>
                 <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-                  Photo · Session hall of the House of Representatives
+                  {t.home.latest2Photo}
                 </div>
                 <p
                   style={{
@@ -513,7 +544,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     color: ACCENT,
                   }}
                 >
-                  Budget
+                  {t.nav.budget}
                 </p>
                 <h3
                   style={{
@@ -524,18 +555,17 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  Reading the bicam report: a line-by-line guide for first-timers
+                  {t.home.latest2Title}
                 </h3>
                 <p style={{ margin: '10px 0 0', fontSize: 15, lineHeight: 1.5, color: '#444' }}>
-                  The stage of the budget cycle where the biggest changes are made, and the least is
-                  explained.
+                  {t.home.latest2Deck}
                 </p>
               </a>
             </article>
             <article>
-              <a href="#" style={{ display: 'block' }}>
+              <a href="/" onClick={handleStayHome} style={{ display: 'block' }}>
                 <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-                  Photo · Barangay hall with residents queuing outside
+                  {t.home.latest3Photo}
                 </div>
                 <p
                   style={{
@@ -547,7 +577,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     color: ACCENT,
                   }}
                 >
-                  Community
+                  {t.nav.community}
                 </p>
                 <h3
                   style={{
@@ -558,17 +588,17 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  Inside a barangay that put its procurement records online
+                  {t.home.latest3Title}
                 </h3>
                 <p style={{ margin: '10px 0 0', fontSize: 15, lineHeight: 1.5, color: '#444' }}>
-                  What changed for residents once contracts and suppliers became searchable.
+                  {t.home.latest3Deck}
                 </p>
               </a>
             </article>
             <article>
-              <a href="#" style={{ display: 'block' }}>
+              <a href="/" onClick={handleStayHome} style={{ display: 'block' }}>
                 <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-                  Photo · Close-up of a phone showing an e-government app
+                  {t.home.latest4Photo}
                 </div>
                 <p
                   style={{
@@ -580,7 +610,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     color: ACCENT,
                   }}
                 >
-                  Digital Services
+                  {t.nav.digitalServices}
                 </p>
                 <h3
                   style={{
@@ -591,10 +621,10 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  The case for one login across every government service
+                  {t.home.latest4Title}
                 </h3>
                 <p style={{ margin: '10px 0 0', fontSize: 15, lineHeight: 1.5, color: '#444' }}>
-                  Digital ID promises convenience. Here is what it has to get right on privacy first.
+                  {t.home.latest4Deck}
                 </p>
               </a>
             </article>
@@ -614,7 +644,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
           }}
         >
           <div className="ph" style={{ flex: '999 1 560px', minWidth: 0, aspectRatio: '21 / 9' }}>
-            Photo essay · Rice terraces at dawn, for a story on connectivity in upland provinces
+            {t.home.featurePhoto}
           </div>
           <div style={{ flex: '1 1 340px', minWidth: 0 }}>
             <p
@@ -627,7 +657,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 color: ACCENT,
               }}
             >
-              Long read
+              {t.home.longRead}
             </p>
             <h2
               id="feature"
@@ -640,7 +670,9 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 fontWeight: 500,
               }}
             >
-              <a href="#">Last mile, last in line: who gets left out when services go online</a>
+              <a href="/" onClick={handleStayHome}>
+                {t.home.featureTitle}
+              </a>
             </h2>
             <p
               style={{
@@ -651,12 +683,15 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 color: '#333',
               }}
             >
-              A reporting trip through municipalities where the nearest stable signal is a jeepney
-              ride away.
+              {t.home.featureDeck}
             </p>
             <p style={{ margin: '16px 0 0', fontSize: 13, color: '#555' }}>
-              By <span style={{ color: '#111', fontWeight: 600 }}>[Author name]</span> &nbsp;·&nbsp;
-              Photographs by <span style={{ color: '#111', fontWeight: 600 }}>[Photographer]</span>
+              {t.home.byWord}{' '}
+              <span style={{ color: '#111', fontWeight: 600 }}>{t.home.authorPlaceholder}</span>{' '}
+              &nbsp;·&nbsp; {t.home.photographsBy}{' '}
+              <span style={{ color: '#111', fontWeight: 600 }}>
+                {t.home.photographerPlaceholder}
+              </span>
             </p>
           </div>
         </section>
@@ -683,7 +718,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 paddingBottom: 10,
               }}
             >
-              Opinion
+              {t.nav.opinion}
             </h2>
             <div
               style={{
@@ -693,7 +728,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 paddingTop: 16,
               }}
             >
-              <a href="#" style={{ display: 'block' }}>
+              <a href="/" onClick={handleStayHome} style={{ display: 'block' }}>
                 <p
                   style={{
                     margin: 0,
@@ -703,11 +738,13 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     lineHeight: 1.3,
                   }}
                 >
-                  Open data is not a website. It is a habit.
+                  {t.home.opinion1}
                 </p>
-                <p style={{ margin: '10px 0 0', fontSize: 13, color: '#555' }}>[Columnist name]</p>
+                <p style={{ margin: '10px 0 0', fontSize: 13, color: '#555' }}>
+                  {t.home.columnistPlaceholder}
+                </p>
               </a>
-              <a href="#" style={{ display: 'block' }}>
+              <a href="/" onClick={handleStayHome} style={{ display: 'block' }}>
                 <p
                   style={{
                     margin: 0,
@@ -717,11 +754,13 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     lineHeight: 1.3,
                   }}
                 >
-                  Volunteers built it. Now government has to maintain it.
+                  {t.home.opinion2}
                 </p>
-                <p style={{ margin: '10px 0 0', fontSize: 13, color: '#555' }}>[Columnist name]</p>
+                <p style={{ margin: '10px 0 0', fontSize: 13, color: '#555' }}>
+                  {t.home.columnistPlaceholder}
+                </p>
               </a>
-              <a href="#" style={{ display: 'block' }}>
+              <a href="/" onClick={handleStayHome} style={{ display: 'block' }}>
                 <p
                   style={{
                     margin: 0,
@@ -731,9 +770,11 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     lineHeight: 1.3,
                   }}
                 >
-                  Let AI read the bills — but keep humans in the hearing room.
+                  {t.home.opinion3}
                 </p>
-                <p style={{ margin: '10px 0 0', fontSize: 13, color: '#555' }}>[Columnist name]</p>
+                <p style={{ margin: '10px 0 0', fontSize: 13, color: '#555' }}>
+                  {t.home.columnistPlaceholder}
+                </p>
               </a>
             </div>
           </div>
@@ -750,7 +791,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 paddingBottom: 10,
               }}
             >
-              Civic tools
+              {t.home.civicTools}
             </h2>
             <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
               <li style={{ borderBottom: '1px solid #E5E5E5' }}>
@@ -767,7 +808,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  Open Data Portal <span aria-hidden="true" style={{ color: ACCENT }}>→</span>
+                  {t.home.tool1} <span aria-hidden="true" style={{ color: ACCENT }}>→</span>
                 </a>
               </li>
               <li style={{ borderBottom: '1px solid #E5E5E5' }}>
@@ -784,7 +825,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  Budget Explorer <span aria-hidden="true" style={{ color: ACCENT }}>→</span>
+                  {t.home.tool2} <span aria-hidden="true" style={{ color: ACCENT }}>→</span>
                 </a>
               </li>
               <li style={{ borderBottom: '1px solid #E5E5E5' }}>
@@ -801,7 +842,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  ScamCheck <span aria-hidden="true" style={{ color: ACCENT }}>→</span>
+                  {t.home.tool3} <span aria-hidden="true" style={{ color: ACCENT }}>→</span>
                 </a>
               </li>
               <li>
@@ -817,7 +858,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  View All Tools <span aria-hidden="true" style={{ color: ACCENT }}>→</span>
+                  {t.home.tool4} <span aria-hidden="true" style={{ color: ACCENT }}>→</span>
                 </a>
               </li>
             </ul>
@@ -840,7 +881,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
               lineHeight: 1.15,
             }}
           >
-            The Civic Tech Weekly
+            {t.home.nlTitle}
           </h2>
           <p
             style={{
@@ -851,8 +892,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
               color: '#444',
             }}
           >
-            Our editors&apos; picks on data, digital government and the people building public
-            tools. Every Friday.
+            {t.home.nlDesc}
           </p>
           <form
             onSubmit={(e) => e.preventDefault()}
@@ -875,12 +915,12 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 clip: 'rect(0 0 0 0)',
               }}
             >
-              Email address
+              {t.home.nlEmailLabel}
             </label>
             <input
               id="nl-email"
               type="email"
-              placeholder="you@example.com"
+              placeholder={t.home.nlPlaceholder}
               style={{
                 flex: '1 1 260px',
                 minHeight: 48,
@@ -902,7 +942,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 cursor: 'pointer',
               }}
             >
-              Sign up
+              {t.home.nlSignUp}
             </button>
           </form>
         </section>
@@ -942,33 +982,32 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 maxWidth: 380,
               }}
             >
-              An independent newsroom of BetterGov.ph, the volunteer-run movement for government
-              transparency in the Philippines.
+              {t.footer.desc}
             </p>
           </div>
           <div className="footer-links">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <span style={{ fontWeight: 600 }}>About</span>
-              <a href="#" style={{ color: '#555' }}>
-                Our mission
+              <span style={{ fontWeight: 600 }}>{t.footer.about}</span>
+              <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
+                {t.footer.ourMission}
               </a>
-              <a href="#" style={{ color: '#555' }}>
-                Editorial standards
+              <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
+                {t.footer.editorialStandards}
               </a>
-              <a href="#" style={{ color: '#555' }}>
-                Corrections
+              <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
+                {t.footer.corrections}
               </a>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <span style={{ fontWeight: 600 }}>Get involved</span>
-              <a href="#" style={{ color: '#555' }}>
-                Volunteer
+              <span style={{ fontWeight: 600 }}>{t.footer.getInvolved}</span>
+              <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
+                {t.footer.volunteer}
               </a>
-              <a href="#" style={{ color: '#555' }}>
-                Send a tip
+              <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
+                {t.footer.sendATip}
               </a>
-              <a href="#" style={{ color: '#555' }}>
-                Contact
+              <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
+                {t.footer.contact}
               </a>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { Lang } from './data/i18n';
 import { applyDocumentSeo, ROUTE_SEO } from './data/seo';
 import { ArticlePage } from './pages/ArticlePage';
 import { DirectoryPage } from './pages/DirectoryPage';
@@ -13,18 +14,38 @@ function getPageFromPath(): Page {
   return 'home';
 }
 
+function getInitialLang(): Lang {
+  try {
+    const saved = window.localStorage.getItem('civictech-lang');
+    if (saved === 'fil' || saved === 'en') return saved;
+  } catch {
+    // ignore storage access errors
+  }
+  return 'en';
+}
+
 export function App() {
   const [page, setPage] = useState<Page>(getPageFromPath);
+  const [lang, setLang] = useState<Lang>(getInitialLang);
 
   useEffect(() => {
-    applyDocumentSeo(ROUTE_SEO[page]);
-  }, [page]);
+    applyDocumentSeo(ROUTE_SEO[page], lang);
+  }, [page, lang]);
 
   useEffect(() => {
     const onPopState = () => setPage(getPageFromPath());
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
+
+  const handleLangChange = (nextLang: Lang) => {
+    setLang(nextLang);
+    try {
+      window.localStorage.setItem('civictech-lang', nextLang);
+    } catch {
+      // ignore storage access errors
+    }
+  };
 
   const navigate = (next: Page) => {
     const targetPath = next === 'home' ? '/' : `/${next}`;
@@ -38,6 +59,8 @@ export function App() {
   if (page === 'article') {
     return (
       <ArticlePage
+        lang={lang}
+        onLangChange={handleLangChange}
         onBackHome={() => navigate('home')}
         onOpenCivicTools={() => navigate('civictools')}
       />
@@ -45,11 +68,19 @@ export function App() {
   }
 
   if (page === 'civictools') {
-    return <DirectoryPage onBackHome={() => navigate('home')} />;
+    return (
+      <DirectoryPage
+        lang={lang}
+        onLangChange={handleLangChange}
+        onBackHome={() => navigate('home')}
+      />
+    );
   }
 
   return (
     <HomePage
+      lang={lang}
+      onLangChange={handleLangChange}
       onOpenArticle={() => navigate('article')}
       onOpenCivicTools={() => navigate('civictools')}
     />
