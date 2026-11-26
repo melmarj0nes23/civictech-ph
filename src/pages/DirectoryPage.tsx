@@ -213,14 +213,15 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
           <div
             style={{
               display: 'flex',
-              flexWrap: 'wrap',
+              flexWrap: 'nowrap',
               alignItems: 'center',
-              gap: 8,
-              fontSize: 16,
+              gap: 6,
+              fontSize: 15,
               color: '#333',
+              maxWidth: '100%',
+              minWidth: 0,
             }}
           >
-            <span>Show</span>
             <select
               aria-label="Filter by type"
               value={kindFilter}
@@ -232,13 +233,15 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 border: 'none',
                 borderBottom: '1px solid #DADADA',
                 background: 'transparent',
-                padding: '4px 6px 4px 2px',
+                padding: '4px 4px 4px 0',
                 fontFamily: 'Inter, system-ui, sans-serif',
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: 600,
                 color: '#111',
                 cursor: 'pointer',
-                maxWidth: '100%',
+                minWidth: 0,
+                flexShrink: 1,
+                textOverflow: 'ellipsis',
               }}
             >
               <option value="all">All Entries ({DIRECTORY_ENTRIES.length})</option>
@@ -246,7 +249,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
               <option value="cso">CSOs ({csoCount})</option>
             </select>
 
-            <span>in</span>
+            <span style={{ flexShrink: 0 }}>in</span>
             <select
               aria-label="Filter by sector"
               value={sectorFilter}
@@ -258,13 +261,15 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 border: 'none',
                 borderBottom: '1px solid #DADADA',
                 background: 'transparent',
-                padding: '4px 6px 4px 2px',
+                padding: '4px 4px 4px 0',
                 fontFamily: 'Inter, system-ui, sans-serif',
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: 600,
                 color: '#111',
                 cursor: 'pointer',
-                maxWidth: '100%',
+                minWidth: 0,
+                flexShrink: 1,
+                textOverflow: 'ellipsis',
               }}
             >
               <option value="all">Every Sector</option>
