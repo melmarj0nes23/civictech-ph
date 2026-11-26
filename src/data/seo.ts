@@ -18,7 +18,7 @@ export const ROUTE_SEO: Record<'home' | 'civictools' | 'article', PageSeo> = {
   },
   civictools: {
     path: '/civictools',
-    title: 'Civic Tech & CSO Directory (15 Sectors) — Civic Tech by BetterGov.ph',
+    title: 'Civic Tech & CSO Directory — Civic Tech by BetterGov.ph',
     description:
       'Explore 200+ Philippine civic tech projects and Civil Society Organizations (CSOs) across 15 public-interest sectors.',
     type: 'website',
