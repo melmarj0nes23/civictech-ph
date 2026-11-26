@@ -56,10 +56,12 @@ a:hover {
 }
 
 .utility-actions {
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   gap: 8px 20px;
   align-items: center;
+  justify-content: space-between;
 }
 
 /* Compact header (Article & Civic Tools) */
