@@ -29,7 +29,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
               onClick={handleBackHome}
               style={{
                 display: 'inline-flex',
-                alignItems: 'center',
+                alignItems: 'baseline',
                 gap: 8,
                 fontFamily: 'Newsreader, Georgia, serif',
                 fontSize: 32,
@@ -40,7 +40,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
               <img
                 src="/logo.png"
                 alt="Civic Tech logo"
-                style={{ height: 28, width: 'auto', display: 'block' }}
+                style={{ height: 28, width: 'auto', display: 'block', alignSelf: 'center' }}
               />
               Civic Tech
             </a>

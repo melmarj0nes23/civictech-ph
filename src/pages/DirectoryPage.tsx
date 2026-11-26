@@ -64,7 +64,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
               onClick={handleBackHome}
               style={{
                 display: 'inline-flex',
-                alignItems: 'center',
+                alignItems: 'baseline',
                 gap: 8,
                 fontFamily: 'Newsreader, Georgia, serif',
                 fontSize: 32,
@@ -75,7 +75,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
               <img
                 src="/logo.png"
                 alt="Civic Tech logo"
-                style={{ height: 28, width: 'auto', display: 'block' }}
+                style={{ height: 28, width: 'auto', display: 'block', alignSelf: 'center' }}
               />
               Civic Tech
             </a>
