@@ -257,6 +257,9 @@ const en = {
     volunteer: 'Volunteer',
     sendATip: 'Send a tip',
     contact: 'Contact',
+    source: 'Source',
+    github: 'GitHub',
+    reportProblem: 'Report a problem',
   },
 } as const;
 
@@ -454,6 +457,9 @@ const fil: TranslationSchema = {
     volunteer: 'Magboluntaryo',
     sendATip: 'Magpadala ng tip',
     contact: 'Makipag-ugnayan',
+    source: 'Pinagmulan',
+    github: 'GitHub',
+    reportProblem: 'Mag-ulat ng problema',
   },
 };
 

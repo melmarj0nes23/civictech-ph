@@ -125,6 +125,25 @@ export function Footer({
               {t.footer.contact}
             </a>
           </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <span style={{ fontWeight: 600 }}>{t.footer.source}</span>
+            <a
+              href="https://github.com/melmarj0nes23/civictech-ph"
+              target="_blank"
+              rel="noreferrer"
+              style={{ color: '#555' }}
+            >
+              {t.footer.github}
+            </a>
+            <a
+              href="https://github.com/melmarj0nes23/civictech-ph/issues"
+              target="_blank"
+              rel="noreferrer"
+              style={{ color: '#555' }}
+            >
+              {t.footer.reportProblem}
+            </a>
+          </div>
         </div>
       </div>
     </footer>
