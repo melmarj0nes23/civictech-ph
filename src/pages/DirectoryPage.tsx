@@ -470,35 +470,69 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
         )}
       </main>
 
-      <footer style={{ borderTop: '1px solid #E5E5E5' }}>
+      <footer style={{ borderTop: '1px solid #111', marginTop: 8 }}>
         <div
           style={{
             maxWidth: 1240,
             margin: '0 auto',
-            padding: 24,
+            padding: '36px 24px 48px',
             display: 'flex',
             flexWrap: 'wrap',
-            gap: 12,
+            gap: 32,
             justifyContent: 'space-between',
-            fontSize: 13,
-            color: '#555',
+            alignItems: 'flex-start',
           }}
         >
-          <span>Civic Tech is an independent newsroom &amp; directory of BetterGov.ph.</span>
-          <span>
-            <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
-              Newsroom
-            </a>{' '}
-            &nbsp;·&nbsp;{' '}
-            <a
-              href="https://github.com/bettergovph/openbayan.org"
-              target="_blank"
-              rel="noreferrer"
-              style={{ color: '#555' }}
+          <div style={{ flex: '1 1 320px' }}>
+            <p
+              style={{
+                margin: 0,
+                fontFamily: 'Newsreader, Georgia, serif',
+                fontSize: 32,
+                fontWeight: 600,
+              }}
             >
-              OpenBayan.org GitHub
-            </a>
-          </span>
+              Civic Tech
+            </p>
+            <p
+              style={{
+                margin: '8px 0 0',
+                fontSize: 14,
+                lineHeight: 1.5,
+                color: '#555',
+                maxWidth: 380,
+              }}
+            >
+              An independent newsroom of BetterGov.ph, the volunteer-run movement for government
+              transparency in the Philippines.
+            </p>
+          </div>
+          <div className="footer-links">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <span style={{ fontWeight: 600 }}>About</span>
+              <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
+                Our mission
+              </a>
+              <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
+                Editorial standards
+              </a>
+              <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
+                Corrections
+              </a>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <span style={{ fontWeight: 600 }}>Get involved</span>
+              <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
+                Volunteer
+              </a>
+              <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
+                Send a tip
+              </a>
+              <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
+                Contact
+              </a>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
