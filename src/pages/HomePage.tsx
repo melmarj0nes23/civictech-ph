@@ -107,8 +107,16 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
             color: '#555',
           }}
         >
-          by <span style={{ color: ACCENT, fontWeight: 600 }}>BetterGov.ph</span> &nbsp;·&nbsp;
-          Technology, data and open government in the Philippines
+          by{' '}
+          <a
+            href="https://bettergov.ph"
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: ACCENT, fontWeight: 600 }}
+          >
+            BetterGov.ph
+          </a>{' '}
+          &nbsp;·&nbsp; Technology, data and open government in the Philippines
         </p>
       </header>
 

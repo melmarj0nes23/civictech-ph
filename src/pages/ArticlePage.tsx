@@ -34,12 +34,10 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
             justifyContent: 'space-between',
           }}
         >
-          <a
-            href="/"
-            onClick={handleBackHome}
-            style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}
-          >
-            <span
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+            <a
+              href="/"
+              onClick={handleBackHome}
               style={{
                 fontFamily: 'Newsreader, Georgia, serif',
                 fontSize: 32,
@@ -48,7 +46,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
               }}
             >
               Civic Tech
-            </span>
+            </a>
             <span
               style={{
                 fontSize: 11,
@@ -57,9 +55,17 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
                 color: '#555',
               }}
             >
-              by <span style={{ color: ACCENT, fontWeight: 600 }}>BetterGov.ph</span>
+              by{' '}
+              <a
+                href="https://bettergov.ph"
+                target="_blank"
+                rel="noreferrer"
+                style={{ color: ACCENT, fontWeight: 600 }}
+              >
+                BetterGov.ph
+              </a>
             </span>
-          </a>
+          </div>
           <nav
             aria-label="Sections"
             style={{
