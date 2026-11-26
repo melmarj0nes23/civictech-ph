@@ -11,7 +11,7 @@ export const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.png`;
 export const ROUTE_SEO: Record<'home' | 'civictools' | 'article', PageSeo> = {
   home: {
     path: '/',
-    title: 'Civic Tech by BetterGov.ph — Technology, Data & Open Government in the Philippines',
+    title: 'Civic Tech - An Independent Newsroom by BetterGov.ph',
     description:
       'A directory of Philippine civic tech projects and Civil Society Organizations (CSOs) across 15 sectors, plus independent reporting on open data and digital government.',
     type: 'website',
