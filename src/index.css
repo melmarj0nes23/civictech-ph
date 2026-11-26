@@ -1,14 +1,6 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html,
 body {
   margin: 0;
   background: #fff;
-  overflow-x: hidden;
 }
 
 a {
@@ -124,6 +116,11 @@ a:hover {
 }
 
 @media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
   .masthead-title {
     font-size: 46px !important;
   }
