@@ -200,10 +200,16 @@ a:hover {
     font-size: 26px !important;
   }
 
-  .compact-subscribe {
+  .compact-actions {
     order: 2;
     flex: 0 0 auto;
     align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 10px !important;
+  }
+
+  .compact-subscribe {
     min-height: 38px;
     padding: 0 14px;
   }

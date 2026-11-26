@@ -152,7 +152,7 @@ export function DirectoryPage({
               {t.nav.opinion}
             </a>
           </nav>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div className="compact-actions" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <a
               href="/civictools"
               onClick={handleSwitchLang(lang === 'en' ? 'fil' : 'en')}
