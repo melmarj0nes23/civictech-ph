@@ -31,31 +31,20 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
       {/* Utility bar */}
       <div style={{ borderBottom: '1px solid #E5E5E5' }}>
-        <div
-          style={{
-            maxWidth: 1240,
-            margin: '0 auto',
-            padding: '10px 24px',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 12,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            fontSize: 13,
-            color: '#555',
-          }}
-        >
+        <div className="utility-bar-inner">
           <span>Wednesday, 25 November 2026</span>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 20px', alignItems: 'center' }}>
-            <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
-              English
-            </a>
-            <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
-              Filipino
-            </a>
-            <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
-              Sign in
-            </a>
+          <div className="utility-actions">
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+              <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
+                English
+              </a>
+              <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
+                Filipino
+              </a>
+              <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
+                Sign in
+              </a>
+            </div>
             <a
               href="/newsletter"
               onClick={handleScrollNewsletter}

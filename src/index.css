@@ -41,6 +41,68 @@ a:hover {
   margin: 0 0 24px;
 }
 
+/* Utility bar (Homepage) */
+.utility-bar-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 10px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #555;
+}
+
+.utility-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  align-items: center;
+}
+
+/* Compact header (Article & Civic Tools) */
+.compact-header-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.compact-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.compact-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.compact-subscribe {
+  background: #0B3D91;
+  color: #fff;
+  padding: 0 16px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.compact-subscribe:hover {
+  color: #fff;
+}
+
 .share-rail {
   flex: 0 0 auto;
   display: flex;
@@ -50,6 +112,54 @@ a:hover {
 }
 
 @media (max-width: 768px) {
+  .utility-bar-inner {
+    padding: 10px 16px;
+  }
+
+  .utility-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px 12px;
+  }
+
+  .compact-header-inner {
+    padding: 12px 16px;
+    gap: 10px 12px;
+  }
+
+  .compact-brand {
+    order: 1;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .compact-subscribe {
+    order: 2;
+    min-height: 36px;
+    padding: 0 14px;
+  }
+
+  .compact-nav {
+    order: 3;
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0 18px;
+    padding-top: 8px;
+    border-top: 1px solid #E5E5E5;
+  }
+
+  .compact-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .compact-nav a {
+    white-space: nowrap;
+    padding: 6px 0 !important;
+  }
+
   .share-rail {
     flex-direction: row;
     flex: 1 1 100%;

@@ -57,19 +57,8 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
       {/* Compact header */}
       <header style={{ borderBottom: '1px solid #E5E5E5' }}>
-        <div
-          style={{
-            maxWidth: 1240,
-            margin: '0 auto',
-            padding: '12px 24px',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '12px 32px',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+        <div className="compact-header-inner">
+          <div className="compact-brand">
             <a
               href="/"
               onClick={handleBackHome}
@@ -101,16 +90,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
               </a>
             </span>
           </div>
-          <nav
-            aria-label="Sections"
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '4px 24px',
-              fontSize: 14,
-              fontWeight: 500,
-            }}
-          >
+          <nav aria-label="Sections" className="compact-nav">
             <a href="/" onClick={handleBackHome} style={{ padding: '12px 0' }}>
               Open Data
             </a>
@@ -130,20 +110,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
               Opinion
             </a>
           </nav>
-          <a
-            href="/"
-            onClick={handleBackHome}
-            style={{
-              background: ACCENT,
-              color: '#fff',
-              padding: '0 16px',
-              minHeight: 44,
-              display: 'inline-flex',
-              alignItems: 'center',
-              fontWeight: 600,
-              fontSize: 13,
-            }}
-          >
+          <a href="/" onClick={handleBackHome} className="compact-subscribe">
             Subscribe
           </a>
         </div>
