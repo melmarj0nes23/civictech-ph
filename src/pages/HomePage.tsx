@@ -931,7 +931,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
               transparency in the Philippines.
             </p>
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 48, fontSize: 14 }}>
+          <div className="footer-links">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <span style={{ fontWeight: 600 }}>About</span>
               <a href="#" style={{ color: '#555' }}>

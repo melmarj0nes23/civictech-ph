@@ -115,6 +115,13 @@ a:hover {
   padding-top: 6px;
 }
 
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 48px;
+  font-size: 14px;
+}
+
 @media (max-width: 768px) {
   html,
   body {
@@ -209,5 +216,15 @@ a:hover {
     flex-direction: row;
     flex: 1 1 100%;
     padding-top: 0;
+  }
+
+  .footer-links {
+    width: 100%;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .footer-links > div:last-child {
+    text-align: right;
   }
 }
