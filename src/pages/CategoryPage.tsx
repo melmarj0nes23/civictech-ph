@@ -97,7 +97,7 @@ export function CategoryPage({
             </span>
           </div>
           <nav aria-label="Sections" className="compact-nav">
-            {CATEGORIES.slice(0, 6).map((cat) => {
+            {CATEGORIES.map((cat) => {
               const active = cat.slug === category.slug;
               return (
                 <a

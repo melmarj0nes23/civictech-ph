@@ -166,7 +166,7 @@ export function SubmitPage({
             </span>
           </div>
           <nav aria-label="Sections" className="compact-nav">
-            {CATEGORIES.slice(0, 6).map((cat) => (
+            {CATEGORIES.map((cat) => (
               <a
                 key={cat.slug}
                 href={`/category/${cat.slug}`}
