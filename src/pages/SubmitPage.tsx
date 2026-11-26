@@ -1,4 +1,5 @@
-import { useState, type FormEvent, type MouseEvent } from 'react';
+import { useMemo, useState, type FormEvent, type MouseEvent } from 'react';
+import { DIRECTORY_ENTRIES } from '../data/directory';
 import { SECTOR_LABELS, TRANSLATIONS, type Lang } from '../data/i18n';
 import { SECTORS, type Sector } from '../data/sectors';
 
@@ -33,6 +34,14 @@ export function SubmitPage({
   const [tags, setTags] = useState('');
   const [maintainers, setMaintainers] = useState('');
 
+  const sortedEntries = useMemo(
+    () => [...DIRECTORY_ENTRIES].sort((a, b) => a.title.localeCompare(b.title)),
+    []
+  );
+  const [updateProject, setUpdateProject] = useState(sortedEntries[0]?.slug ?? '');
+  const [updateTitle, setUpdateTitle] = useState('');
+  const [updateBody, setUpdateBody] = useState('');
+
   const handleBackHome = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onBackHome();
@@ -64,6 +73,17 @@ export function SubmitPage({
     if (license.trim()) params.set('license', license.trim());
     if (tags.trim()) params.set('tags', tags.trim());
     if (maintainers.trim()) params.set('maintainers', maintainers.trim());
+
+    window.open(`${GITHUB_NEW_ISSUE_URL}?${params.toString()}`, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleUpdateSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    params.set('template', 'post-update.yml');
+    params.set('title', `Post an update: ${updateTitle.trim()}`);
+    params.set('project', updateProject);
+    params.set('body', updateBody.trim());
 
     window.open(`${GITHUB_NEW_ISSUE_URL}?${params.toString()}`, '_blank', 'noopener,noreferrer');
   };
@@ -429,6 +449,107 @@ export function SubmitPage({
             </button>
           </div>
         </form>
+
+        {/* Post an update */}
+        <section
+          id="update"
+          style={{
+            marginTop: 56,
+            paddingTop: 40,
+            borderTop: '1px solid #111',
+          }}
+        >
+          <h2
+            style={{
+              margin: 0,
+              fontFamily: 'Newsreader, Georgia, serif',
+              fontWeight: 500,
+              fontSize: 34,
+              lineHeight: 1.15,
+            }}
+          >
+            {t.submit.updateHeading}
+          </h2>
+          <p style={{ margin: '10px 0 24px', fontSize: 15, lineHeight: 1.5, color: '#444' }}>
+            {t.submit.updateLead}
+          </p>
+
+          <form
+            onSubmit={handleUpdateSubmit}
+            style={{ display: 'flex', flexDirection: 'column', gap: 20 }}
+          >
+            <div>
+              <label htmlFor="update-project" style={labelStyle}>
+                {t.submit.updateEntry} *
+              </label>
+              <select
+                id="update-project"
+                required
+                value={updateProject}
+                onChange={(e) => setUpdateProject(e.target.value)}
+                style={inputStyle}
+              >
+                {sortedEntries.map((entry) => (
+                  <option key={entry.slug} value={entry.slug}>
+                    {entry.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="update-title" style={labelStyle}>
+                {t.submit.updateTitle} *
+              </label>
+              <p style={{ margin: '0 0 6px', fontSize: 12, color: '#666' }}>
+                {t.submit.updateTitleHint}
+              </p>
+              <input
+                id="update-title"
+                required
+                maxLength={100}
+                value={updateTitle}
+                onChange={(e) => setUpdateTitle(e.target.value)}
+                style={inputStyle}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="update-body" style={labelStyle}>
+                {t.submit.updateBody} *
+              </label>
+              <p style={{ margin: '0 0 6px', fontSize: 12, color: '#666' }}>
+                {t.submit.updateBodyHint}
+              </p>
+              <textarea
+                id="update-body"
+                rows={4}
+                required
+                maxLength={1200}
+                value={updateBody}
+                onChange={(e) => setUpdateBody(e.target.value)}
+                style={{ ...inputStyle, minHeight: 110, resize: 'vertical' }}
+              />
+            </div>
+
+            <div style={{ paddingTop: 4 }}>
+              <button
+                type="submit"
+                style={{
+                  background: '#111',
+                  color: '#fff',
+                  border: 0,
+                  padding: '0 22px',
+                  minHeight: 46,
+                  font: '600 14px Inter, sans-serif',
+                  cursor: 'pointer',
+                }}
+              >
+                {t.submit.continueGithub}
+              </button>
+            </div>
+          </form>
+        </section>
       </main>
 
       <footer style={{ borderTop: '1px solid #111', marginTop: 8 }}>

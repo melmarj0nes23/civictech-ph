@@ -1,0 +1,27 @@
+name: Post an update
+description: Share progress on a project or CSO that is already in the civictech.ph directory.
+title: 'Post an update: '
+labels: ['directory-update']
+body:
+  - type: input
+    id: project
+    attributes:
+      label: Project or CSO
+      description: The slug or name of the entry in the directory.
+      placeholder: budget-portal
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: Update title
+      description: Up to 100 characters.
+    validations:
+      required: true
+  - type: textarea
+    id: body
+    attributes:
+      label: What changed
+      description: Up to 1,200 characters of plain text. What shipped, what you learned, or where you need help.
+    validations:
+      required: true
