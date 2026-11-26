@@ -77,11 +77,12 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
       >
         <p className="masthead-date">Wednesday, 25 November 2026</p>
         <h1
+          className="masthead-title"
           style={{
             margin: 0,
             fontFamily: 'Newsreader, Georgia, serif',
             fontWeight: 600,
-            fontSize: 'clamp(44px, 8vw, 84px)',
+            fontSize: 84,
             lineHeight: 1,
             letterSpacing: '-0.02em',
           }}
@@ -209,11 +210,12 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
               Open Data
             </p>
             <h2
+              className="hero-title"
               style={{
                 margin: 0,
                 fontFamily: 'Newsreader, Georgia, serif',
                 fontWeight: 500,
-                fontSize: 'clamp(28px, 4.5vw, 46px)',
+                fontSize: 46,
                 lineHeight: 1.08,
                 letterSpacing: '-0.015em',
               }}
@@ -614,10 +616,11 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
             </p>
             <h2
               id="feature"
+              className="feature-title"
               style={{
                 margin: 0,
                 fontFamily: 'Newsreader, Georgia, serif',
-                fontSize: 'clamp(26px, 3.8vw, 36px)',
+                fontSize: 36,
                 lineHeight: 1.12,
                 fontWeight: 500,
               }}

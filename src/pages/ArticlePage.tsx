@@ -97,11 +97,12 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
             Open Data · Feature
           </p>
           <h1
+            className="article-title"
             style={{
               margin: 0,
               fontFamily: 'Newsreader, Georgia, serif',
               fontWeight: 500,
-              fontSize: 'clamp(32px, 5.5vw, 58px)',
+              fontSize: 58,
               lineHeight: 1.06,
               letterSpacing: '-0.02em',
             }}
@@ -109,11 +110,12 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
             The volunteers rebuilding how Filipinos read the national budget
           </h1>
           <p
+            className="article-deck"
             style={{
               margin: '20px auto 0',
               maxWidth: 680,
               fontFamily: 'Newsreader, Georgia, serif',
-              fontSize: 'clamp(18px, 2.5vw, 22px)',
+              fontSize: 22,
               lineHeight: 1.45,
               color: '#333',
             }}
@@ -316,9 +318,10 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
               }}
             >
               <p
+                className="article-quote"
                 style={{
                   margin: 0,
-                  fontSize: 'clamp(22px, 3.5vw, 30px)',
+                  fontSize: 30,
                   lineHeight: 1.3,
                   fontStyle: 'italic',
                   fontWeight: 500,

@@ -124,6 +124,34 @@ a:hover {
 }
 
 @media (max-width: 768px) {
+  .masthead-title {
+    font-size: 46px !important;
+  }
+
+  .hero-title {
+    font-size: 30px !important;
+  }
+
+  .feature-title {
+    font-size: 28px !important;
+  }
+
+  .article-title {
+    font-size: 34px !important;
+  }
+
+  .article-deck {
+    font-size: 18px !important;
+  }
+
+  .article-quote {
+    font-size: 22px !important;
+  }
+
+  .directory-title {
+    font-size: 34px !important;
+  }
+
   .utility-bar-inner {
     padding: 10px 16px;
   }

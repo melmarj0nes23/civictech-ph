@@ -144,11 +144,12 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
               civictech.ph · 15 Sectors
             </p>
             <h1
+              className="directory-title"
               style={{
                 margin: 0,
                 fontFamily: 'Newsreader, Georgia, serif',
                 fontWeight: 500,
-                fontSize: 'clamp(32px, 5vw, 48px)',
+                fontSize: 48,
                 lineHeight: 1.08,
                 letterSpacing: '-0.02em',
               }}
