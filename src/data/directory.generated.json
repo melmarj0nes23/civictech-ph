@@ -1,0 +1,4552 @@
+[
+  {
+    "slug": "2026-budget-analysis",
+    "kind": "project",
+    "title": "2026 Budget Analysis",
+    "summary": "Explore an independent analysis of the 2026 Philippine national budget.",
+    "status": "stable",
+    "sectors": [
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Transparency"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "repoUrl": "https://github.com/bettergovph/2026-budget",
+    "website": "https://2026-budget.bettergov.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "asean-in-data",
+    "kind": "project",
+    "title": "ASEAN in Data",
+    "summary": "Compare economies, people, governance, and risks across Southeast Asia through sourced charts and downloadable datasets.",
+    "status": "stable",
+    "sectors": [
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Transparency"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://asean.bettergov.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "barangay-api",
+    "kind": "project",
+    "title": "Barangay API",
+    "summary": "|",
+    "status": "stable",
+    "sectors": [
+      "Government Services"
+    ],
+    "legacySectors": [
+      "DEPDev",
+      "Geography",
+      "Civic Tech"
+    ],
+    "tags": [
+      "barangay",
+      "fastapi",
+      "python",
+      "docker",
+      "pandas"
+    ],
+    "maintainers": [
+      "manuelb@hawitsu.xyz"
+    ],
+    "dateAdded": "2025-10-05",
+    "repoUrl": "https://github.com/bendlikeabamboo/barangay-api",
+    "website": "https://barangay-api.hawitsu.xyz/docs",
+    "demo": "https://barangay-api.hawitsu.xyz/docs",
+    "license": "MIT",
+    "body": "A containerizable FastAPI application for the list of Philippine regions,\nprovinces, cities, municipalities, and barangay according to the August 2025\nmasterlist from Philippine Standard Geographic Code (PSGC) Release.\n\nThis project is a FastAPI wrapper around the\n[barangay](https://pypi.org/project/barangay) package, providing a simple and\nefficient way to interact with the Philippine Standard Geographic Code (PSGC) data.\n\nFeatures include a performant fuzzy-search for barangays (0.02s per match), and\ntraversible REST API endpoints for Philippine administrative areas, and PSGC focused\nREST API endpoints."
+  },
+  {
+    "slug": "batas-watch",
+    "kind": "project",
+    "title": "Batas Watch",
+    "summary": "Track House and Senate bills from the 20th Congress with statuses, authors, committees, readable text, analysis, and official sources.",
+    "status": "stable",
+    "sectors": [
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Government"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://bills.juris.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "bettergov",
+    "kind": "project",
+    "title": "BetterGov.ph",
+    "summary": "A community‐led initiative to build a more usable Philippine national government website; open, volunteer-driven, aiming to improve how citizens access government services and information.",
+    "status": "beta",
+    "sectors": [
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Government",
+      "Technology",
+      "Civic Tech"
+    ],
+    "tags": [],
+    "maintainers": [
+      "volunteers@bettergov.ph"
+    ],
+    "dateAdded": "2025-09-22",
+    "lastUpdated": "2025-09-22",
+    "repoUrl": "https://github.com/bettergovph/bettergov",
+    "website": "https://bettergov.ph",
+    "license": "CC0-1.0 (public domain dedication)",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "body": "BetterGov.ph is an open-source, volunteer-driven project that reimagines the Philippine government’s online presence. Its goal is to make government information and services more accessible, transparent, and user-friendly through community-built technology."
+  },
+  {
+    "slug": "bettergov-sso-account-application",
+    "kind": "project",
+    "title": "BetterGov SSO Account Application",
+    "summary": "Dedicated identity provider that gives BetterGov users a single account with secure login, JWT-based SSO, and staged security upgrades.",
+    "status": "planning",
+    "sectors": [
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Government",
+      "Technology"
+    ],
+    "tags": [
+      "Identity",
+      "SSO"
+    ],
+    "maintainers": [
+      "marion"
+    ],
+    "dateAdded": "2025-09-24",
+    "lastUpdated": "2025-09-24",
+    "license": "Unknown",
+    "featured": false,
+    "body": "The BetterGov SSO Account Application will power unified sign-ins across BetterGov services, starting with username and password authentication, JWT token exchange, and basic audit logs, then expanding to encryption layers, multi-factor verification, social logins, and government ID integrations."
+  },
+  {
+    "slug": "betterlgu",
+    "kind": "project",
+    "title": "BetterLGU",
+    "summary": "Find and contribute to community-maintained local government transparency portals across the Philippines.",
+    "status": "stable",
+    "sectors": [
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Government"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://lgu.bettergov.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-aborlan-palawan",
+    "kind": "project",
+    "title": "BetterLGU: Aborlan, Palawan",
+    "summary": "Community-maintained transparency portal for Aborlan, Palawan, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterAborlan/betteraborlan",
+    "website": "https://betteraborlan.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-agoo-la-union",
+    "kind": "project",
+    "title": "BetterLGU: Agoo, La Union",
+    "summary": "Community-maintained transparency portal for Agoo, La Union, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/glennmarkgarcia/betteragoo",
+    "website": "https://betteragoo.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-aklan-province",
+    "kind": "project",
+    "title": "BetterLGU: Aklan Province",
+    "summary": "Community-maintained transparency portal for Aklan Province, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/fr4nc1stein/betteraklan",
+    "website": "https://betteraklan.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-alaminos-city-pangasinan",
+    "kind": "project",
+    "title": "BetterLGU: Alaminos City, Pangasinan",
+    "summary": "Community-maintained transparency portal for Alaminos City, Pangasinan, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterAlaminosCity/betteralaminoscity",
+    "website": "https://betteralaminoscity.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-alangalang-leyte",
+    "kind": "project",
+    "title": "BetterLGU: Alangalang, Leyte",
+    "summary": "Community-maintained transparency portal for Alangalang, Leyte, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/severinolorillajr/betteralangalang",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-albay-province",
+    "kind": "project",
+    "title": "BetterLGU: Albay Province",
+    "summary": "Community-maintained transparency portal for Albay Province, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/jsonrls/better-albay",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-allen-northern-samar",
+    "kind": "project",
+    "title": "BetterLGU: Allen, Northern Samar",
+    "summary": "Community-maintained transparency portal for Allen, Northern Samar, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/xandreiAThome/betterallen",
+    "website": "https://betterallen.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-angeles-city-pampanga",
+    "kind": "project",
+    "title": "BetterLGU: Angeles City, Pampanga",
+    "summary": "Community-maintained transparency portal for Angeles City, Pampanga, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/ongods/betterangeles",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-angono-rizal",
+    "kind": "project",
+    "title": "BetterLGU: Angono, Rizal",
+    "summary": "Community-maintained transparency portal for Angono, Rizal, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/cj-catacutan/betterangono",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-antipolo-city-rizal",
+    "kind": "project",
+    "title": "BetterLGU: Antipolo City, Rizal",
+    "summary": "Community-maintained transparency portal for Antipolo City, Rizal, listed in the BetterLGU directory.",
+    "status": "planning",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/frvfrvr/betterantipolo",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-aparri-cagayan",
+    "kind": "project",
+    "title": "BetterLGU: Aparri, Cagayan",
+    "summary": "Community-maintained transparency portal for Aparri, Cagayan, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/egiebk/betteraparri",
+    "website": "https://betteraparri.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-atimonan-quezon",
+    "kind": "project",
+    "title": "BetterLGU: Atimonan, Quezon",
+    "summary": "Community-maintained transparency portal for Atimonan, Quezon, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/EmsiPrds/betteratimonan",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-aurora-zamboanga-del-sur",
+    "kind": "project",
+    "title": "BetterLGU: Aurora, Zamboanga del Sur",
+    "summary": "Community-maintained transparency portal for Aurora, Zamboanga del Sur, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/Jayke770/betteraurora",
+    "website": "https://betteraurora.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-baao-camarines-sur",
+    "kind": "project",
+    "title": "BetterLGU: Baao, Camarines Sur",
+    "summary": "Community-maintained transparency portal for Baao, Camarines Sur, listed in the BetterLGU directory.",
+    "status": "planning",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/alvagenesis/betterbaao",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-bacolod-city-negros-occidental",
+    "kind": "project",
+    "title": "BetterLGU: Bacolod City, Negros Occidental",
+    "summary": "Community-maintained transparency portal for Bacolod City, Negros Occidental, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/betterbacolod/betterbacolod",
+    "website": "https://betterbacolod.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-bacoor-city-cavite",
+    "kind": "project",
+    "title": "BetterLGU: Bacoor City, Cavite",
+    "summary": "Community-maintained transparency portal for Bacoor City, Cavite, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/0phl/betterbacoor",
+    "website": "https://www.betterbacoor.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-bagac-bataan",
+    "kind": "project",
+    "title": "BetterLGU: Bagac, Bataan",
+    "summary": "Community-maintained transparency portal for Bagac, Bataan, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/betterbagac/betterbagac",
+    "website": "https://betterbagac.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-baguio-city-benguet",
+    "kind": "project",
+    "title": "BetterLGU: Baguio City, Benguet",
+    "summary": "Community-maintained transparency portal for Baguio City, Benguet, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/ashier/betterbaguio",
+    "website": "https://betterbaguio.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-balanga-city-bataan",
+    "kind": "project",
+    "title": "BetterLGU: Balanga City, Bataan",
+    "summary": "Community-maintained transparency portal for Balanga City, Bataan, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/AstroMC98/betterbalanga",
+    "website": "https://betterbalanga.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-baler-aurora",
+    "kind": "project",
+    "title": "BetterLGU: Baler, Aurora",
+    "summary": "Community-maintained transparency portal for Baler, Aurora, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/tekwicks/betterbaler",
+    "website": "https://betterbaler.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-basista-pangasinan",
+    "kind": "project",
+    "title": "BetterLGU: Basista, Pangasinan",
+    "summary": "Community-maintained transparency portal for Basista, Pangasinan, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/jadolation/betterbasista",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-batangas-city-batangas",
+    "kind": "project",
+    "title": "BetterLGU: Batangas City, Batangas",
+    "summary": "Community-maintained transparency portal for Batangas City, Batangas, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/jrbenriquez/betterbatangascity",
+    "website": "https://betterbatangascity.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-bauan-batangas",
+    "kind": "project",
+    "title": "BetterLGU: Bauan, Batangas",
+    "summary": "Community-maintained transparency portal for Bauan, Batangas, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/Arxenic/betterbauan",
+    "website": "https://betterbauan.vercel.app",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-bauang-la-union",
+    "kind": "project",
+    "title": "BetterLGU: Bauang, La Union",
+    "summary": "Community-maintained transparency portal for Bauang, La Union, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/loudaboi/betterbauang",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-bayawan-city-negros-oriental",
+    "kind": "project",
+    "title": "BetterLGU: Bayawan City, Negros Oriental",
+    "summary": "Community-maintained transparency portal for Bayawan City, Negros Oriental, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/rodneydelacruz/betterbayawan",
+    "website": "https://betterbayawan.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-bayombong-nueva-vizcaya",
+    "kind": "project",
+    "title": "BetterLGU: Bayombong, Nueva Vizcaya",
+    "summary": "Community-maintained transparency portal for Bayombong, Nueva Vizcaya, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/betterbayombong/betterbayombong",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-bicol-region",
+    "kind": "project",
+    "title": "BetterLGU: Bicol Region",
+    "summary": "Community-maintained transparency portal for Bicol Region, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/winclores/betterbicol",
+    "website": "https://betterbicol.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-binan-city-laguna",
+    "kind": "project",
+    "title": "BetterLGU: Biñan City, Laguna",
+    "summary": "Community-maintained transparency portal for Biñan City, Laguna, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/mimflar/betterbinan",
+    "website": "https://betterbinan.vercel.app/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-binangonan-rizal",
+    "kind": "project",
+    "title": "BetterLGU: Binangonan, Rizal",
+    "summary": "Community-maintained transparency portal for Binangonan, Rizal, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/betterbinangonan-devs/betterbinangonan",
+    "website": "https://betterbinangonan.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-bocaue-bulacan",
+    "kind": "project",
+    "title": "BetterLGU: Bocaue, Bulacan",
+    "summary": "Community-maintained transparency portal for Bocaue, Bulacan, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/ericksondelacruz/betterbocaue",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-botolan-zambales",
+    "kind": "project",
+    "title": "BetterLGU: Botolan, Zambales",
+    "summary": "Community-maintained transparency portal for Botolan, Zambales, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/SilentPing/better-botolan",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-bukidnon-province",
+    "kind": "project",
+    "title": "BetterLGU: Bukidnon Province",
+    "summary": "Community-maintained transparency portal for Bukidnon Province, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/Better-Bukidnon",
+    "website": "https://betterbukidnon.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-bulakan-bulacan",
+    "kind": "project",
+    "title": "BetterLGU: Bulakan, Bulacan",
+    "summary": "Community-maintained transparency portal for Bulakan, Bulacan, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/kuyacarlo/betterbulakan",
+    "website": "https://betterbulakan.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-cabanatuan-city-nueva-ecija",
+    "kind": "project",
+    "title": "BetterLGU: Cabanatuan City, Nueva Ecija",
+    "summary": "Community-maintained transparency portal for Cabanatuan City, Nueva Ecija, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterCabanatuan/bettercabanatuan",
+    "website": "https://bettercabanatuan.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-cabuyao-city-laguna",
+    "kind": "project",
+    "title": "BetterLGU: Cabuyao City, Laguna",
+    "summary": "Community-maintained transparency portal for Cabuyao City, Laguna, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/johnrommeloctaviano/better-cabuyao",
+    "website": "https://bettercabuyao.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-calamba-city-laguna",
+    "kind": "project",
+    "title": "BetterLGU: Calamba City, Laguna",
+    "summary": "Community-maintained transparency portal for Calamba City, Laguna, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/apajuan/bettercalamba",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-calapan-city-oriental-mindoro",
+    "kind": "project",
+    "title": "BetterLGU: Calapan City, Oriental Mindoro",
+    "summary": "Community-maintained transparency portal for Calapan City, Oriental Mindoro, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/bettercalapan/portal",
+    "website": "https://bettercalapan.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-calatagan-batangas",
+    "kind": "project",
+    "title": "BetterLGU: Calatagan, Batangas",
+    "summary": "Community-maintained transparency portal for Calatagan, Batangas, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/marcxxv/bettercalatagan",
+    "website": "https://bettercalatagan.vercel.app",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-calauan-laguna",
+    "kind": "project",
+    "title": "BetterLGU: Calauan, Laguna",
+    "summary": "Community-maintained transparency portal for Calauan, Laguna, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/bettercalauan/bettercalauan/tree/react-typescript",
+    "website": "https://bettercalauan.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-caloocan-city-metro-manila",
+    "kind": "project",
+    "title": "BetterLGU: Caloocan City, Metro Manila",
+    "summary": "Community-maintained transparency portal for Caloocan City, Metro Manila, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/angelicatanagras/bettercaloocan",
+    "website": "https://www.bettercaloocan.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-candaba-pampanga",
+    "kind": "project",
+    "title": "BetterLGU: Candaba, Pampanga",
+    "summary": "Community-maintained transparency portal for Candaba, Pampanga, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/bulsu-kpdeguzman/bettercandaba",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-carigara-leyte",
+    "kind": "project",
+    "title": "BetterLGU: Carigara, Leyte",
+    "summary": "Community-maintained transparency portal for Carigara, Leyte, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/severinolorillajr/bettercarigara",
+    "website": "https://bettercarigara.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-carmona-city-cavite",
+    "kind": "project",
+    "title": "BetterLGU: Carmona City, Cavite",
+    "summary": "Community-maintained transparency portal for Carmona City, Cavite, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/carlolim/bettercarmona",
+    "website": "https://bettercarmona.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-catanduanes-province",
+    "kind": "project",
+    "title": "BetterLGU: Catanduanes Province",
+    "summary": "Community-maintained transparency portal for Catanduanes Province, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/VLDCNDN/bettercatanduanes",
+    "website": "https://bettercatanduanes.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-catarman-northern-samar",
+    "kind": "project",
+    "title": "BetterLGU: Catarman, Northern Samar",
+    "summary": "Community-maintained transparency portal for Catarman, Northern Samar, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/jpdevdotcom/better-catarman-northsamar",
+    "website": "https://bettercatarman.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-catbalogan-city-samar",
+    "kind": "project",
+    "title": "BetterLGU: Catbalogan City, Samar",
+    "summary": "Community-maintained transparency portal for Catbalogan City, Samar, listed in the BetterLGU directory.",
+    "status": "planning",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/hplarozner/better-lgu-catbalogan",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-cavinti-laguna",
+    "kind": "project",
+    "title": "BetterLGU: Cavinti, Laguna",
+    "summary": "Community-maintained transparency portal for Cavinti, Laguna, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/klnwlks/bettercavinti",
+    "website": "https://bettercavinti.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-cebu-city-cebu",
+    "kind": "project",
+    "title": "BetterLGU: Cebu City, Cebu",
+    "summary": "Community-maintained transparency portal for Cebu City, Cebu, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/kyrenmearr/bettercebucity",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-corella-bohol",
+    "kind": "project",
+    "title": "BetterLGU: Corella, Bohol",
+    "summary": "Community-maintained transparency portal for Corella, Bohol, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/ashdroidcmd/bettercorella",
+    "website": "https://bettercorella.vercel.app",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-dagupan-city-pangasinan",
+    "kind": "project",
+    "title": "BetterLGU: Dagupan City, Pangasinan",
+    "summary": "Community-maintained transparency portal for Dagupan City, Pangasinan, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/jamesjmnz/better-dagupan",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-dasmarinas-city-cavite",
+    "kind": "project",
+    "title": "BetterLGU: Dasmariñas City, Cavite",
+    "summary": "Community-maintained transparency portal for Dasmariñas City, Cavite, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/Shuashuaa/BetterDasmarinas",
+    "website": "https://betterdasmarinas.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-davao-city-davao-del-sur",
+    "kind": "project",
+    "title": "BetterLGU: Davao City, Davao del Sur",
+    "summary": "Community-maintained transparency portal for Davao City, Davao del Sur, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/johnloydlao/betterdavao",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-davao-del-sur-province",
+    "kind": "project",
+    "title": "BetterLGU: Davao del Sur Province",
+    "summary": "Community-maintained transparency portal for Davao del Sur Province, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/ianmuico/better-davao-del-sur",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-dipolog-city-zamboanga-del-norte",
+    "kind": "project",
+    "title": "BetterLGU: Dipolog City, Zamboanga del Norte",
+    "summary": "Community-maintained transparency portal for Dipolog City, Zamboanga del Norte, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/z1on3/betterdipolog",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-gattaran-cagayan",
+    "kind": "project",
+    "title": "BetterLGU: Gattaran, Cagayan",
+    "summary": "Community-maintained transparency portal for Gattaran, Cagayan, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/ginxFromYt/bettergattaran",
+    "website": "https://bettergattaran.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-general-mariano-alvarez-cavite",
+    "kind": "project",
+    "title": "BetterLGU: General Mariano Alvarez, Cavite",
+    "summary": "Community-maintained transparency portal for General Mariano Alvarez, Cavite, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/bettergma/bettergma-gov",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-general-santos-city-south-cotabato",
+    "kind": "project",
+    "title": "BetterLGU: General Santos City, South Cotabato",
+    "summary": "Community-maintained transparency portal for General Santos City, South Cotabato, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/psalmcatulpos/bettergensan",
+    "website": "https://bettergensan.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-general-trias-city-cavite",
+    "kind": "project",
+    "title": "BetterLGU: General Trias City, Cavite",
+    "summary": "Community-maintained transparency portal for General Trias City, Cavite, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/kenhehe/betterGeneraltrias",
+    "website": "https://www.bettergeneraltrias.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-hermosa-bataan",
+    "kind": "project",
+    "title": "BetterLGU: Hermosa, Bataan",
+    "summary": "Community-maintained transparency portal for Hermosa, Bataan, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterHermosa/betterhermosa",
+    "website": "https://betterhermosa.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-hilongos-leyte",
+    "kind": "project",
+    "title": "BetterLGU: Hilongos, Leyte",
+    "summary": "Community-maintained transparency portal for Hilongos, Leyte, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/rolpppp/betterhilongos",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-iligan-city-lanao-del-norte",
+    "kind": "project",
+    "title": "BetterLGU: Iligan City, Lanao del Norte",
+    "summary": "Community-maintained transparency portal for Iligan City, Lanao del Norte, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/KishonShrill/BetterIligan",
+    "website": "https://betteriligancity.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-ilocos-norte-province",
+    "kind": "project",
+    "title": "BetterLGU: Ilocos Norte Province",
+    "summary": "Community-maintained transparency portal for Ilocos Norte Province, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/russellraed/betterilocosnorte",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-inabanga-bohol",
+    "kind": "project",
+    "title": "BetterLGU: Inabanga, Bohol",
+    "summary": "Community-maintained transparency portal for Inabanga, Bohol, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/gerardosocias29/betterinabanga",
+    "website": "https://betterinabanga.vercel.app",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-indang-cavite",
+    "kind": "project",
+    "title": "BetterLGU: Indang, Cavite",
+    "summary": "Community-maintained transparency portal for Indang, Cavite, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/michaustriaqa/betterindang",
+    "website": "https://betterindang.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-infanta-quezon",
+    "kind": "project",
+    "title": "BetterLGU: Infanta, Quezon",
+    "summary": "Community-maintained transparency portal for Infanta, Quezon, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/davisolpruvnik/better-infanta",
+    "website": "https://betterinfantaquezon.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-iriga-city-camarines-sur",
+    "kind": "project",
+    "title": "BetterLGU: Iriga City, Camarines Sur",
+    "summary": "Community-maintained transparency portal for Iriga City, Camarines Sur, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/ronhedwigzape/betteririga",
+    "website": "https://betteririga.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-kabankalan-city-negros-occidental",
+    "kind": "project",
+    "title": "BetterLGU: Kabankalan City, Negros Occidental",
+    "summary": "Community-maintained transparency portal for Kabankalan City, Negros Occidental, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/betterkabankalan/betterkabankalan",
+    "website": "https://betterkabankalan.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-kabugao-apayao",
+    "kind": "project",
+    "title": "BetterLGU: Kabugao, Apayao",
+    "summary": "Community-maintained transparency portal for Kabugao, Apayao, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/KuyaLoy/betterkabugao",
+    "website": "https://betterkabugao.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-koronadal-city-south-cotabato",
+    "kind": "project",
+    "title": "BetterLGU: Koronadal City, South Cotabato",
+    "summary": "Community-maintained transparency portal for Koronadal City, South Cotabato, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/janineooak/betterkoronadal",
+    "website": "https://betterkoronadal.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-labo-camarines-norte",
+    "kind": "project",
+    "title": "BetterLGU: Labo, Camarines Norte",
+    "summary": "Community-maintained transparency portal for Labo, Camarines Norte, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/kiembully/betterlabo",
+    "website": "https://betterlabo.vercel.app",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-lal-lo-cagayan",
+    "kind": "project",
+    "title": "BetterLGU: Lal-lo, Cagayan",
+    "summary": "Community-maintained transparency portal for Lal-lo, Cagayan, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/ianlabicani/betterlallo",
+    "website": "https://betterlallo.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-lapu-lapu-city-cebu",
+    "kind": "project",
+    "title": "BetterLGU: Lapu-Lapu City, Cebu",
+    "summary": "Community-maintained transparency portal for Lapu-Lapu City, Cebu, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterLapuLapu/betterlapulapu",
+    "website": "https://betterlapulapu.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-las-pinas-city-metro-manila",
+    "kind": "project",
+    "title": "BetterLGU: Las Piñas City, Metro Manila",
+    "summary": "Community-maintained transparency portal for Las Piñas City, Metro Manila, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/betterlaspinas/betterlaspinas",
+    "website": "https://betterlaspinas.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-leganes-iloilo",
+    "kind": "project",
+    "title": "BetterLGU: Leganes, Iloilo",
+    "summary": "Community-maintained transparency portal for Leganes, Iloilo, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/kedalisay/Better-Leganes",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-legazpi-city-albay",
+    "kind": "project",
+    "title": "BetterLGU: Legazpi City, Albay",
+    "summary": "Community-maintained transparency portal for Legazpi City, Albay, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/bpbelen/betterlegazpi",
+    "website": "https://www.betterlegazpi.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-libmanan-camarines-sur",
+    "kind": "project",
+    "title": "BetterLGU: Libmanan, Camarines Sur",
+    "summary": "Community-maintained transparency portal for Libmanan, Camarines Sur, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/enzox0/betterlibmanan",
+    "website": "https://betterlibmanan.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-liliw-laguna",
+    "kind": "project",
+    "title": "BetterLGU: Liliw, Laguna",
+    "summary": "Community-maintained transparency portal for Liliw, Laguna, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterLiliw/betterliliw",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-limay-bataan",
+    "kind": "project",
+    "title": "BetterLGU: Limay, Bataan",
+    "summary": "Community-maintained transparency portal for Limay, Bataan, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/AstroMC98/BetterLimay-Prod",
+    "website": "https://betterlimay.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-lingayen-pangasinan",
+    "kind": "project",
+    "title": "BetterLGU: Lingayen, Pangasinan",
+    "summary": "Community-maintained transparency portal for Lingayen, Pangasinan, listed in the BetterLGU directory.",
+    "status": "planning",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/rimzbravz/betterlingayen",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-lipa-city-batangas",
+    "kind": "project",
+    "title": "BetterLGU: Lipa City, Batangas",
+    "summary": "Community-maintained transparency portal for Lipa City, Batangas, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/Angelito1986/better-lipa",
+    "website": "https://betterlipaportal.netlify.app",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-llanera-nueva-ecija",
+    "kind": "project",
+    "title": "BetterLGU: Llanera, Nueva Ecija",
+    "summary": "Community-maintained transparency portal for Llanera, Nueva Ecija, listed in the BetterLGU directory.",
+    "status": "planning",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/heyerikfelipe/BetterLlanera",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-lopez-quezon",
+    "kind": "project",
+    "title": "BetterLGU: Lopez, Quezon",
+    "summary": "Community-maintained transparency portal for Lopez, Quezon, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/StanleyPangaruy/betterlopez",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-los-banos-laguna",
+    "kind": "project",
+    "title": "BetterLGU: Los Baños, Laguna",
+    "summary": "Community-maintained transparency portal for Los Baños, Laguna, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterLosBanos/betterlb",
+    "website": "https://betterlb.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-lucena-city-quezon",
+    "kind": "project",
+    "title": "BetterLGU: Lucena City, Quezon",
+    "summary": "Community-maintained transparency portal for Lucena City, Quezon, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/RyannKim327/BetterLucenaCity",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-lumban-laguna",
+    "kind": "project",
+    "title": "BetterLGU: Lumban, Laguna",
+    "summary": "Community-maintained transparency portal for Lumban, Laguna, listed in the BetterLGU directory.",
+    "status": "planning",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/avoabadier/betterlumban",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-maasin-city-southern-leyte",
+    "kind": "project",
+    "title": "BetterLGU: Maasin City, Southern Leyte",
+    "summary": "Community-maintained transparency portal for Maasin City, Southern Leyte, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/bettermaasin/BetterMaasin",
+    "website": "https://bettermaasin.netlify.app",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-maddela-quirino",
+    "kind": "project",
+    "title": "BetterLGU: Maddela, Quirino",
+    "summary": "Community-maintained transparency portal for Maddela, Quirino, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/Hendrizzzz/bettermaddela",
+    "website": "https://bettermaddela.vercel.app/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-magallanes-sorsogon",
+    "kind": "project",
+    "title": "BetterLGU: Magallanes, Sorsogon",
+    "summary": "Community-maintained transparency portal for Magallanes, Sorsogon, listed in the BetterLGU directory.",
+    "status": "planning",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/the-name-romel/bettermagallanes",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-makati-city-metro-manila",
+    "kind": "project",
+    "title": "BetterLGU: Makati City, Metro Manila",
+    "summary": "Community-maintained transparency portal for Makati City, Metro Manila, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/migi-macati/bettermakati",
+    "website": "https://bettermakati.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-malaybalay-city-bukidnon",
+    "kind": "project",
+    "title": "BetterLGU: Malaybalay City, Bukidnon",
+    "summary": "Community-maintained transparency portal for Malaybalay City, Bukidnon, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/lordzxxxx/BetterMC",
+    "website": "https://www.bettermalaybalay.cloud",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-malinao-albay",
+    "kind": "project",
+    "title": "BetterLGU: Malinao, Albay",
+    "summary": "Community-maintained transparency portal for Malinao, Albay, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/bettermalinao/bettermalinao",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-malolos-city-bulacan",
+    "kind": "project",
+    "title": "BetterLGU: Malolos City, Bulacan",
+    "summary": "Community-maintained transparency portal for Malolos City, Bulacan, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/francisdiaz22/bettermalolos",
+    "website": "https://bettermalolos.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-manila-city-metro-manila",
+    "kind": "project",
+    "title": "BetterLGU: Manila City, Metro Manila",
+    "summary": "Community-maintained transparency portal for Manila City, Metro Manila, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/grgdlm/bettermanila",
+    "website": "https://bettermanila.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-mapandan-pangasinan",
+    "kind": "project",
+    "title": "BetterLGU: Mapandan, Pangasinan",
+    "summary": "Community-maintained transparency portal for Mapandan, Pangasinan, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/jadolation/bettermapandan",
+    "website": "https://www.bettermapandan.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-marawi-city-lanao-del-sur",
+    "kind": "project",
+    "title": "BetterLGU: Marawi City, Lanao del Sur",
+    "summary": "Community-maintained transparency portal for Marawi City, Lanao del Sur, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/mamangcao/bettermarawi",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-marikina-city-metro-manila",
+    "kind": "project",
+    "title": "BetterLGU: Marikina City, Metro Manila",
+    "summary": "Community-maintained transparency portal for Marikina City, Metro Manila, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterMarikina/bettermarikina",
+    "website": "https://www.bettermarikina.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-marinduque-province",
+    "kind": "project",
+    "title": "BetterLGU: Marinduque Province",
+    "summary": "Community-maintained transparency portal for Marinduque Province, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/b0urbonn/bettermarinduque",
+    "website": "https://bettermarinduque.vercel.app",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-mati-city-davao-oriental",
+    "kind": "project",
+    "title": "BetterLGU: Mati City, Davao Oriental",
+    "summary": "Community-maintained transparency portal for Mati City, Davao Oriental, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/kaarlosasiang/bettermaticity",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-meycauayan-city-bulacan",
+    "kind": "project",
+    "title": "BetterLGU: Meycauayan City, Bulacan",
+    "summary": "Community-maintained transparency portal for Meycauayan City, Bulacan, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/shnflrsc/bettermeycauayan",
+    "website": "https://bettermeycauayan.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-miagao-iloilo",
+    "kind": "project",
+    "title": "BetterLGU: Miagao, Iloilo",
+    "summary": "Community-maintained transparency portal for Miagao, Iloilo, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/joebertj/bettermiagao",
+    "website": "https://bettermiagao.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-morong-rizal",
+    "kind": "project",
+    "title": "BetterLGU: Morong, Rizal",
+    "summary": "Community-maintained transparency portal for Morong, Rizal, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/carlodandan/bettermorong",
+    "website": "https://bettermorong.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-naguilian-la-union",
+    "kind": "project",
+    "title": "BetterLGU: Naguilian, La Union",
+    "summary": "Community-maintained transparency portal for Naguilian, La Union, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/baeyacorpuz/betternaguilianlu",
+    "website": "https://betternaguilianlu.vercel.app",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-naic-cavite",
+    "kind": "project",
+    "title": "BetterLGU: Naic, Cavite",
+    "summary": "Community-maintained transparency portal for Naic, Cavite, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/riecodes/betternaic",
+    "website": "https://betternaic.vercel.app",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-obando-bulacan",
+    "kind": "project",
+    "title": "BetterLGU: Obando, Bulacan",
+    "summary": "Community-maintained transparency portal for Obando, Bulacan, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/MigzAndroidz/better-obando",
+    "website": "https://betterobando.vercel.app",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-ocampo-camarines-sur",
+    "kind": "project",
+    "title": "BetterLGU: Ocampo, Camarines Sur",
+    "summary": "Community-maintained transparency portal for Ocampo, Camarines Sur, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/ejsinfuego/betterocampo",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-olongapo-city-zambales",
+    "kind": "project",
+    "title": "BetterLGU: Olongapo City, Zambales",
+    "summary": "Community-maintained transparency portal for Olongapo City, Zambales, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/eyronjohn/betterolongapo",
+    "website": "https://betterolongapo.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-oriental-mindoro-province",
+    "kind": "project",
+    "title": "BetterLGU: Oriental Mindoro Province",
+    "summary": "Community-maintained transparency portal for Oriental Mindoro Province, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/renthelautomations/betterorientalmindoro",
+    "website": "https://betterorientalmindoro.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-pagbilao-quezon",
+    "kind": "project",
+    "title": "BetterLGU: Pagbilao, Quezon",
+    "summary": "Community-maintained transparency portal for Pagbilao, Quezon, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/rallion90/better-pagbilao",
+    "website": "https://betterpagbilao.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-pagsanjan-laguna",
+    "kind": "project",
+    "title": "BetterLGU: Pagsanjan, Laguna",
+    "summary": "Community-maintained transparency portal for Pagsanjan, Laguna, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/rswlljms/betterpagsanjan",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-palo-leyte",
+    "kind": "project",
+    "title": "BetterLGU: Palo, Leyte",
+    "summary": "Community-maintained transparency portal for Palo, Leyte, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterPalo/BetterPalo",
+    "website": "https://betterpalo.betterpalogov.workers.dev",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-panabo-city-davao-del-norte",
+    "kind": "project",
+    "title": "BetterLGU: Panabo City, Davao del Norte",
+    "summary": "Community-maintained transparency portal for Panabo City, Davao del Norte, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/ProjectFuritsu/citizensconnectnabotech",
+    "website": "https://citizensconnectnabotech.vercel.app/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-pangasinan-province",
+    "kind": "project",
+    "title": "BetterLGU: Pangasinan Province",
+    "summary": "Community-maintained transparency portal for Pangasinan Province, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/jadolation/betterPangasinan",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-pasay-city-metro-manila",
+    "kind": "project",
+    "title": "BetterLGU: Pasay City, Metro Manila",
+    "summary": "Community-maintained transparency portal for Pasay City, Metro Manila, listed in the BetterLGU directory.",
+    "status": "planning",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/slvdrvncntjvr/betterpasay",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-pasig-city-metro-manila",
+    "kind": "project",
+    "title": "BetterLGU: Pasig City, Metro Manila",
+    "summary": "Community-maintained transparency portal for Pasig City, Metro Manila, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/ericvelasco-dev/betterpasig",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-piat-cagayan",
+    "kind": "project",
+    "title": "BetterLGU: Piat, Cagayan",
+    "summary": "Community-maintained transparency portal for Piat, Cagayan, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/JoScripty/betterpiat",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-pila-laguna",
+    "kind": "project",
+    "title": "BetterLGU: Pila, Laguna",
+    "summary": "Community-maintained transparency portal for Pila, Laguna, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/Necookie/betterpila",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-plaridel-bulacan",
+    "kind": "project",
+    "title": "BetterLGU: Plaridel, Bulacan",
+    "summary": "Community-maintained transparency portal for Plaridel, Bulacan, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/kai-dev00/betterplaridel",
+    "website": "https://betterplaridel-two.vercel.app/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-puerto-princesa-city-palawan",
+    "kind": "project",
+    "title": "BetterLGU: Puerto Princesa City, Palawan",
+    "summary": "Community-maintained transparency portal for Puerto Princesa City, Palawan, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterPuertoPrincesa/betterpuertoprincesa",
+    "website": "https://betterpuertoprincesa.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-quezon-city-metro-manila",
+    "kind": "project",
+    "title": "BetterLGU: Quezon City, Metro Manila",
+    "summary": "Community-maintained transparency portal for Quezon City, Metro Manila, listed in the BetterLGU directory.",
+    "status": "planning",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/brixavengoza/betterquezoncity",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-ramon-isabela",
+    "kind": "project",
+    "title": "BetterLGU: Ramon, Isabela",
+    "summary": "Community-maintained transparency portal for Ramon, Isabela, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/spncrruiz-alt/betterramon",
+    "website": "https://betterramon.pages.dev",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-rizal-nueva-ecija",
+    "kind": "project",
+    "title": "BetterLGU: Rizal, Nueva Ecija",
+    "summary": "Community-maintained transparency portal for Rizal, Nueva Ecija, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/njveneracion/betterrizalne",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-roxas-city-capiz",
+    "kind": "project",
+    "title": "BetterLGU: Roxas City, Capiz",
+    "summary": "Community-maintained transparency portal for Roxas City, Capiz, listed in the BetterLGU directory.",
+    "status": "planning",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/chariz1101/betterroxas",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-san-carlos-city-pangasinan",
+    "kind": "project",
+    "title": "BetterLGU: San Carlos City, Pangasinan",
+    "summary": "Community-maintained transparency portal for San Carlos City, Pangasinan, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/edisonmalasan/bettersancarlos",
+    "website": "https://bettersancarlos.vercel.app/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-san-fernando-city-la-union",
+    "kind": "project",
+    "title": "BetterLGU: San Fernando City, La Union",
+    "summary": "Community-maintained transparency portal for San Fernando City, La Union, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/alvindemesadev/better-san-fernando-lu",
+    "website": "https://bettersanfernando.pages.dev/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-san-fernando-city-pampanga",
+    "kind": "project",
+    "title": "BetterLGU: San Fernando City, Pampanga",
+    "summary": "Community-maintained transparency portal for San Fernando City, Pampanga, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/bettersanfernando/bettersanfernando",
+    "website": "https://bettersanfernando.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-san-jose-antique",
+    "kind": "project",
+    "title": "BetterLGU: San Jose, Antique",
+    "summary": "Community-maintained transparency portal for San Jose, Antique, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/bonfire404/bettersanjose",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-san-jose-city-nueva-ecija",
+    "kind": "project",
+    "title": "BetterLGU: San Jose City, Nueva Ecija",
+    "summary": "Community-maintained transparency portal for San Jose City, Nueva Ecija, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/denver6000/bettersanjosecity-ne",
+    "website": "https://sanjose.betternuevaecija.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-san-jose-del-monte-city-bulacan",
+    "kind": "project",
+    "title": "BetterLGU: San Jose del Monte City, Bulacan",
+    "summary": "Community-maintained transparency portal for San Jose del Monte City, Bulacan, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/Better-SJDM/better-sjdm",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-san-pablo-city-laguna",
+    "kind": "project",
+    "title": "BetterLGU: San Pablo City, Laguna",
+    "summary": "Community-maintained transparency portal for San Pablo City, Laguna, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/ChristiannWick/bettersanpablo",
+    "website": "https://www.bettersanpablo.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-san-pascual-masbate",
+    "kind": "project",
+    "title": "BetterLGU: San Pascual, Masbate",
+    "summary": "Community-maintained transparency portal for San Pascual, Masbate, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/marcuwynu23/bettersanpascualmasbate",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-san-pedro-city-laguna",
+    "kind": "project",
+    "title": "BetterLGU: San Pedro City, Laguna",
+    "summary": "Community-maintained transparency portal for San Pedro City, Laguna, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/sechipeanut/BetterSanPedro",
+    "website": "https://bettersanpedro.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-santa-barbara-pangasinan",
+    "kind": "project",
+    "title": "BetterLGU: Santa Barbara, Pangasinan",
+    "summary": "Community-maintained transparency portal for Santa Barbara, Pangasinan, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/JericoGarcia21/better-santabarbara",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-santa-cruz-laguna",
+    "kind": "project",
+    "title": "BetterLGU: Santa Cruz, Laguna",
+    "summary": "Community-maintained transparency portal for Santa Cruz, Laguna, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterSantaCruz/betterstacruzlaguna",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-santa-maria-bulacan",
+    "kind": "project",
+    "title": "BetterLGU: Santa Maria, Bulacan",
+    "summary": "Community-maintained transparency portal for Santa Maria, Bulacan, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/josiahjezraelguevarra/BetterSantaMaria",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-santa-rosa-city-laguna",
+    "kind": "project",
+    "title": "BetterLGU: Santa Rosa City, Laguna",
+    "summary": "Community-maintained transparency portal for Santa Rosa City, Laguna, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/jericizon/bettersantarosacity",
+    "website": "https://bettersantarosacity.pages.dev",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-santo-domingo-ilocos-sur",
+    "kind": "project",
+    "title": "BetterLGU: Santo Domingo, Ilocos Sur",
+    "summary": "Community-maintained transparency portal for Santo Domingo, Ilocos Sur, listed in the BetterLGU directory.",
+    "status": "planning",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/tanojericko/bettersantodomingo-ilocossur",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-sara-iloilo",
+    "kind": "project",
+    "title": "BetterLGU: Sara, Iloilo",
+    "summary": "Community-maintained transparency portal for Sara, Iloilo, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/SaraGugmaKo/bettersara",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-siquijor-province",
+    "kind": "project",
+    "title": "BetterLGU: Siquijor Province",
+    "summary": "Community-maintained transparency portal for Siquijor Province, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterSiquijor/BetterSiquijor",
+    "website": "https://bettersiquijor.vercel.app/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-solano-nueva-vizcaya",
+    "kind": "project",
+    "title": "BetterLGU: Solano, Nueva Vizcaya",
+    "summary": "Community-maintained transparency portal for Solano, Nueva Vizcaya, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterSolano/bettersolano",
+    "website": "https://bettersolano.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-surallah-south-cotabato",
+    "kind": "project",
+    "title": "BetterLGU: Surallah, South Cotabato",
+    "summary": "Community-maintained transparency portal for Surallah, South Cotabato, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/average04/bettersurallah",
+    "website": "https://bettersurallah.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-taal-batangas",
+    "kind": "project",
+    "title": "BetterLGU: Taal, Batangas",
+    "summary": "Community-maintained transparency portal for Taal, Batangas, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/rambaldoz/bettertaalbatangas",
+    "website": "https://bettertaalbatangas.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-tabaco-city-albay",
+    "kind": "project",
+    "title": "BetterLGU: Tabaco City, Albay",
+    "summary": "Community-maintained transparency portal for Tabaco City, Albay, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/johnjoshualipio/bettertabaco",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-tacloban-city-leyte",
+    "kind": "project",
+    "title": "BetterLGU: Tacloban City, Leyte",
+    "summary": "Community-maintained transparency portal for Tacloban City, Leyte, listed in the BetterLGU directory.",
+    "status": "planning",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/zenabus/better-tacloban",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-tagaytay-city-cavite",
+    "kind": "project",
+    "title": "BetterLGU: Tagaytay City, Cavite",
+    "summary": "Community-maintained transparency portal for Tagaytay City, Cavite, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/Arlovzki/bettertagaytay",
+    "website": "https://www.bettertagaytay.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-tago-surigao-del-sur",
+    "kind": "project",
+    "title": "BetterLGU: Tago, Surigao del Sur",
+    "summary": "Community-maintained transparency portal for Tago, Surigao del Sur, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterTago/better-tago",
+    "website": "https://www.bettertago.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-taguig-city-metro-manila",
+    "kind": "project",
+    "title": "BetterLGU: Taguig City, Metro Manila",
+    "summary": "Community-maintained transparency portal for Taguig City, Metro Manila, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/plvzfq-rit/bettertaguig",
+    "website": "https://bettertaguig.org/",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-talavera-nueva-ecija",
+    "kind": "project",
+    "title": "BetterLGU: Talavera, Nueva Ecija",
+    "summary": "Community-maintained transparency portal for Talavera, Nueva Ecija, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/jcparucha/bettertalavera",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-talibon-bohol",
+    "kind": "project",
+    "title": "BetterLGU: Talibon, Bohol",
+    "summary": "Community-maintained transparency portal for Talibon, Bohol, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/jessie-melendres/bettertalibon",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-tampakan-south-cotabato",
+    "kind": "project",
+    "title": "BetterLGU: Tampakan, South Cotabato",
+    "summary": "Community-maintained transparency portal for Tampakan, South Cotabato, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/jamez78/bettertampakan",
+    "website": "https://bettertampakan.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-tanay-rizal",
+    "kind": "project",
+    "title": "BetterLGU: Tanay, Rizal",
+    "summary": "Community-maintained transparency portal for Tanay, Rizal, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/s4burieru/bettertanay",
+    "website": "https://bettertanay.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-tandag-city-surigao-del-sur",
+    "kind": "project",
+    "title": "BetterLGU: Tandag City, Surigao del Sur",
+    "summary": "Community-maintained transparency portal for Tandag City, Surigao del Sur, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/BetterTandag/better-tandag",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-tanza-cavite",
+    "kind": "project",
+    "title": "BetterLGU: Tanza, Cavite",
+    "summary": "Community-maintained transparency portal for Tanza, Cavite, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/manalilib/betterTanza",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-taytay-rizal",
+    "kind": "project",
+    "title": "BetterLGU: Taytay, Rizal",
+    "summary": "Community-maintained transparency portal for Taytay, Rizal, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/zzelif/bettertaytay",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-teresa-rizal",
+    "kind": "project",
+    "title": "BetterLGU: Teresa, Rizal",
+    "summary": "Community-maintained transparency portal for Teresa, Rizal, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/MewSeiren/betterteresa.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-trece-martires-city-cavite",
+    "kind": "project",
+    "title": "BetterLGU: Trece Martires City, Cavite",
+    "summary": "Community-maintained transparency portal for Trece Martires City, Cavite, listed in the BetterLGU directory.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/hiroqt/bettertrece",
+    "website": "https://bettertrecemartires.org",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-tuguegarao-city-cagayan",
+    "kind": "project",
+    "title": "BetterLGU: Tuguegarao City, Cagayan",
+    "summary": "Community-maintained transparency portal for Tuguegarao City, Cagayan, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/JDgayagoy/BetterTuguegarao",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-urdaneta-city-pangasinan",
+    "kind": "project",
+    "title": "BetterLGU: Urdaneta City, Pangasinan",
+    "summary": "Community-maintained transparency portal for Urdaneta City, Pangasinan, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/robotinkers/betterurdaneta",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-valenzuela-city-metro-manila",
+    "kind": "project",
+    "title": "BetterLGU: Valenzuela City, Metro Manila",
+    "summary": "Community-maintained transparency portal for Valenzuela City, Metro Manila, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/JeremyDFabian/bettervalenzuela",
+    "featured": false
+  },
+  {
+    "slug": "betterlgu-zamboanga-city-zamboanga-del-sur",
+    "kind": "project",
+    "title": "BetterLGU: Zamboanga City, Zamboanga del Sur",
+    "summary": "Community-maintained transparency portal for Zamboanga City, Zamboanga del Sur, listed in the BetterLGU directory.",
+    "status": "alpha",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Local Government"
+    ],
+    "tags": [
+      "betterlgu"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "repoUrl": "https://github.com/RALPH22222/betterzamboangacity",
+    "website": "https://betterzamboangacity.vercel.app",
+    "featured": false
+  },
+  {
+    "slug": "bisto-proyekto",
+    "kind": "project",
+    "title": "Bisto Proyekto",
+    "summary": "Track and report on government infrastructure projects through a citizen-powered monitoring interface.",
+    "status": "stable",
+    "sectors": [
+      "Infrastructure & Transport"
+    ],
+    "legacySectors": [
+      "Infrastructure"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://bisto.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "budget-portal",
+    "kind": "project",
+    "title": "Budget Portal",
+    "summary": "Explore the proposed FY 2027 national budget and compare it line by line with the FY 2026 General Appropriations Act.",
+    "status": "stable",
+    "sectors": [
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Transparency"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://budget.bettergov.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "cadena",
+    "kind": "project",
+    "title": "Cadena",
+    "summary": "Explore a digital budget transparency proposal for publishing traceable government budget transactions.",
+    "status": "stable",
+    "sectors": [
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Transparency"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://cadena.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "congress-datasets-api",
+    "kind": "project",
+    "title": "Congress Datasets + API",
+    "summary": "Unified datasets and APIs for Philippine legislative data, covering lawmakers, bills, committees, and relationships.",
+    "status": "planning",
+    "sectors": [
+      "Government Services",
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Government",
+      "Transparency"
+    ],
+    "tags": [
+      "Open Data"
+    ],
+    "maintainers": [
+      "Nap"
+    ],
+    "dateAdded": "2025-09-24",
+    "lastUpdated": "2025-09-24",
+    "repoUrl": "https://github.com/wewillcraft/philippine-datasets",
+    "license": "Unknown",
+    "featured": false,
+    "body": "Congress Datasets + API aggregates and cleans Senate and House records into a graph-powered dataset with public API endpoints, inviting collaborators to help with scraping, FOI requests, entity modeling, and analytics."
+  },
+  {
+    "slug": "data-research",
+    "kind": "project",
+    "title": "Data Research",
+    "summary": "Explore interactive charts, graphs, and maps analyzing Philippine government budget, procurement, and infrastructure data.",
+    "status": "stable",
+    "sectors": [
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Transparency"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://research.bettergov.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "dynasties",
+    "kind": "project",
+    "title": "Dynasties",
+    "summary": "See every candidate for local office since 2001: who won, who lost, who keeps coming back, and which surnames hold the seats in each province and town.",
+    "status": "stable",
+    "sectors": [
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Government"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://dynasties.bettergov.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "flood-control-browser",
+    "kind": "project",
+    "title": "Flood Control Browser",
+    "summary": "Explore public flood-control project records across the Philippines.",
+    "status": "stable",
+    "sectors": [
+      "Infrastructure & Transport"
+    ],
+    "legacySectors": [
+      "Infrastructure"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://bettergov.ph/flood-control-projects",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "floodtrack",
+    "kind": "project",
+    "title": "FloodTrack",
+    "summary": "Community-driven flood reporting platform that maps hazards, safe zones, and assistance offers in real time.",
+    "status": "beta",
+    "sectors": [
+      "Agriculture & Environment",
+      "Disaster & Recovery"
+    ],
+    "legacySectors": [
+      "Climate",
+      "Disaster Management"
+    ],
+    "tags": [
+      "Disaster Response",
+      "Mapping"
+    ],
+    "maintainers": [
+      "Oliver"
+    ],
+    "dateAdded": "2025-09-24",
+    "lastUpdated": "2025-09-24",
+    "repoUrl": "https://github.com/oancholarevelo/floodtrack",
+    "website": "https://floodtrack.vercel.app/",
+    "license": "Unknown",
+    "featured": false,
+    "body": "FloodTrack lets residents share flood alerts, safe locations, and help requests on an interactive Leaflet map, supplemented with official hotlines, LGU updates, and weather data integrations."
+  },
+  {
+    "slug": "floodwatch-philippines",
+    "kind": "project",
+    "title": "FloodWatch Philippines",
+    "summary": "Anti-corruption platform exposing irregular flood-control projects with maps, toolkits, and secure reporting.",
+    "status": "beta",
+    "sectors": [
+      "Government Services",
+      "Social & Welfare"
+    ],
+    "legacySectors": [
+      "Government",
+      "Civil Society"
+    ],
+    "tags": [
+      "Anti-Corruption",
+      "Disaster Response"
+    ],
+    "maintainers": [
+      "pageman"
+    ],
+    "dateAdded": "2025-09-24",
+    "lastUpdated": "2025-09-24",
+    "website": "https://floodwatch-7ugzz6.manus.space/",
+    "license": "Unknown",
+    "featured": false,
+    "body": "FloodWatch Philippines equips activists and citizens with interactive corruption maps, evidence toolkits, anonymous reporting, and progress dashboards to investigate ₱1.089 trillion in flood-control spending."
+  },
+  {
+    "slug": "jeepney-design-system",
+    "kind": "project",
+    "title": "Jeepney Design System",
+    "summary": "A vibrant design system for web & native applications",
+    "status": "beta",
+    "sectors": [
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Technology"
+    ],
+    "tags": [],
+    "maintainers": [
+      "niculistana@gmail.com"
+    ],
+    "dateAdded": "2025-09-22",
+    "lastUpdated": "2025-09-22",
+    "repoUrl": "https://github.com/adobocorp/jeepney-design-system",
+    "website": "http://jeepney-design-system.vercel.app",
+    "license": "MIT",
+    "body": "Jeepney Design System is an open-source design system for web & native applications."
+  },
+  {
+    "slug": "juris-ph",
+    "kind": "project",
+    "title": "Juris.ph",
+    "summary": "Search Philippine Supreme Court decisions and Republic Acts through a free, open legal research interface.",
+    "status": "stable",
+    "sectors": [
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Government"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://juris.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "kuya-j",
+    "kind": "project",
+    "title": "Kuya J",
+    "summary": "Ask an AI assistant about Philippine government services, laws, budgets, and public data in English, Filipino, or Taglish. Answers come with their sources.",
+    "status": "stable",
+    "sectors": [
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Government"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "repoUrl": "https://github.com/bettergovph/chat.bettergov.ph",
+    "website": "https://chat.bettergov.ph",
+    "license": "MIT",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "lottolens-ph-open-data",
+    "kind": "project",
+    "title": "LottoLens PH Public PCSO Data",
+    "summary": "Source-traceable Philippine PCSO draw schedules and historical results published as reusable open data.",
+    "status": "stable",
+    "sectors": [
+      "Government Services",
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Government",
+      "Transparency",
+      "Technology"
+    ],
+    "tags": [
+      "Open Data",
+      "Public Information",
+      "Data Verification"
+    ],
+    "maintainers": [
+      "LottoLens PH Editorial"
+    ],
+    "dateAdded": "2026-08-12",
+    "lastUpdated": "2026-08-12",
+    "repoUrl": "https://github.com/remo65588-boop/lottolens-ph-public-data",
+    "website": "https://remo65588-boop.github.io/lottolens-ph-public-data/",
+    "license": "CC BY 4.0",
+    "featured": false,
+    "body": "LottoLens PH Public PCSO Data publishes a reusable draw-schedule table and a\nfixed historical snapshot of 13,457 results across nine Philippine Charity\nSweepstakes Office games. Each historical row retains a source name and source\nURL, while the package also includes field definitions, Frictionless Data\nmetadata, validation notes, citation metadata, and fixed release tags.\n\nThe project helps Filipino developers, researchers, journalists, and members of\nthe public inspect historical result records without relying on screenshots or\nundocumented copies. It is independently maintained, is not affiliated with\nPCSO, does not predict future results, and directs users to official PCSO\nchannels as the final authority. Readers can review the\n[coverage and verification methodology](https://lottolensph.com/research/pcso-results-data-coverage)\nbefore reusing the snapshot."
+  },
+  {
+    "slug": "open-congress-api",
+    "kind": "project",
+    "title": "Open Congress API",
+    "summary": "Access structured Philippine congressional documents, bill statuses, and representative information.",
+    "status": "stable",
+    "sectors": [
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Government"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "repoUrl": "https://github.com/bettergovph/open-congress-api",
+    "website": "https://open-congress-api.bettergov.ph/",
+    "license": "CC0-1.0",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "open-data-portal",
+    "kind": "project",
+    "title": "Open Data Portal",
+    "summary": "Browse public datasets organized for research, reuse, and civic accountability.",
+    "status": "stable",
+    "sectors": [
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Transparency"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "repoUrl": "https://github.com/bettergovph/open-data-portal",
+    "website": "https://data.bettergov.ph",
+    "license": "CC0-1.0",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "openbayan",
+    "kind": "project",
+    "title": "OpenBayan",
+    "summary": "A showcase of open-source stuff for the Philippines.",
+    "status": "beta",
+    "sectors": [
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Technology"
+    ],
+    "tags": [],
+    "maintainers": [
+      "contact@openbayan.org"
+    ],
+    "dateAdded": "2025-09-22",
+    "lastUpdated": "2025-11-23",
+    "repoUrl": "https://github.com/bettergovph/openbayan.org",
+    "website": "https://openbayan.org",
+    "license": "MIT",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false,
+    "body": "View more at <https://openbayan.org>"
+  },
+  {
+    "slug": "opengovchain",
+    "kind": "project",
+    "title": "OpenGovChain",
+    "summary": "Explore blockchain-backed open standards for contracting, infrastructure, and national budget data.",
+    "status": "stable",
+    "sectors": [
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Transparency"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "repoUrl": "https://github.com/bettergovph/govchain",
+    "website": "https://govchain.bettergov.ph",
+    "license": "MIT",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "opentaxjs",
+    "kind": "project",
+    "title": "OpenTaxJS",
+    "summary": "Rules-based engine that centralizes Philippine tax calculations so apps stop rewriting complex tax logic.",
+    "status": "alpha",
+    "sectors": [
+      "Taxes & Finance",
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Finance",
+      "Government"
+    ],
+    "tags": [
+      "Taxation",
+      "Rules Engine"
+    ],
+    "maintainers": [
+      "nedpals"
+    ],
+    "dateAdded": "2025-09-24",
+    "lastUpdated": "2025-09-24",
+    "repoUrl": "https://github.com/nedpals/opentaxjs",
+    "license": "Unknown",
+    "featured": false,
+    "body": "OpenTaxJS defines a unified rules specification for computing different Philippine taxes and seeks collaborators to validate scenarios, extend coverage, and improve the rules engine implementation."
+  },
+  {
+    "slug": "openverify",
+    "kind": "project",
+    "title": "OpenVerify",
+    "summary": "Unofficial API wrapper that verifies PhilSys and eGov QR codes to make identity validation easier for civic-tech projects.",
+    "status": "alpha",
+    "sectors": [
+      "Government Services",
+      "Public Safety"
+    ],
+    "legacySectors": [
+      "Government",
+      "Security"
+    ],
+    "tags": [
+      "Identity",
+      "API"
+    ],
+    "maintainers": [
+      "ryanamay"
+    ],
+    "dateAdded": "2025-09-24",
+    "lastUpdated": "2025-09-24",
+    "repoUrl": "https://github.com/bettergovph/openverify",
+    "license": "Unknown",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false,
+    "body": "OpenVerify exposes the working flows for PhilID v1, PhilID v3 / ePhilID, and other eGovPH ID verification via a unified interface, while inviting contributors to harden missing data handling, build secure API endpoints, and design a better user interface."
+  },
+  {
+    "slug": "petitions",
+    "kind": "project",
+    "title": "Petitions",
+    "summary": "Start, sign, and share petitions to decision-makers without creating an account. Each email address counts once.",
+    "status": "stable",
+    "sectors": [
+      "Social & Welfare"
+    ],
+    "legacySectors": [
+      "Civil Society"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "repoUrl": "https://github.com/bettergovph/petition",
+    "website": "https://petition.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "ph-contributions-calculator",
+    "kind": "project",
+    "title": "Philippine Contributions Calculator",
+    "summary": "A free website, REST API, and TypeScript library for Philippine statutory contributions, starting with SSS and growing to cover PhilHealth and Pag-IBIG.",
+    "status": "beta",
+    "sectors": [
+      "Government Services",
+      "Taxes & Finance"
+    ],
+    "legacySectors": [
+      "Government",
+      "Finance",
+      "Technology"
+    ],
+    "tags": [
+      "web-app",
+      "api",
+      "open-data",
+      "civic-tech",
+      "sss",
+      "philhealth",
+      "pag-ibig",
+      "payroll",
+      "typescript"
+    ],
+    "maintainers": [
+      "jpabellon"
+    ],
+    "dateAdded": "2026-10-20",
+    "repoUrl": "https://github.com/jpabellon/ph-contributions-calculator",
+    "website": "https://jpabellon.github.io/ph-contributions-calculator/",
+    "demo": "https://jpabellon.github.io/ph-contributions-calculator/webapicalculator/",
+    "license": "MIT",
+    "body": "SSS coverage is available today. PhilHealth and Pag-IBIG are planned, and the project does not yet claim to calculate them."
+  },
+  {
+    "slug": "ph-hotlines-directory",
+    "kind": "project",
+    "title": "PH Hotlines Directory",
+    "summary": "Directory of localized emergency hotlines across Philippine cities, seeded with Cavite data and open for contributions.",
+    "status": "alpha",
+    "sectors": [
+      "Public Safety",
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Public Safety",
+      "Government"
+    ],
+    "tags": [
+      "Emergency Services"
+    ],
+    "maintainers": [
+      "Waffen"
+    ],
+    "dateAdded": "2025-09-24",
+    "lastUpdated": "2025-11-08",
+    "repoUrl": "https://github.com/bettergovph/hotines",
+    "website": "https://hotlines.bettergov.ph",
+    "license": "Unknown",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false,
+    "body": "PH Hotlines Directory compiles emergency contact numbers per Philippine locality, inviting volunteers to expand coverage, improve data quality, and support BetterGov initiatives."
+  },
+  {
+    "slug": "philgeps-browser",
+    "kind": "project",
+    "title": "PhilGEPS Browser",
+    "summary": "Browse Philippine government procurement opportunities and records.",
+    "status": "stable",
+    "sectors": [
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Transparency"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://philgeps.bettergov.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "philippine-projects-heatmap",
+    "kind": "project",
+    "title": "Philippine Projects Heatmap",
+    "summary": "Visual tracker of Philippine projects with mocked data today, heading toward live datasets and contributor workflows.",
+    "status": "alpha",
+    "sectors": [
+      "Government Services",
+      "Infrastructure & Transport"
+    ],
+    "legacySectors": [
+      "Government",
+      "Infrastructure"
+    ],
+    "tags": [
+      "Mapping",
+      "Data Visualization"
+    ],
+    "maintainers": [
+      "Gim"
+    ],
+    "dateAdded": "2025-09-24",
+    "lastUpdated": "2025-09-24",
+    "repoUrl": "https://github.com/Gawa-Developers/ph-projects-heatmap",
+    "website": "https://ph-projects-heatmap.vercel.app/",
+    "license": "Unknown",
+    "featured": false,
+    "body": "The Philippine Projects Heatmap maps infrastructure initiatives and plans to integrate sources like PHILGEPS Awards, with contributions needed for data ingestion, contributor docs, and deployment automation."
+  },
+  {
+    "slug": "philippine-quiz",
+    "kind": "project",
+    "title": "Philippine Quiz",
+    "summary": "Test your knowledge of Philippine history, culture, government, and geography.",
+    "status": "stable",
+    "sectors": [
+      "Education"
+    ],
+    "legacySectors": [
+      "Education"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://quiz.bettergov.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "philippines-tax-directory",
+    "kind": "project",
+    "title": "Philippines Tax Directory",
+    "summary": "Community-maintained guide that centralizes Philippine tax information, resources, and references for developers and citizens.",
+    "status": "alpha",
+    "sectors": [
+      "Taxes & Finance",
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Finance",
+      "Government"
+    ],
+    "tags": [
+      "Taxation"
+    ],
+    "maintainers": [
+      "anth.dev"
+    ],
+    "dateAdded": "2025-09-24",
+    "lastUpdated": "2025-10-03",
+    "repoUrl": "https://github.com/bettergovph/ph-tax-directory",
+    "website": "https://taxdirectory.bettergov.ph",
+    "license": "CC0-1.0 (public domain dedication)",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false,
+    "body": "The Philippines Tax Directory aims to become a comprehensive catalog of tax rules, forms, and guidance tailored for Philippine contexts, inviting contributors to expand coverage and keep resources accurate."
+  },
+  {
+    "slug": "politiko",
+    "kind": "project",
+    "title": "Politiko",
+    "summary": "Explore members of the 20th Congress through an approachable, swipe-based civic discovery experience.",
+    "status": "stable",
+    "sectors": [
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Government"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://politiko.bettergov.ph/",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "price-guides",
+    "kind": "project",
+    "title": "Price Guides",
+    "summary": "Explore essential economic indicators including market prices, fuel prices, exchange rates, and related public data.",
+    "status": "stable",
+    "sectors": [
+      "Taxes & Finance"
+    ],
+    "legacySectors": [
+      "Finance"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://price-guides.bettergov.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "psgc-api",
+    "kind": "project",
+    "title": "PSGC API",
+    "summary": "Philippine Standard Geographic Code (PSGC) API written in Rust",
+    "status": "beta",
+    "sectors": [
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Technology"
+    ],
+    "tags": [],
+    "maintainers": [
+      "benjiebengarcia@gmail.com"
+    ],
+    "dateAdded": "2025-10-25",
+    "lastUpdated": "2025-10-25",
+    "repoUrl": "https://github.com/mystique09/psgc-rs",
+    "website": "https://api-psgc-production.up.railway.app",
+    "license": "MIT",
+    "body": "An over-engineered Rust implementation of the Philippine Standard Geographic Code (PSGC) API. This project serves as a\nrewrite of the original PSGC-API, leveraging Rust's performance and safety features along with modern database\ntechnologies."
+  },
+  {
+    "slug": "regov",
+    "kind": "project",
+    "title": "RE:GOV",
+    "summary": "An AI agent that crawls a legacy Philippine government website and rebuilds it as an accessible concept site on the BetterGov.ph Kapwa design system, with a migration report.",
+    "status": "beta",
+    "sectors": [
+      "Government Services",
+      "Education"
+    ],
+    "legacySectors": [
+      "Government",
+      "Technology",
+      "Education"
+    ],
+    "tags": [
+      "web-app",
+      "ai-agent",
+      "civic-tech",
+      "accessibility",
+      "design-system",
+      "kapwa",
+      "government-websites",
+      "nextjs",
+      "typescript"
+    ],
+    "maintainers": [
+      "rockyru"
+    ],
+    "dateAdded": "2026-10-27",
+    "repoUrl": "https://github.com/rockyru/regov",
+    "website": "https://regov.app",
+    "demo": "https://regov.app/showcase",
+    "license": "MIT",
+    "body": "Generated sites are unofficial concepts; agency names, seals and content belong to their respective institutions. The live instance limits concurrent runs and rate-limits submissions, and every site in the showcase was built from public pages or a Wayback Machine capture."
+  },
+  {
+    "slug": "saln-tracker-ph",
+    "kind": "project",
+    "title": "SALN Tracker PH",
+    "summary": "A web platform for tracking and displaying Statements of Assets, Liabilities, and Net Worth (SALN) of Philippine government officials to promote transparency and accountability.",
+    "status": "stable",
+    "sectors": [
+      "Government Services",
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Government",
+      "Transparency"
+    ],
+    "tags": [],
+    "maintainers": [
+      "JHNLWHD"
+    ],
+    "dateAdded": "2025-09-22",
+    "lastUpdated": "2025-09-22",
+    "repoUrl": "https://github.com/JHNLWHD/saln-tracker-ph",
+    "website": "https://saln.bettergov.ph",
+    "license": "MIT",
+    "body": "SALN Tracker Philippines is a web platform that tracks and displays the Statement of Assets, Liabilities, and Net Worth (SALN) of Philippine government officials. Its goal is to promote transparency and accountability by making SALN disclosures easier to access and understand for citizens."
+  },
+  {
+    "slug": "scamcheck",
+    "kind": "project",
+    "title": "ScamCheck",
+    "summary": "Paste a suspicious text, upload a screenshot, or forward an email to check it for scam signals. Then learn what to do next and where to report it.",
+    "status": "stable",
+    "sectors": [
+      "Public Safety"
+    ],
+    "legacySectors": [
+      "Public Safety"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "repoUrl": "https://github.com/bettergovph/scamcheck",
+    "website": "https://scamcheck.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "startupdatabase-ph",
+    "kind": "project",
+    "title": "StartupDatabase.ph",
+    "summary": "Discover Filipino startups, products, founders, investors, jobs, and ecosystem research in a curated community directory.",
+    "status": "stable",
+    "sectors": [
+      "Government Services"
+    ],
+    "legacySectors": [
+      "Technology"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://startupdatabase.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "statistics-explorer",
+    "kind": "project",
+    "title": "Statistics Explorer",
+    "summary": "Find Philippine Statistics Authority OpenSTAT datasets by topic, explore results, and download exact selections with source dates.",
+    "status": "stable",
+    "sectors": [
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Transparency"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "website": "https://statistics.bettergov.ph",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "transparency-portal",
+    "kind": "project",
+    "title": "Transparency Portal",
+    "summary": "Search and browse Philippine government procurement, tax, budget, and infrastructure records in one public interface.",
+    "status": "stable",
+    "sectors": [
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Transparency"
+    ],
+    "tags": [],
+    "maintainers": [],
+    "dateAdded": "2026-11-21",
+    "owner": "bettergovph",
+    "repoUrl": "https://github.com/bettergovph/transparency-dashboard",
+    "website": "https://transparency.bettergov.ph",
+    "license": "MIT",
+    "needs": [
+      "developers",
+      "designers",
+      "researchers"
+    ],
+    "featured": false
+  },
+  {
+    "slug": "bantay-kita",
+    "kind": "cso",
+    "title": "Bantay Kita",
+    "summary": "National coalition of civil society organizations advocating for transparency and accountability in the extractive industries and natural resource governance.",
+    "status": "stable",
+    "sectors": [
+      "Agriculture & Environment",
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Agriculture & Environment",
+      "Transparency & Procurement"
+    ],
+    "tags": [
+      "Extractive Industries",
+      "Environment",
+      "Open Contracting"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://www.bantaykita.ph"
+  },
+  {
+    "slug": "g-watch",
+    "kind": "cso",
+    "title": "Government Watch (G-Watch)",
+    "summary": "Independent citizen action and accountability research organization empowering communities to monitor public service delivery and local budgets.",
+    "status": "stable",
+    "sectors": [
+      "Government Services",
+      "Social & Welfare"
+    ],
+    "legacySectors": [
+      "Government Services",
+      "Social & Welfare"
+    ],
+    "tags": [
+      "Citizen Monitoring",
+      "Public Services",
+      "Social Accountability"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://www.g-watch.org"
+  },
+  {
+    "slug": "kontra-daya",
+    "kind": "cso",
+    "title": "Kontra Daya",
+    "summary": "Broad-based election watchdog coalition monitoring automated election systems, campaign finance, and electoral integrity.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Elections & Governance"
+    ],
+    "tags": [
+      "Elections",
+      "Watchdog"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://kontradaya.org"
+  },
+  {
+    "slug": "namfrel",
+    "kind": "cso",
+    "title": "NAMFREL",
+    "summary": "National Citizens Movement for Free Elections — pioneer citizen-led election monitoring and parallel vote count organization in the Philippines.",
+    "status": "stable",
+    "sectors": [
+      "Elections & Governance"
+    ],
+    "legacySectors": [
+      "Elections & Governance"
+    ],
+    "tags": [
+      "Elections",
+      "Citizen Monitoring"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://www.namfrel.org.ph"
+  },
+  {
+    "slug": "pcij",
+    "kind": "cso",
+    "title": "Philippine Center for Investigative Journalism",
+    "summary": "Independent, non-profit investigative media agency producing data-driven reporting on governance, public accountability, and justice.",
+    "status": "stable",
+    "sectors": [
+      "Transparency & Procurement",
+      "Law & Justice"
+    ],
+    "legacySectors": [
+      "Transparency & Procurement",
+      "Law & Justice"
+    ],
+    "tags": [
+      "Investigative Journalism",
+      "Accountability",
+      "Open Data"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://pcij.org"
+  },
+  {
+    "slug": "right-to-know-right-now",
+    "kind": "cso",
+    "title": "Right to Know, Right Now! Coalition",
+    "summary": "Civil society coalition campaigning for the passage of a comprehensive Freedom of Information law and proactive public disclosure.",
+    "status": "stable",
+    "sectors": [
+      "Transparency & Procurement",
+      "Law & Justice"
+    ],
+    "legacySectors": [
+      "Transparency & Procurement",
+      "Law & Justice"
+    ],
+    "tags": [
+      "FOI",
+      "Right to Information",
+      "Advocacy"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://www.foi.gov.ph"
+  },
+  {
+    "slug": "vera-files",
+    "kind": "cso",
+    "title": "VERA Files",
+    "summary": "Non-profit media organization founded by veteran Filipino journalists focused on fact-checking, public accountability, and human rights.",
+    "status": "stable",
+    "sectors": [
+      "Law & Justice",
+      "Transparency & Procurement"
+    ],
+    "legacySectors": [
+      "Law & Justice",
+      "Transparency & Procurement"
+    ],
+    "tags": [
+      "Fact-Checking",
+      "Media",
+      "Public Accountability"
+    ],
+    "maintainers": [],
+    "dateAdded": "2026-11-27",
+    "website": "https://verafiles.org"
+  }
+]

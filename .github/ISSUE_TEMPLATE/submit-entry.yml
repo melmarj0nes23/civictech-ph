@@ -1,0 +1,57 @@
+name: Submit a Civic Tech Project or CSO
+description: Propose a Philippine civic tech project or Civil Society Organization (CSO) for the civictech.ph directory.
+title: '[Directory]: '
+labels: ['directory-submission']
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Entry Type
+      options:
+        - Civic Tech Project
+        - Civil Society Organization (CSO)
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Project or Organization Name
+      placeholder: e.g. Budget Portal or Kontra Daya
+    validations:
+      required: true
+  - type: dropdown
+    id: sector
+    attributes:
+      label: Primary Sector
+      options:
+        - Disaster & Recovery
+        - Social & Welfare
+        - Government Services
+        - Travel
+        - Health
+        - Education
+        - Business & Economy
+        - Taxes & Finance
+        - Labor & Employment
+        - Law & Justice
+        - Elections & Governance
+        - Transparency & Procurement
+        - Agriculture & Environment
+        - Infrastructure & Transport
+        - Public Safety
+    validations:
+      required: true
+  - type: input
+    id: website
+    attributes:
+      label: Website or Repository URL
+      placeholder: https://...
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Short Summary (up to 240 characters)
+      description: Briefly describe what the project or CSO does and who it serves.
+    validations:
+      required: true
