@@ -215,13 +215,14 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
               display: 'flex',
               flexWrap: 'nowrap',
               alignItems: 'center',
-              gap: 6,
-              fontSize: 15,
+              gap: 8,
+              fontSize: 16,
               color: '#333',
               maxWidth: '100%',
               minWidth: 0,
             }}
           >
+            <span className="filter-show-label">Show</span>
             <select
               aria-label="Filter by type"
               value={kindFilter}
@@ -235,7 +236,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 background: 'transparent',
                 padding: '4px 4px 4px 0',
                 fontFamily: 'Inter, system-ui, sans-serif',
-                fontSize: 15,
+                fontSize: 16,
                 fontWeight: 600,
                 color: '#111',
                 cursor: 'pointer',
@@ -263,7 +264,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 background: 'transparent',
                 padding: '4px 4px 4px 0',
                 fontFamily: 'Inter, system-ui, sans-serif',
-                fontSize: 15,
+                fontSize: 16,
                 fontWeight: 600,
                 color: '#111',
                 cursor: 'pointer',
@@ -283,6 +284,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
 
           <input
             type="search"
+            className="directory-search"
             aria-label="Search projects and CSOs"
             placeholder="Search projects, CSOs, or tags..."
             value={search}

@@ -122,6 +122,10 @@ a:hover {
   font-size: 14px;
 }
 
+.filter-show-label {
+  display: inline;
+}
+
 @media (max-width: 768px) {
   html,
   body {
@@ -236,5 +240,15 @@ a:hover {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
+  }
+
+  .filter-show-label {
+    display: none;
+  }
+
+  .directory-search {
+    width: 100% !important;
+    max-width: none !important;
+    flex: 1 1 100% !important;
   }
 }
