@@ -496,6 +496,24 @@ export const ARTICLES: ArticleItem[] = [
   },
 ];
 
+export const ARTICLE_PHOTOS: Record<string, string> = {
+  'volunteers-national-budget': '/images/congress-session.jpg',
+  'transparent-canvassing': '/images/election-observers.jpg',
+  'foi-explained': '/images/manila-city-hall.jpg',
+  'gov-ph-mobile': '/images/digital-services.jpg',
+  'spotting-scam-texts': '/images/digital-services.jpg',
+  'mapping-public-transport': '/images/manila-transit.jpg',
+  'reading-bicam-report': '/images/congress-session.jpg',
+  'barangay-procurement': '/images/manila-city-hall.jpg',
+  'one-login-gov': '/images/digital-services.jpg',
+  'last-mile-connectivity': '/images/manila-transit.jpg',
+  'open-data-habit': '/images/election-observers.jpg',
+};
+
+export function getArticlePhoto(slug: string): string {
+  return ARTICLE_PHOTOS[slug] ?? '/images/congress-session.jpg';
+}
+
 export function getArticleBySlug(slug: string): ArticleItem {
   return ARTICLES.find((a) => a.slug === slug) ?? ARTICLES[0];
 }

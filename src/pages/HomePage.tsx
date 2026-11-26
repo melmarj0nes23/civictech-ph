@@ -1,6 +1,6 @@
 import type { MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
-import { CATEGORIES, type CategorySlug } from '../data/articles';
+import { CATEGORIES, getArticlePhoto, type CategorySlug } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
 import type { InfoPageSlug } from '../data/infoPages';
 
@@ -221,28 +221,16 @@ export function HomePage({
               style={{ display: 'block' }}
             >
               <div
-                className="ph"
+                className="ph ph--photo"
                 style={{
                   aspectRatio: '16 / 9',
                   width: '100%',
-                  flexDirection: 'column',
-                  gap: 8,
                 }}
               >
-                <svg
-                  width="28"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  aria-hidden="true"
-                >
-                  <rect x="3" y="6" width="18" height="14" rx="2" />
-                  <circle cx="12" cy="13" r="3.5" />
-                  <path d="M8 6l1.5-2h5L16 6" />
-                </svg>
-                <span>{t.home.leadPhoto}</span>
+                <img
+                  src={getArticlePhoto('volunteers-national-budget')}
+                  alt={t.home.leadPhoto}
+                />
               </div>
             </a>
             <p
@@ -348,8 +336,8 @@ export function HomePage({
                   {t.home.top1Title}
                 </p>
               </div>
-              <div className="ph" style={{ width: 96, height: 96, flex: 'none', fontSize: 10 }}>
-                {t.home.photoShort}
+              <div className="ph ph--photo" style={{ width: 96, height: 96, flex: 'none' }}>
+                <img src={getArticlePhoto('transparent-canvassing')} alt={t.home.top1Title} loading="lazy" />
               </div>
             </a>
             <a
@@ -387,8 +375,8 @@ export function HomePage({
                   {t.home.top2Title}
                 </p>
               </div>
-              <div className="ph" style={{ width: 96, height: 96, flex: 'none', fontSize: 10 }}>
-                {t.home.photoShort}
+              <div className="ph ph--photo" style={{ width: 96, height: 96, flex: 'none' }}>
+                <img src={getArticlePhoto('foi-explained')} alt={t.home.top2Title} loading="lazy" />
               </div>
             </a>
             <a
@@ -426,8 +414,8 @@ export function HomePage({
                   {t.home.top3Title}
                 </p>
               </div>
-              <div className="ph" style={{ width: 96, height: 96, flex: 'none', fontSize: 10 }}>
-                {t.home.photoShort}
+              <div className="ph ph--photo" style={{ width: 96, height: 96, flex: 'none' }}>
+                <img src={getArticlePhoto('gov-ph-mobile')} alt={t.home.top3Title} loading="lazy" />
               </div>
             </a>
             <a
@@ -460,8 +448,8 @@ export function HomePage({
                   {t.home.top4Title}
                 </p>
               </div>
-              <div className="ph" style={{ width: 96, height: 96, flex: 'none', fontSize: 10 }}>
-                {t.home.photoShort}
+              <div className="ph ph--photo" style={{ width: 96, height: 96, flex: 'none' }}>
+                <img src={getArticlePhoto('spotting-scam-texts')} alt={t.home.top4Title} loading="lazy" />
               </div>
             </a>
           </aside>
@@ -511,8 +499,8 @@ export function HomePage({
                 onClick={handleOpenArticle('mapping-public-transport')}
                 style={{ display: 'block' }}
               >
-                <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-                  {t.home.latest1Photo}
+                <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
+                  <img src={getArticlePhoto('mapping-public-transport')} alt={t.home.latest1Photo} loading="lazy" />
                 </div>
                 <p
                   style={{
@@ -548,8 +536,8 @@ export function HomePage({
                 onClick={handleOpenArticle('reading-bicam-report')}
                 style={{ display: 'block' }}
               >
-                <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-                  {t.home.latest2Photo}
+                <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
+                  <img src={getArticlePhoto('reading-bicam-report')} alt={t.home.latest2Photo} loading="lazy" />
                 </div>
                 <p
                   style={{
@@ -585,8 +573,8 @@ export function HomePage({
                 onClick={handleOpenArticle('barangay-procurement')}
                 style={{ display: 'block' }}
               >
-                <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-                  {t.home.latest3Photo}
+                <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
+                  <img src={getArticlePhoto('barangay-procurement')} alt={t.home.latest3Photo} loading="lazy" />
                 </div>
                 <p
                   style={{
@@ -622,8 +610,8 @@ export function HomePage({
                 onClick={handleOpenArticle('one-login-gov')}
                 style={{ display: 'block' }}
               >
-                <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-                  {t.home.latest4Photo}
+                <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
+                  <img src={getArticlePhoto('one-login-gov')} alt={t.home.latest4Photo} loading="lazy" />
                 </div>
                 <p
                   style={{
@@ -668,8 +656,8 @@ export function HomePage({
             alignItems: 'center',
           }}
         >
-          <div className="ph" style={{ flex: '999 1 560px', minWidth: 0, aspectRatio: '21 / 9' }}>
-            {t.home.featurePhoto}
+          <div className="ph ph--photo" style={{ flex: '999 1 560px', minWidth: 0, aspectRatio: '21 / 9' }}>
+            <img src={getArticlePhoto('last-mile-connectivity')} alt={t.home.featurePhoto} loading="lazy" />
           </div>
           <div style={{ flex: '1 1 340px', minWidth: 0 }}>
             <p

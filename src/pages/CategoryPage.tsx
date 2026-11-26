@@ -3,6 +3,7 @@ import { Footer } from '../components/Footer';
 import {
   ARTICLES,
   CATEGORIES,
+  getArticlePhoto,
   getCategoryBySlug,
   type CategorySlug,
 } from '../data/articles';
@@ -184,8 +185,8 @@ export function CategoryPage({
                 onClick={handleArticleClick(story.slug)}
                 style={{ display: 'block' }}
               >
-                <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-                  {story.photoLabel[lang]}
+                <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
+                  <img src={getArticlePhoto(story.slug)} alt={story.photoLabel[lang]} loading="lazy" />
                 </div>
                 <p
                   style={{

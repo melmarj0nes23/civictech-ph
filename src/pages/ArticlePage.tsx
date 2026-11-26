@@ -4,6 +4,7 @@ import {
   ARTICLES,
   CATEGORIES,
   getArticleBySlug,
+  getArticlePhoto,
   type CategorySlug,
 } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
@@ -211,23 +212,10 @@ export function ArticlePage({
         {/* Hero photo */}
         <figure style={{ maxWidth: 1240, margin: '0 auto', padding: '0 24px' }}>
           <div
-            className="ph"
-            style={{ aspectRatio: '16 / 8', width: '100%', flexDirection: 'column', gap: 8 }}
+            className="ph ph--photo"
+            style={{ aspectRatio: '16 / 8', width: '100%' }}
           >
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              aria-hidden="true"
-            >
-              <rect x="3" y="6" width="18" height="14" rx="2" />
-              <circle cx="12" cy="13" r="3.5" />
-              <path d="M8 6l1.5-2h5L16 6" />
-            </svg>
-            <span>{article.photoLabel[lang]}</span>
+            <img src={getArticlePhoto(article.slug)} alt={article.photoLabel[lang]} />
           </div>
           <figcaption style={{ marginTop: 10, fontSize: 13, lineHeight: 1.5, color: '#555' }}>
             {t.article.heroCaption}{' '}
@@ -408,8 +396,8 @@ export function ArticlePage({
                 <p>{t.article.p4}</p>
 
                 <figure style={{ margin: '36px 0' }}>
-                  <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-                    {t.article.inlinePhoto}
+                  <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
+                    <img src="/images/election-observers.jpg" alt={t.article.inlinePhoto} loading="lazy" />
                   </div>
                   <figcaption
                     style={{
@@ -500,8 +488,8 @@ export function ArticlePage({
                 }}
               >
                 {idx === 0 && (
-                  <div className="ph" style={{ aspectRatio: '3 / 2', marginBottom: 12, fontSize: 11 }}>
-                    {t.home.photoShort}
+                  <div className="ph ph--photo" style={{ aspectRatio: '3 / 2', marginBottom: 12 }}>
+                    <img src={getArticlePhoto(story.slug)} alt={story.photoLabel[lang]} loading="lazy" />
                   </div>
                 )}
                 <p
@@ -533,17 +521,15 @@ export function ArticlePage({
           }}
         >
           <div
-            className="ph"
+            className="ph ph--photo"
             style={{
               width: 64,
               height: 64,
               borderRadius: '50%',
               flex: 'none',
-              fontSize: 10,
-              padding: 0,
             }}
           >
-            {t.home.photoShort}
+            <img src="/images/election-observers.jpg" alt={article.author[lang]} loading="lazy" />
           </div>
           <div>
             <p style={{ margin: 0, fontWeight: 600, fontSize: 15 }}>{article.author[lang]}</p>
@@ -590,8 +576,8 @@ export function ArticlePage({
               onClick={handleArticleClick(story.slug)}
               style={{ display: 'block' }}
             >
-              <div className="ph" style={{ aspectRatio: '3 / 2' }}>
-                {story.photoLabel[lang]}
+              <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
+                <img src={getArticlePhoto(story.slug)} alt={story.photoLabel[lang]} loading="lazy" />
               </div>
               <p
                 style={{
