@@ -8,6 +8,7 @@
     "prebuild": "npm run sync:directory",
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "postbuild": "node scripts/prerender-seo.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

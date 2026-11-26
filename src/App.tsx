@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { applyDocumentSeo, ROUTE_SEO } from './data/seo';
 import { ArticlePage } from './pages/ArticlePage';
 import { DirectoryPage } from './pages/DirectoryPage';
 import { HomePage } from './pages/HomePage';
@@ -14,6 +15,10 @@ function getPageFromPath(): Page {
 
 export function App() {
   const [page, setPage] = useState<Page>(getPageFromPath);
+
+  useEffect(() => {
+    applyDocumentSeo(ROUTE_SEO[page]);
+  }, [page]);
 
   useEffect(() => {
     const onPopState = () => setPage(getPageFromPath());
