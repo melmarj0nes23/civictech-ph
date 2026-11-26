@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   create-pr:
-    if: contains(github.event.issue.labels.*.name, 'directory-submission')
+    if: contains(github.event.issue.labels.*.name, 'directory-submission') || startsWith(github.event.issue.title, '[Directory]:') || contains(github.event.issue.body, '### Project or Organization Name')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
