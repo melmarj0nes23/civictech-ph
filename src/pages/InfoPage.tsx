@@ -128,7 +128,7 @@ export function InfoPage({
         </div>
       </header>
 
-      <main style={{ maxWidth: 740, margin: '0 auto', padding: '48px 24px 72px' }}>
+      <main className="info-main" style={{ maxWidth: 740, margin: '0 auto', padding: '48px 24px 72px' }}>
         <p
           style={{
             margin: '0 0 12px',
@@ -155,6 +155,7 @@ export function InfoPage({
           {page.title[lang]}
         </h1>
         <p
+          className="article-deck"
           style={{
             margin: '18px 0 0',
             fontFamily: 'Newsreader, Georgia, serif',
@@ -169,7 +170,7 @@ export function InfoPage({
         </p>
 
         <div
-          className="body"
+          className="body info-body"
           style={{
             marginTop: 32,
             fontFamily: 'Newsreader, Georgia, serif',
@@ -202,6 +203,7 @@ export function InfoPage({
             <a
               href={page.cta.href}
               onClick={handleCta}
+              className="info-cta"
               style={{
                 background: ACCENT,
                 color: '#fff',
