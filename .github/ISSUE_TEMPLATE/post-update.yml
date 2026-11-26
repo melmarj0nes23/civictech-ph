@@ -24,6 +24,18 @@ body:
         - Stable
         - Archived
   - type: input
+    id: website
+    attributes:
+      label: Website (optional)
+      description: Add or update the project or CSO website URL. Leave empty for no change.
+      placeholder: https://
+  - type: input
+    id: repository
+    attributes:
+      label: Source code (optional)
+      description: Add or update the GitHub or source repository URL. Leave empty for no change.
+      placeholder: https://github.com/
+  - type: input
     id: title
     attributes:
       label: Update title

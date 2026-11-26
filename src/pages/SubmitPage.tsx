@@ -42,6 +42,8 @@ export function SubmitPage({
   const [updateStatus, setUpdateStatus] = useState<
     'No change' | 'Planning' | 'Alpha' | 'Beta' | 'Stable' | 'Archived'
   >('No change');
+  const [updateWebsite, setUpdateWebsite] = useState('');
+  const [updateRepository, setUpdateRepository] = useState('');
   const [updateTitle, setUpdateTitle] = useState('');
   const [updateBody, setUpdateBody] = useState('');
 
@@ -87,6 +89,8 @@ export function SubmitPage({
     params.set('title', `Post an update: ${updateTitle.trim()}`);
     params.set('project', updateProject);
     params.set('status', updateStatus);
+    if (updateWebsite.trim()) params.set('website', updateWebsite.trim());
+    if (updateRepository.trim()) params.set('repository', updateRepository.trim());
     params.set('body', updateBody.trim());
 
     window.open(`${GITHUB_NEW_ISSUE_URL}?${params.toString()}`, '_blank', 'noopener,noreferrer');
@@ -535,6 +539,48 @@ export function SubmitPage({
                   <option value="Stable">Stable</option>
                   <option value="Archived">Archived</option>
                 </select>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
+                gap: 16,
+              }}
+            >
+              <div>
+                <label htmlFor="update-website" style={labelStyle}>
+                  {t.submit.updateWebsite}
+                </label>
+                <p style={{ margin: '0 0 6px', fontSize: 12, color: '#666' }}>
+                  {t.submit.updateUrlHint}
+                </p>
+                <input
+                  id="update-website"
+                  type="url"
+                  placeholder="https://"
+                  value={updateWebsite}
+                  onChange={(e) => setUpdateWebsite(e.target.value)}
+                  style={inputStyle}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="update-repository" style={labelStyle}>
+                  {t.submit.updateRepository}
+                </label>
+                <p style={{ margin: '0 0 6px', fontSize: 12, color: '#666' }}>
+                  {t.submit.updateUrlHint}
+                </p>
+                <input
+                  id="update-repository"
+                  type="url"
+                  placeholder="https://github.com/"
+                  value={updateRepository}
+                  onChange={(e) => setUpdateRepository(e.target.value)}
+                  style={inputStyle}
+                />
               </div>
             </div>
 
