@@ -1,11 +1,13 @@
 import type { MouseEvent } from 'react';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
+import type { InfoPageSlug } from '../data/infoPages';
 
 interface FooterProps {
   lang: Lang;
   onBackHome: () => void;
   onOpenCivicTools: () => void;
   onOpenSubmit: (hash?: string) => void;
+  onOpenInfo: (slug: InfoPageSlug) => void;
 }
 
 export function Footer({
@@ -13,6 +15,7 @@ export function Footer({
   onBackHome,
   onOpenCivicTools,
   onOpenSubmit,
+  onOpenInfo,
 }: FooterProps) {
   const t = TRANSLATIONS[lang];
 
@@ -30,6 +33,12 @@ export function Footer({
     (hash?: string) => (e: MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault();
       onOpenSubmit(hash);
+    };
+
+  const handleOpenInfo =
+    (slug: InfoPageSlug) => (e: MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      onOpenInfo(slug);
     };
 
   return (
@@ -90,19 +99,23 @@ export function Footer({
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <span style={{ fontWeight: 600 }}>{t.footer.about}</span>
-            <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
+            <a href="/mission" onClick={handleOpenInfo('mission')} style={{ color: '#555' }}>
               {t.footer.ourMission}
             </a>
-            <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
+            <a
+              href="/editorial-standards"
+              onClick={handleOpenInfo('editorial-standards')}
+              style={{ color: '#555' }}
+            >
               {t.footer.editorialStandards}
             </a>
-            <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
+            <a href="/corrections" onClick={handleOpenInfo('corrections')} style={{ color: '#555' }}>
               {t.footer.corrections}
             </a>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <span style={{ fontWeight: 600 }}>{t.footer.getInvolved}</span>
-            <a href="/civictools/submit" onClick={handleOpenSubmit()} style={{ color: '#555' }}>
+            <a href="/volunteer" onClick={handleOpenInfo('volunteer')} style={{ color: '#555' }}>
               {t.footer.volunteer}
             </a>
             <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>

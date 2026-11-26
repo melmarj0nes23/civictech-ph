@@ -6,11 +6,13 @@ import {
   type CategorySlug,
 } from './data/articles';
 import type { Lang } from './data/i18n';
+import { INFO_PAGES, type InfoPageSlug } from './data/infoPages';
 import { applyDocumentSeo, ROUTE_SEO } from './data/seo';
 import { ArticlePage } from './pages/ArticlePage';
 import { CategoryPage } from './pages/CategoryPage';
 import { DirectoryPage } from './pages/DirectoryPage';
 import { HomePage } from './pages/HomePage';
+import { InfoPage } from './pages/InfoPage';
 import { SubmitPage } from './pages/SubmitPage';
 
 type RouteState =
@@ -18,12 +20,21 @@ type RouteState =
   | { kind: 'civictools' }
   | { kind: 'submit' }
   | { kind: 'category'; slug: CategorySlug }
-  | { kind: 'article'; slug: string };
+  | { kind: 'article'; slug: string }
+  | { kind: 'info'; slug: InfoPageSlug };
 
 function getRouteFromPath(): RouteState {
   const path = window.location.pathname.replace(/\/+$/, '') || '/';
   if (path === '/civictools/submit') return { kind: 'submit' };
   if (path === '/civictools') return { kind: 'civictools' };
+  if (
+    path === '/mission' ||
+    path === '/editorial-standards' ||
+    path === '/corrections' ||
+    path === '/volunteer'
+  ) {
+    return { kind: 'info', slug: path.slice(1) as InfoPageSlug };
+  }
   if (path === '/article') return { kind: 'article', slug: 'volunteers-national-budget' };
   if (path.startsWith('/article/')) {
     return { kind: 'article', slug: path.slice('/article/'.length) };
@@ -51,6 +62,22 @@ export function App() {
   const [lang, setLang] = useState<Lang>(getInitialLang);
 
   useEffect(() => {
+    if (route.kind === 'info') {
+      const info = INFO_PAGES[route.slug];
+      applyDocumentSeo(
+        {
+          path: `/${info.slug}`,
+          title: {
+            en: `${info.title.en} — Civic Tech by BetterGov.ph`,
+            fil: `${info.title.fil} — Civic Tech ng BetterGov.ph`,
+          },
+          description: info.deck,
+          type: 'website',
+        },
+        lang
+      );
+      return;
+    }
     if (route.kind === 'category') {
       const cat = getCategoryBySlug(route.slug) ?? CATEGORIES[0];
       applyDocumentSeo(
@@ -108,6 +135,7 @@ export function App() {
     let targetPath = '/';
     if (next.kind === 'civictools') targetPath = '/civictools';
     else if (next.kind === 'submit') targetPath = '/civictools/submit';
+    else if (next.kind === 'info') targetPath = `/${next.slug}`;
     else if (next.kind === 'category') targetPath = `/category/${next.slug}`;
     else if (next.kind === 'article') {
       targetPath =
@@ -130,6 +158,21 @@ export function App() {
     }
   };
 
+  if (route.kind === 'info') {
+    return (
+      <InfoPage
+        slug={route.slug}
+        lang={lang}
+        onLangChange={handleLangChange}
+        onBackHome={() => navigate({ kind: 'home' })}
+        onOpenCivicTools={() => navigate({ kind: 'civictools' })}
+        onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
+        onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
+        onOpenInfo={(slug) => navigate({ kind: 'info', slug })}
+      />
+    );
+  }
+
   if (route.kind === 'article') {
     return (
       <ArticlePage
@@ -141,6 +184,7 @@ export function App() {
         onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
         onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
         onOpenArticle={(slug) => navigate({ kind: 'article', slug })}
+        onOpenInfo={(slug) => navigate({ kind: 'info', slug })}
       />
     );
   }
@@ -156,6 +200,7 @@ export function App() {
         onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
         onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
         onOpenArticle={(slug) => navigate({ kind: 'article', slug })}
+        onOpenInfo={(slug) => navigate({ kind: 'info', slug })}
       />
     );
   }
@@ -169,6 +214,7 @@ export function App() {
         onBackDirectory={() => navigate({ kind: 'civictools' })}
         onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
         onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
+        onOpenInfo={(slug) => navigate({ kind: 'info', slug })}
       />
     );
   }
@@ -181,6 +227,7 @@ export function App() {
         onBackHome={() => navigate({ kind: 'home' })}
         onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
         onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
+        onOpenInfo={(slug) => navigate({ kind: 'info', slug })}
       />
     );
   }
@@ -193,6 +240,7 @@ export function App() {
       onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
       onOpenCivicTools={() => navigate({ kind: 'civictools' })}
       onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
+      onOpenInfo={(slug) => navigate({ kind: 'info', slug })}
     />
   );
 }

@@ -73,6 +73,17 @@ const ROUTES = [
     description: `${title} — Civic Tech by BetterGov.ph.`,
     type: 'article',
   })),
+  ...[
+    ['mission', 'Our mission', 'An open, volunteer-run hub connecting Filipinos with civic technology, civil society organizations, and independent reporting on public data.'],
+    ['editorial-standards', 'Editorial standards', 'How we report, verify data, separate opinion from reporting, and maintain independence across Civic Tech.'],
+    ['corrections', 'Corrections', 'When we get a fact, link, or directory detail wrong, we fix it promptly and note the change openly.'],
+    ['volunteer', 'Volunteer', 'Help build, curate, and document Philippine civic technology with BetterGov.ph.'],
+  ].map(([slug, title, description]) => ({
+    path: `/${slug}`,
+    title: `${title} — Civic Tech by BetterGov.ph`,
+    description,
+    type: 'website',
+  })),
 ];
 
 function escapeHtml(str) {

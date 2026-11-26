@@ -2,6 +2,7 @@ import type { MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
 import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
+import type { InfoPageSlug } from '../data/infoPages';
 
 const ACCENT = '#0B3D91';
 
@@ -12,6 +13,7 @@ interface HomePageProps {
   onOpenCategory: (slug: CategorySlug) => void;
   onOpenCivicTools: () => void;
   onOpenSubmit: (hash?: string) => void;
+  onOpenInfo: (slug: InfoPageSlug) => void;
 }
 
 export function HomePage({
@@ -21,6 +23,7 @@ export function HomePage({
   onOpenCategory,
   onOpenCivicTools,
   onOpenSubmit,
+  onOpenInfo,
 }: HomePageProps) {
   const t = TRANSLATIONS[lang];
 
@@ -990,6 +993,7 @@ export function HomePage({
         onBackHome={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onOpenCivicTools={onOpenCivicTools}
         onOpenSubmit={onOpenSubmit}
+        onOpenInfo={onOpenInfo}
       />
     </div>
   );

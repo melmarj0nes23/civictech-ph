@@ -3,6 +3,7 @@ import { Footer } from '../components/Footer';
 import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { DIRECTORY_ENTRIES } from '../data/directory';
 import { SECTOR_LABELS, TRANSLATIONS, type Lang } from '../data/i18n';
+import type { InfoPageSlug } from '../data/infoPages';
 import { SECTORS, type Sector } from '../data/sectors';
 
 const ACCENT = '#0B3D91';
@@ -15,6 +16,7 @@ interface SubmitPageProps {
   onBackDirectory: () => void;
   onOpenSubmit: (hash?: string) => void;
   onOpenCategory: (slug: CategorySlug) => void;
+  onOpenInfo: (slug: InfoPageSlug) => void;
 }
 
 export function SubmitPage({
@@ -24,6 +26,7 @@ export function SubmitPage({
   onBackDirectory,
   onOpenSubmit,
   onOpenCategory,
+  onOpenInfo,
 }: SubmitPageProps) {
   const t = TRANSLATIONS[lang];
   const [kind, setKind] = useState<'Civic Tech Project' | 'Civil Society Organization (CSO)'>(
@@ -645,6 +648,7 @@ export function SubmitPage({
         onBackHome={onBackHome}
         onOpenCivicTools={onBackDirectory}
         onOpenSubmit={onOpenSubmit}
+        onOpenInfo={onOpenInfo}
       />
     </div>
   );

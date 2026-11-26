@@ -10,6 +10,7 @@ import {
   type Lang,
 } from '../data/i18n';
 import type { EntryKind } from '../data/schema';
+import type { InfoPageSlug } from '../data/infoPages';
 import { SECTORS, type Sector } from '../data/sectors';
 
 const ACCENT = '#0B3D91';
@@ -21,6 +22,7 @@ interface DirectoryPageProps {
   onBackHome: () => void;
   onOpenSubmit: (hash?: string) => void;
   onOpenCategory: (slug: CategorySlug) => void;
+  onOpenInfo: (slug: InfoPageSlug) => void;
 }
 
 export function DirectoryPage({
@@ -29,6 +31,7 @@ export function DirectoryPage({
   onBackHome,
   onOpenSubmit,
   onOpenCategory,
+  onOpenInfo,
 }: DirectoryPageProps) {
   const t = TRANSLATIONS[lang];
   const [search, setSearch] = useState('');
@@ -536,6 +539,7 @@ export function DirectoryPage({
         onBackHome={onBackHome}
         onOpenCivicTools={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onOpenSubmit={onOpenSubmit}
+        onOpenInfo={onOpenInfo}
       />
     </div>
   );

@@ -7,6 +7,7 @@ import {
   type CategorySlug,
 } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
+import type { InfoPageSlug } from '../data/infoPages';
 
 const ACCENT = '#0B3D91';
 
@@ -19,6 +20,7 @@ interface CategoryPageProps {
   onOpenSubmit: (hash?: string) => void;
   onOpenCategory: (slug: CategorySlug) => void;
   onOpenArticle: (slug: string) => void;
+  onOpenInfo: (slug: InfoPageSlug) => void;
 }
 
 export function CategoryPage({
@@ -30,6 +32,7 @@ export function CategoryPage({
   onOpenSubmit,
   onOpenCategory,
   onOpenArticle,
+  onOpenInfo,
 }: CategoryPageProps) {
   const t = TRANSLATIONS[lang];
   const category = getCategoryBySlug(categorySlug) ?? CATEGORIES[0];
@@ -224,6 +227,7 @@ export function CategoryPage({
         onBackHome={onBackHome}
         onOpenCivicTools={onOpenCivicTools}
         onOpenSubmit={onOpenSubmit}
+        onOpenInfo={onOpenInfo}
       />
     </div>
   );
