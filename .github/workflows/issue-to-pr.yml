@@ -1,0 +1,123 @@
+name: Directory Submission to PR
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  create-pr:
+    if: contains(github.event.issue.labels.*.name, 'directory-submission')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Parse submission and create PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body || '';
+
+            function extractField(heading) {
+              const regex = new RegExp(`### ${heading}\\s+([\\s\\S]*?)(?=\\n### |$)`);
+              const match = body.match(regex);
+              return match ? match[1].trim() : '';
+            }
+
+            const kindRaw = extractField('Entry Type');
+            const name = extractField('Project or Organization Name');
+            const sector = extractField('Primary Sector');
+            const website = extractField('Website or Repository URL');
+            const summary = extractField('Short Summary \\(up to 240 characters\\)');
+
+            if (!name || !sector || !website || !summary) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: 'Could not parse all required fields from this submission. Please make sure all form fields are filled out.',
+              });
+              return;
+            }
+
+            const isCso = kindRaw.toLowerCase().includes('cso');
+            const folder = isCso ? 'csos' : 'projects';
+            const slug = name
+              .normalize('NFKD')
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, '-')
+              .replace(/^-+|-+$/g, '')
+              .slice(0, 60)
+              .replace(/-+$/, '');
+
+            if (!slug) {
+              throw new Error('Could not generate a valid slug from the submission name.');
+            }
+
+            const today = new Date().toISOString().slice(0, 10);
+            const esc = (s) => s.replace(/'/g, "''").replace(/\r?\n/g, ' ');
+            const markdown = [
+              '---',
+              `title: '${esc(name)}'`,
+              `summary: '${esc(summary.slice(0, 240))}'`,
+              `status: 'beta'`,
+              `sectors: ['${esc(sector)}']`,
+              `website: '${esc(website)}'`,
+              `owner: '${issue.user.login}'`,
+              `tags: []`,
+              `dateAdded: '${today}'`,
+              '---',
+              '',
+            ].join('\n');
+
+            const filePath = `content/${folder}/${slug}/index.md`;
+            const branch = `submission/${slug}-${issue.number}`;
+            const baseBranch = context.payload.repository.default_branch;
+
+            const { data: refData } = await github.rest.git.getRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `heads/${baseBranch}`,
+            });
+
+            try {
+              await github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `refs/heads/${branch}`,
+                sha: refData.object.sha,
+              });
+            } catch (err) {
+              if (err.status !== 422) throw err;
+            }
+
+            await github.rest.repos.createOrUpdateFileContents({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              path: filePath,
+              message: `Add ${isCso ? 'CSO' : 'project'}: ${name}`,
+              content: Buffer.from(markdown, 'utf8').toString('base64'),
+              branch,
+            });
+
+            const { data: pr } = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Add ${isCso ? 'CSO' : 'project'}: ${name}`,
+              head: branch,
+              base: baseBranch,
+              body: `Automated PR from submission #${issue.number} by @${issue.user.login}.\n\nCloses #${issue.number}`,
+            });
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: `Pull request created: #${pr.number}. A maintainer will review and merge it shortly.`,
+            });
