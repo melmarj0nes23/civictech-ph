@@ -223,8 +223,4 @@ a:hover {
     justify-content: space-between;
     gap: 24px;
   }
-
-  .footer-links > div:last-child {
-    text-align: right;
-  }
 }
