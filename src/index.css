@@ -251,4 +251,10 @@ a:hover {
     max-width: none !important;
     flex: 1 1 100% !important;
   }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
 }
