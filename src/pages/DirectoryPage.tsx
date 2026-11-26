@@ -17,9 +17,15 @@ interface DirectoryPageProps {
   lang: Lang;
   onLangChange: (lang: Lang) => void;
   onBackHome: () => void;
+  onOpenSubmit: () => void;
 }
 
-export function DirectoryPage({ lang, onLangChange, onBackHome }: DirectoryPageProps) {
+export function DirectoryPage({
+  lang,
+  onLangChange,
+  onBackHome,
+  onOpenSubmit,
+}: DirectoryPageProps) {
   const t = TRANSLATIONS[lang];
   const [search, setSearch] = useState('');
   const [kindFilter, setKindFilter] = useState<EntryKind | 'all'>('all');
@@ -29,6 +35,11 @@ export function DirectoryPage({ lang, onLangChange, onBackHome }: DirectoryPageP
   const handleBackHome = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onBackHome();
+  };
+
+  const handleOpenSubmit = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    onOpenSubmit();
   };
 
   const handleSwitchLang = (next: Lang) => (e: MouseEvent<HTMLAnchorElement>) => {
@@ -210,9 +221,8 @@ export function DirectoryPage({ lang, onLangChange, onBackHome }: DirectoryPageP
           </div>
 
           <a
-            href="https://github.com/melmarj0nes23/civictech-ph/issues/new?template=submit-entry.yml"
-            target="_blank"
-            rel="noreferrer"
+            href="/civictools/submit"
+            onClick={handleOpenSubmit}
             style={{
               background: ACCENT,
               color: '#fff',

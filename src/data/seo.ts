@@ -10,7 +10,7 @@ export interface PageSeo {
 export const SITE_URL = 'https://civictech-ph.pages.dev';
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.png`;
 
-export const ROUTE_SEO: Record<'home' | 'civictools' | 'article', PageSeo> = {
+export const ROUTE_SEO: Record<'home' | 'civictools' | 'submit' | 'article', PageSeo> = {
   home: {
     path: '/',
     title: {
@@ -32,6 +32,18 @@ export const ROUTE_SEO: Record<'home' | 'civictools' | 'article', PageSeo> = {
     description: {
       en: 'Explore 200+ Philippine civic tech projects and Civil Society Organizations (CSOs) across 15 public-interest sectors.',
       fil: 'Tuklasin ang 200+ proyektong civic tech at Civil Society Organization (CSO) sa 15 sektor sa Pilipinas.',
+    },
+    type: 'website',
+  },
+  submit: {
+    path: '/civictools/submit',
+    title: {
+      en: 'Submit a Project or CSO — Civic Tech by BetterGov.ph',
+      fil: 'Magsumite ng Proyekto o CSO — Civic Tech ng BetterGov.ph',
+    },
+    description: {
+      en: 'Share a Philippine civic tech project or Civil Society Organization (CSO) for the civictech.ph directory.',
+      fil: 'Magbahagi ng proyektong civic tech o Civil Society Organization (CSO) para sa direktoryo ng civictech.ph.',
     },
     type: 'website',
   },

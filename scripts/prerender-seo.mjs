@@ -26,6 +26,13 @@ const ROUTES = [
     type: 'website',
   },
   {
+    path: '/civictools/submit',
+    title: 'Submit a Project or CSO — Civic Tech by BetterGov.ph',
+    description:
+      'Share a Philippine civic tech project or Civil Society Organization (CSO) for the civictech.ph directory.',
+    type: 'website',
+  },
+  {
     path: '/article',
     title: 'The volunteers rebuilding how Filipinos read the national budget — Civic Tech',
     description:

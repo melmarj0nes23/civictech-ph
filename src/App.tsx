@@ -4,12 +4,14 @@ import { applyDocumentSeo, ROUTE_SEO } from './data/seo';
 import { ArticlePage } from './pages/ArticlePage';
 import { DirectoryPage } from './pages/DirectoryPage';
 import { HomePage } from './pages/HomePage';
+import { SubmitPage } from './pages/SubmitPage';
 
-type Page = 'home' | 'article' | 'civictools';
+type Page = 'home' | 'article' | 'civictools' | 'submit';
 
 function getPageFromPath(): Page {
   const path = window.location.pathname.replace(/\/+$/, '') || '/';
   if (path === '/article') return 'article';
+  if (path === '/civictools/submit') return 'submit';
   if (path === '/civictools') return 'civictools';
   return 'home';
 }
@@ -48,7 +50,12 @@ export function App() {
   };
 
   const navigate = (next: Page) => {
-    const targetPath = next === 'home' ? '/' : `/${next}`;
+    const targetPath =
+      next === 'home'
+        ? '/'
+        : next === 'submit'
+          ? '/civictools/submit'
+          : `/${next}`;
     if (window.location.pathname !== targetPath) {
       window.history.pushState(null, '', targetPath);
     }
@@ -67,12 +74,24 @@ export function App() {
     );
   }
 
+  if (page === 'submit') {
+    return (
+      <SubmitPage
+        lang={lang}
+        onLangChange={handleLangChange}
+        onBackHome={() => navigate('home')}
+        onBackDirectory={() => navigate('civictools')}
+      />
+    );
+  }
+
   if (page === 'civictools') {
     return (
       <DirectoryPage
         lang={lang}
         onLangChange={handleLangChange}
         onBackHome={() => navigate('home')}
+        onOpenSubmit={() => navigate('submit')}
       />
     );
   }
