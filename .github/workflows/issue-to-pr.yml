@@ -27,24 +27,38 @@ jobs:
             function extractField(heading) {
               const regex = new RegExp(`### ${heading}\\s+([\\s\\S]*?)(?=\\n### |$)`);
               const match = body.match(regex);
-              return match ? match[1].trim() : '';
+              const val = match ? match[1].trim() : '';
+              return val === '_No response_' ? '' : val;
             }
 
             const kindRaw = extractField('Entry Type');
             const name = extractField('Project or Organization Name');
+            const summary =
+              extractField('One-line summary') ||
+              extractField('Short Summary \\(up to 240 characters\\)');
+            const description = extractField('What it does and who it helps');
+            const statusRaw = extractField('Stage');
             const sector = extractField('Primary Sector');
-            const website = extractField('Website or Repository URL');
-            const summary = extractField('Short Summary \\(up to 240 characters\\)');
+            const website =
+              extractField('Website') || extractField('Website or Repository URL');
+            const repoUrl = extractField('Source code');
+            const license = extractField('License');
+            const tagsRaw = extractField('Tags');
+            const maintainersRaw = extractField('Maintainers');
 
-            if (!name || !sector || !website || !summary) {
+            if (!name || !sector || !summary) {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number,
-                body: 'Could not parse all required fields from this submission. Please make sure all form fields are filled out.',
+                body: 'Could not parse all required fields from this submission. Please make sure all required form fields are filled out.',
               });
               return;
             }
+
+            const allowedStatuses = new Set(['planning', 'alpha', 'beta', 'stable']);
+            const statusLower = statusRaw.toLowerCase();
+            const status = allowedStatuses.has(statusLower) ? statusLower : 'beta';
 
             const isCso = kindRaw.toLowerCase().includes('cso');
             const folder = isCso ? 'csos' : 'projects';
@@ -62,20 +76,42 @@ jobs:
 
             const today = new Date().toISOString().slice(0, 10);
             const esc = (s) => s.replace(/'/g, "''").replace(/\r?\n/g, ' ');
-            const markdown = [
+            const parseCsv = (raw, max) =>
+              raw
+                ? raw
+                    .split(',')
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                    .slice(0, max)
+                : [];
+
+            const tags = parseCsv(tagsRaw, 8);
+            const maintainers = parseCsv(maintainersRaw, 10);
+
+            const lines = [
               '---',
               `title: '${esc(name)}'`,
               `summary: '${esc(summary.slice(0, 240))}'`,
-              `status: 'beta'`,
+              `status: '${status}'`,
               `sectors: ['${esc(sector)}']`,
-              `website: '${esc(website)}'`,
-              `owner: '${issue.user.login}'`,
-              `tags: []`,
-              `dateAdded: '${today}'`,
-              '---',
-              '',
-            ].join('\n');
+            ];
+            if (website) lines.push(`website: '${esc(website)}'`);
+            if (repoUrl) lines.push(`repoUrl: '${esc(repoUrl)}'`);
+            if (license) lines.push(`license: '${esc(license.slice(0, 40))}'`);
+            lines.push(`owner: '${issue.user.login}'`);
+            lines.push(
+              `maintainers: [${maintainers.map((m) => `'${esc(m)}'`).join(', ')}]`
+            );
+            lines.push(`tags: [${tags.map((t) => `'${esc(t)}'`).join(', ')}]`);
+            lines.push(`dateAdded: '${today}'`);
+            lines.push('---');
+            if (description) {
+              lines.push('');
+              lines.push(description.slice(0, 1200));
+            }
+            lines.push('');
 
+            const markdown = lines.join('\n');
             const filePath = `content/${folder}/${slug}/index.md`;
             const branch = `submission/${slug}-${issue.number}`;
             const baseBranch = context.payload.repository.default_branch;

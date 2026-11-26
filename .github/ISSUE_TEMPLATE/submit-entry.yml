@@ -1,8 +1,12 @@
 name: Submit a Civic Tech Project or CSO
-description: Propose a Philippine civic tech project or Civil Society Organization (CSO) for the civictech.ph directory.
+description: Add a Philippine civic tech project or Civil Society Organization (CSO) to the civictech.ph directory. A pull request is opened for you.
 title: '[Directory]: '
 labels: ['directory-submission']
 body:
+  - type: markdown
+    attributes:
+      value: |
+        You do not need to write code to share a project or CSO. Fill in what you know. After you submit, a pull request is opened automatically and a maintainer reviews it.
   - type: dropdown
     id: kind
     attributes:
@@ -17,6 +21,29 @@ body:
     attributes:
       label: Project or Organization Name
       placeholder: e.g. Budget Portal or Kontra Daya
+    validations:
+      required: true
+  - type: input
+    id: summary
+    attributes:
+      label: One-line summary
+      description: Up to 240 characters. This shows in the directory list.
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What it does and who it helps
+      description: Optional. Up to 1,200 characters of plain text.
+  - type: dropdown
+    id: status
+    attributes:
+      label: Stage
+      options:
+        - Planning
+        - Alpha
+        - Beta
+        - Stable
     validations:
       required: true
   - type: dropdown
@@ -44,14 +71,28 @@ body:
   - type: input
     id: website
     attributes:
-      label: Website or Repository URL
-      placeholder: https://...
-    validations:
-      required: true
-  - type: textarea
-    id: summary
+      label: Website
+      description: Where people can see or use it. Leave empty if there is none yet.
+      placeholder: https://
+  - type: input
+    id: repository
     attributes:
-      label: Short Summary (up to 240 characters)
-      description: Briefly describe what the project or CSO does and who it serves.
-    validations:
-      required: true
+      label: Source code
+      description: Leave empty if there is no public repository.
+      placeholder: https://github.com/
+  - type: input
+    id: license
+    attributes:
+      label: License
+      placeholder: MIT
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: Up to 8, separated by commas.
+      placeholder: open-data, mapping
+  - type: input
+    id: maintainers
+    attributes:
+      label: Maintainers
+      description: Names of the people or group behind it, separated by commas.
