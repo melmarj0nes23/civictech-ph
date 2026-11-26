@@ -46,7 +46,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
           }}
         >
           <span>Wednesday, 25 November 2026</span>
-          <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 20px', alignItems: 'center' }}>
             <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
               English
             </a>
@@ -91,7 +91,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
             margin: 0,
             fontFamily: 'Newsreader, Georgia, serif',
             fontWeight: 600,
-            fontSize: 84,
+            fontSize: 'clamp(44px, 8vw, 84px)',
             lineHeight: 1,
             letterSpacing: '-0.02em',
           }}
@@ -223,7 +223,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
                 margin: 0,
                 fontFamily: 'Newsreader, Georgia, serif',
                 fontWeight: 500,
-                fontSize: 46,
+                fontSize: 'clamp(28px, 4.5vw, 46px)',
                 lineHeight: 1.08,
                 letterSpacing: '-0.015em',
               }}
@@ -454,7 +454,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
               gap: 32,
             }}
           >
@@ -627,7 +627,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
               style={{
                 margin: 0,
                 fontFamily: 'Newsreader, Georgia, serif',
-                fontSize: 36,
+                fontSize: 'clamp(26px, 3.8vw, 36px)',
                 lineHeight: 1.12,
                 fontWeight: 500,
               }}
@@ -680,7 +680,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
                 gap: 28,
                 paddingTop: 16,
               }}

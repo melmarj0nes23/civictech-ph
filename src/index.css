@@ -1,6 +1,14 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
 body {
   margin: 0;
   background: #fff;
+  overflow-x: hidden;
 }
 
 a {
@@ -31,4 +39,20 @@ a:hover {
 
 .body p {
   margin: 0 0 24px;
+}
+
+.share-rail {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 6px;
+}
+
+@media (max-width: 768px) {
+  .share-rail {
+    flex-direction: row;
+    flex: 1 1 100%;
+    padding-top: 0;
+  }
 }

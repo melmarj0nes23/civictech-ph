@@ -134,7 +134,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
               margin: 0,
               fontFamily: 'Newsreader, Georgia, serif',
               fontWeight: 500,
-              fontSize: 58,
+              fontSize: 'clamp(32px, 5.5vw, 58px)',
               lineHeight: 1.06,
               letterSpacing: '-0.02em',
             }}
@@ -146,7 +146,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
               margin: '20px auto 0',
               maxWidth: 680,
               fontFamily: 'Newsreader, Georgia, serif',
-              fontSize: 22,
+              fontSize: 'clamp(18px, 2.5vw, 22px)',
               lineHeight: 1.45,
               color: '#333',
             }}
@@ -213,20 +213,11 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
             padding: '48px 24px 0',
             display: 'flex',
             flexWrap: 'wrap',
-            gap: 56,
+            gap: '32px 56px',
             justifyContent: 'center',
           }}
         >
-          <aside
-            aria-label="Share"
-            style={{
-              flex: '0 0 auto',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 8,
-              paddingTop: 6,
-            }}
-          >
+          <aside aria-label="Share" className="share-rail">
             <button
               type="button"
               aria-label="Share on Facebook"
@@ -360,7 +351,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
               <p
                 style={{
                   margin: 0,
-                  fontSize: 30,
+                  fontSize: 'clamp(22px, 3.5vw, 30px)',
                   lineHeight: 1.3,
                   fontStyle: 'italic',
                   fontWeight: 500,
@@ -576,7 +567,7 @@ export function ArticlePage({ onBackHome, onOpenCivicTools }: ArticlePageProps) 
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
             gap: 32,
           }}
         >

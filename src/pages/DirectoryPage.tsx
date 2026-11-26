@@ -181,7 +181,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 margin: 0,
                 fontFamily: 'Newsreader, Georgia, serif',
                 fontWeight: 500,
-                fontSize: 48,
+                fontSize: 'clamp(32px, 5vw, 48px)',
                 lineHeight: 1.08,
                 letterSpacing: '-0.02em',
               }}
@@ -262,6 +262,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 fontWeight: 600,
                 color: '#111',
                 cursor: 'pointer',
+                maxWidth: '100%',
               }}
             >
               <option value="all">All Entries ({DIRECTORY_ENTRIES.length})</option>
@@ -287,6 +288,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
                 fontWeight: 600,
                 color: '#111',
                 cursor: 'pointer',
+                maxWidth: '100%',
               }}
             >
               <option value="all">Every Sector</option>
@@ -364,7 +366,7 @@ export function DirectoryPage({ onBackHome }: DirectoryPageProps) {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))',
                 gap: 24,
               }}
             >
