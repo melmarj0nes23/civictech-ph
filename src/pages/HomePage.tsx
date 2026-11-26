@@ -32,6 +32,7 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
       {/* Utility bar */}
       <div style={{ borderBottom: '1px solid #E5E5E5' }}>
         <div className="utility-bar-inner">
+          <span className="utility-date">Wednesday, 25 November 2026</span>
           <div className="utility-actions">
             <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
               <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
@@ -70,20 +71,11 @@ export function HomePage({ onOpenArticle, onOpenCivicTools }: HomePageProps) {
         style={{
           maxWidth: 1240,
           margin: '0 auto',
-          padding: '32px 24px 28px',
+          padding: '40px 24px 28px',
           textAlign: 'center',
         }}
       >
-        <p
-          style={{
-            margin: '0 0 12px',
-            fontSize: 13,
-            color: '#555',
-            letterSpacing: '0.02em',
-          }}
-        >
-          Wednesday, 25 November 2026
-        </p>
+        <p className="masthead-date">Wednesday, 25 November 2026</p>
         <h1
           style={{
             margin: 0,
