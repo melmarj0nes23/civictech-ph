@@ -32,6 +32,7 @@ function ClerkProfileContent({
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [saving, setSaving] = useState(false);
+  const [editingName, setEditingName] = useState(false);
   const [notice, setNotice] = useState<{ text: string; isError: boolean } | null>(null);
   const [nlActive, setNlActive] = useState<boolean | null>(null);
   const [nlBusy, setNlBusy] = useState(false);
@@ -133,6 +134,7 @@ function ClerkProfileContent({
         text: isEn ? 'Profile updated.' : 'Na-update ang profile.',
         isError: false,
       });
+      setEditingName(false);
     } catch (err) {
       setNotice({
         text:
@@ -181,6 +183,9 @@ function ClerkProfileContent({
   const canPublish = role === 'admin' || role === 'editor';
   const displayName =
     [user.firstName, user.lastName].filter(Boolean).join(' ') || primaryEmail || 'Reader';
+  const connectedProviders = user.externalAccounts
+    .map((ext) => ext.provider.charAt(0).toUpperCase() + ext.provider.slice(1))
+    .join(', ');
   const joinedDate = user.createdAt
     ? new Date(user.createdAt).toLocaleDateString(isEn ? 'en-PH' : 'tl-PH', {
         year: 'numeric',
@@ -193,8 +198,9 @@ function ClerkProfileContent({
     <>
       {/* Top profile header */}
       <div
+        className="profile-header"
         style={{
-          paddingBottom: 28,
+          paddingBottom: 24,
           borderBottom: '1px solid #E5E5E5',
           display: 'flex',
           flexWrap: 'wrap',
@@ -203,23 +209,24 @@ function ClerkProfileContent({
           gap: 20,
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
           <img
             src={user.imageUrl}
             alt={displayName}
+            className="profile-avatar"
             style={{
-              width: 64,
-              height: 64,
+              width: 60,
+              height: 60,
               borderRadius: '50%',
               objectFit: 'cover',
               border: '1px solid #E5E5E5',
               flex: 'none',
             }}
           />
-          <div>
+          <div style={{ minWidth: 0 }}>
             <p
               style={{
-                margin: '0 0 6px',
+                margin: '0 0 4px',
                 fontSize: 11,
                 fontWeight: 600,
                 letterSpacing: '0.12em',
@@ -230,21 +237,33 @@ function ClerkProfileContent({
               {isEn ? 'Account · BetterGov.ph' : 'Account · BetterGov.ph'}
             </p>
             <h1
-              className="directory-title"
+              className="profile-title"
               style={{
                 margin: 0,
                 fontFamily: 'Newsreader, Georgia, serif',
-                fontSize: 38,
+                fontSize: 34,
                 fontWeight: 500,
-                lineHeight: 1.1,
+                lineHeight: 1.12,
                 letterSpacing: '-0.02em',
               }}
             >
               {displayName}
             </h1>
-            <p style={{ margin: '6px 0 0', fontSize: 14, color: '#555' }}>
+            <p
+              className="profile-meta"
+              style={{
+                margin: '4px 0 0',
+                fontSize: 14,
+                color: '#555',
+                overflowWrap: 'anywhere',
+              }}
+            >
               {primaryEmail}
-              {joinedDate ? ` · ${isEn ? 'Joined' : 'Sumali noong'} ${joinedDate}` : ''}
+              {joinedDate && (
+                <span className="profile-joined">
+                  {` · ${isEn ? 'Joined' : 'Sumali noong'} ${joinedDate}`}
+                </span>
+              )}
             </p>
           </div>
         </div>
@@ -253,14 +272,15 @@ function ClerkProfileContent({
           type="button"
           onClick={handleSignOut}
           style={{
-            minHeight: 42,
-            padding: '0 16px',
-            border: '1px solid #D4D4D4',
-            background: '#fff',
-            color: '#111',
+            padding: 0,
+            border: 'none',
+            background: 'transparent',
+            color: '#555',
             fontFamily: 'inherit',
             fontSize: 13,
             fontWeight: 600,
+            textDecoration: 'underline',
+            textUnderlineOffset: 3,
             cursor: 'pointer',
           }}
         >
@@ -268,235 +288,111 @@ function ClerkProfileContent({
         </button>
       </div>
 
-      {/* Profile details form */}
-      <section style={{ padding: '32px 0', borderBottom: '1px solid #E5E5E5' }}>
-        <h2
+      {/* Newsroom Studio (admin / editor only) */}
+      {canPublish && onOpenWrite && (
+        <section
+          className="profile-section"
           style={{
-            margin: '0 0 18px',
-            fontFamily: 'Newsreader, Georgia, serif',
-            fontSize: 24,
-            fontWeight: 500,
+            padding: '24px 0',
+            borderBottom: '1px solid #E5E5E5',
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 16,
           }}
         >
-          {isEn ? 'Profile details' : 'Mga detalye ng profile'}
-        </h2>
-        <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div
+          <div style={{ maxWidth: 460 }}>
+            <h2
+              style={{
+                margin: '0 0 4px',
+                fontFamily: 'Newsreader, Georgia, serif',
+                fontSize: 21,
+                fontWeight: 500,
+              }}
+            >
+              {isEn ? 'Newsroom Studio' : 'Newsroom Studio'}
+            </h2>
+            <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: '#555' }}>
+              {isEn
+                ? `Signed in as ${role}. Write and publish articles.`
+                : `Naka-sign in bilang ${role}. Sumulat at mag-publish ng artikulo.`}
+            </p>
+          </div>
+          <a
+            href="/write"
+            className="profile-cta"
+            onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+              e.preventDefault();
+              onOpenWrite();
+            }}
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
-              gap: 16,
+              display: 'inline-flex',
+              alignItems: 'center',
+              minHeight: 40,
+              padding: '0 18px',
+              background: ACCENT,
+              color: '#fff',
+              fontSize: 13,
+              fontWeight: 600,
+              whiteSpace: 'nowrap',
             }}
           >
-            <div>
-              <label
-                htmlFor="profile-first-name"
-                style={{
-                  display: 'block',
-                  marginBottom: 8,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: '#222',
-                }}
-              >
-                {isEn ? 'First name' : 'Unang pangalan'}
-              </label>
-              <input
-                id="profile-first-name"
-                type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                style={{
-                  width: '100%',
-                  minHeight: 44,
-                  padding: '0 14px',
-                  border: '1px solid #D4D4D4',
-                  fontFamily: 'inherit',
-                  fontSize: 15,
-                  color: '#111',
-                  boxSizing: 'border-box',
-                }}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="profile-last-name"
-                style={{
-                  display: 'block',
-                  marginBottom: 8,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: '#222',
-                }}
-              >
-                {isEn ? 'Last name' : 'Apelyido'}
-              </label>
-              <input
-                id="profile-last-name"
-                type="text"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                style={{
-                  width: '100%',
-                  minHeight: 44,
-                  padding: '0 14px',
-                  border: '1px solid #D4D4D4',
-                  fontFamily: 'inherit',
-                  fontSize: 15,
-                  color: '#111',
-                  boxSizing: 'border-box',
-                }}
-              />
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-            <button
-              type="submit"
-              disabled={saving}
-              style={{
-                minHeight: 44,
-                padding: '0 22px',
-                border: 'none',
-                background: ACCENT,
-                color: '#fff',
-                fontFamily: 'inherit',
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: saving ? 'wait' : 'pointer',
-                opacity: saving ? 0.7 : 1,
-              }}
-            >
-              {saving
-                ? isEn
-                  ? 'Saving…'
-                  : 'Sine-save…'
-                : isEn
-                  ? 'Save changes'
-                  : 'I-save ang pagbabago'}
-            </button>
-            {notice && (
-              <span
-                role="status"
-                style={{
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: notice.isError ? '#C62828' : ACCENT,
-                }}
-              >
-                {notice.text}
-              </span>
-            )}
-          </div>
-        </form>
-      </section>
-
-      {/* Emails & connected accounts */}
-      <section style={{ padding: '32px 0', borderBottom: '1px solid #E5E5E5' }}>
-        <h2
-          style={{
-            margin: '0 0 18px',
-            fontFamily: 'Newsreader, Georgia, serif',
-            fontSize: 24,
-            fontWeight: 500,
-          }}
-        >
-          {isEn ? 'Email & connected accounts' : 'Email at mga nakakonektang account'}
-        </h2>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {user.emailAddresses.map((ea) => (
-            <div
-              key={ea.id}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: 12,
-                padding: '12px 14px',
-                border: '1px solid #E5E5E5',
-                fontSize: 14,
-              }}
-            >
-              <span>{ea.emailAddress}</span>
-              {ea.id === user.primaryEmailAddressId && (
-                <span
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 600,
-                    padding: '3px 8px',
-                    background: '#F4F6FA',
-                    color: ACCENT,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                  }}
-                >
-                  {isEn ? 'Primary' : 'Pangunahin'}
-                </span>
-              )}
-            </div>
-          ))}
-
-          {user.externalAccounts.map((ext) => (
-            <div
-              key={ext.id}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: 12,
-                padding: '12px 14px',
-                border: '1px solid #E5E5E5',
-                fontSize: 14,
-              }}
-            >
-              <span style={{ textTransform: 'capitalize', fontWeight: 500 }}>
-                {ext.provider} · {ext.emailAddress || ext.username || ''}
-              </span>
-              <span style={{ fontSize: 12, color: '#555' }}>
-                {isEn ? 'Connected' : 'Nakakonekta'}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
+            {isEn ? 'Write & manage articles →' : 'Sumulat at pamahalaan ang artikulo →'}
+          </a>
+        </section>
+      )}
 
       {/* Newsletter (Cloudflare D1) */}
-      <section style={{ padding: '32px 0', borderBottom: '1px solid #E5E5E5' }}>
-        <h2
-          style={{
-            margin: '0 0 10px',
-            fontFamily: 'Newsreader, Georgia, serif',
-            fontSize: 24,
-            fontWeight: 500,
-          }}
-        >
-          {isEn ? 'The Civic Tech Weekly' : 'Ang Civic Tech Weekly'}
-        </h2>
-        <p style={{ margin: '0 0 16px', fontSize: 14, lineHeight: 1.55, color: '#555' }}>
-          {nlActive
-            ? isEn
-              ? `Subscribed with ${primaryEmail}.`
-              : `Naka-subscribe gamit ang ${primaryEmail}.`
-            : isEn
-              ? "Our editors' picks on data, digital government and public tools. Every Friday."
-              : 'Mga piling ulat ng patnugot tungkol sa datos, digital na gobyerno at mga tool.'}
-        </p>
+      <section
+        className="profile-section"
+        style={{
+          padding: '24px 0',
+          borderBottom: '1px solid #E5E5E5',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: 16,
+        }}
+      >
+        <div style={{ maxWidth: 460 }}>
+          <h2
+            style={{
+              margin: '0 0 4px',
+              fontFamily: 'Newsreader, Georgia, serif',
+              fontSize: 21,
+              fontWeight: 500,
+            }}
+          >
+            {isEn ? 'The Civic Tech Weekly' : 'Ang Civic Tech Weekly'}
+          </h2>
+          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: '#555' }}>
+            {nlActive
+              ? isEn
+                ? `Subscribed with ${primaryEmail}.`
+                : `Naka-subscribe gamit ang ${primaryEmail}.`
+              : isEn
+                ? "Friday editors' picks on digital government & open data."
+                : 'Mga piling ulat tuwing Biyernes tungkol sa digital na gobyerno.'}
+          </p>
+        </div>
         <button
           type="button"
+          className="profile-cta"
           disabled={nlBusy}
           onClick={handleToggleNewsletter}
           style={{
-            minHeight: 42,
+            minHeight: 40,
             padding: '0 18px',
-            border: nlActive ? '1px solid #D4D4D4' : 'none',
-            background: nlActive ? '#fff' : ACCENT,
-            color: nlActive ? '#111' : '#fff',
+            border: nlActive ? '1px solid #D4D4D4' : canPublish ? `1px solid ${ACCENT}` : 'none',
+            background: nlActive ? '#fff' : canPublish ? '#fff' : ACCENT,
+            color: nlActive ? '#111' : canPublish ? ACCENT : '#fff',
             fontFamily: 'inherit',
             fontSize: 13,
             fontWeight: 600,
             cursor: nlBusy ? 'wait' : 'pointer',
+            whiteSpace: 'nowrap',
           }}
         >
           {nlBusy
@@ -508,85 +404,230 @@ function ClerkProfileContent({
                 ? 'Unsubscribe'
                 : 'Mag-unsubscribe'
               : isEn
-                ? 'Subscribe to newsletter'
-                : 'Mag-subscribe sa newsletter'}
+                ? 'Subscribe'
+                : 'Mag-subscribe'}
         </button>
       </section>
 
-      {/* Newsroom Studio (admin / editor only) */}
-      {canPublish && onOpenWrite && (
-        <section style={{ padding: '32px 0', borderBottom: '1px solid #E5E5E5' }}>
-          <h2
+      {/* Profile & security (compact) */}
+      <section className="profile-section" style={{ padding: '24px 0 0' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 14,
+          }}
+        >
+          <div>
+            <h2
+              style={{
+                margin: '0 0 4px',
+                fontFamily: 'Newsreader, Georgia, serif',
+                fontSize: 21,
+                fontWeight: 500,
+              }}
+            >
+              {isEn ? 'Profile & security' : 'Profile at seguridad'}
+            </h2>
+            <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: '#555' }}>
+              {connectedProviders
+                ? isEn
+                  ? `Connected via ${connectedProviders}.`
+                  : `Nakakonekta gamit ang ${connectedProviders}.`
+                : isEn
+                  ? 'Name, password, and active sessions.'
+                  : 'Pangalan, password, at mga aktibong session.'}
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 18 }}>
+            <button
+              type="button"
+              onClick={() => {
+                setEditingName((prev) => !prev);
+                setNotice(null);
+              }}
+              style={{
+                padding: 0,
+                border: 'none',
+                background: 'transparent',
+                color: '#111',
+                fontFamily: 'inherit',
+                fontSize: 13,
+                fontWeight: 600,
+                textDecoration: 'underline',
+                textUnderlineOffset: 3,
+                cursor: 'pointer',
+              }}
+            >
+              {editingName
+                ? isEn
+                  ? 'Cancel'
+                  : 'Kanselahin'
+                : isEn
+                  ? 'Edit name'
+                  : 'I-edit ang pangalan'}
+            </button>
+            <button
+              type="button"
+              onClick={() => openUserProfile()}
+              style={{
+                padding: 0,
+                border: 'none',
+                background: 'transparent',
+                color: ACCENT,
+                fontFamily: 'inherit',
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              {isEn ? 'Security settings →' : 'Seguridad →'}
+            </button>
+          </div>
+        </div>
+
+        {notice && !editingName && (
+          <p
+            role="status"
             style={{
-              margin: '0 0 10px',
-              fontFamily: 'Newsreader, Georgia, serif',
-              fontSize: 24,
-              fontWeight: 500,
-            }}
-          >
-            {isEn ? 'Newsroom Studio' : 'Newsroom Studio'}
-          </h2>
-          <p style={{ margin: '0 0 16px', fontSize: 14, lineHeight: 1.55, color: '#555' }}>
-            {isEn
-              ? `Signed in as ${role}. Create, edit, and publish Civic Tech articles directly to Cloudflare D1.`
-              : `Naka-sign in bilang ${role}. Sumulat, mag-edit, at mag-publish ng mga artikulo sa Cloudflare D1.`}
-          </p>
-          <a
-            href="/write"
-            onClick={(e: MouseEvent<HTMLAnchorElement>) => {
-              e.preventDefault();
-              onOpenWrite();
-            }}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              minHeight: 42,
-              padding: '0 18px',
-              background: ACCENT,
-              color: '#fff',
+              margin: '12px 0 0',
               fontSize: 13,
               fontWeight: 600,
+              color: notice.isError ? '#C62828' : ACCENT,
             }}
           >
-            {isEn ? 'Write & manage articles →' : 'Sumulat at pamahalaan ang artikulo →'}
-          </a>
-        </section>
-      )}
+            {notice.text}
+          </p>
+        )}
 
-      {/* Security */}
-      <section style={{ padding: '32px 0 0' }}>
-        <h2
-          style={{
-            margin: '0 0 10px',
-            fontFamily: 'Newsreader, Georgia, serif',
-            fontSize: 24,
-            fontWeight: 500,
-          }}
-        >
-          {isEn ? 'Security & password' : 'Seguridad at password'}
-        </h2>
-        <p style={{ margin: '0 0 16px', fontSize: 14, lineHeight: 1.55, color: '#555' }}>
-          {isEn
-            ? 'Manage your password, active sessions, two-factor authentication, or connected providers.'
-            : 'Pamahalaan ang iyong password, mga aktibong session, at two-factor authentication.'}
-        </p>
-        <button
-          type="button"
-          onClick={() => openUserProfile()}
-          style={{
-            minHeight: 42,
-            padding: '0 18px',
-            border: '1px solid #111',
-            background: '#fff',
-            color: '#111',
-            fontFamily: 'inherit',
-            fontSize: 13,
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
-        >
-          {isEn ? 'Manage security settings →' : 'Pamahalaan ang seguridad →'}
-        </button>
+        {editingName && (
+          <form
+            onSubmit={handleSave}
+            style={{
+              marginTop: 20,
+              padding: 20,
+              border: '1px solid #E5E5E5',
+              background: '#FAFAFA',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+            }}
+          >
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))',
+                gap: 14,
+              }}
+            >
+              <div>
+                <label
+                  htmlFor="profile-first-name"
+                  style={{
+                    display: 'block',
+                    marginBottom: 6,
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: '#222',
+                  }}
+                >
+                  {isEn ? 'First name' : 'Unang pangalan'}
+                </label>
+                <input
+                  id="profile-first-name"
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  style={{
+                    width: '100%',
+                    minHeight: 40,
+                    padding: '0 12px',
+                    border: '1px solid #D4D4D4',
+                    background: '#fff',
+                    fontFamily: 'inherit',
+                    fontSize: 14,
+                    color: '#111',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="profile-last-name"
+                  style={{
+                    display: 'block',
+                    marginBottom: 6,
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: '#222',
+                  }}
+                >
+                  {isEn ? 'Last name' : 'Apelyido'}
+                </label>
+                <input
+                  id="profile-last-name"
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  style={{
+                    width: '100%',
+                    minHeight: 40,
+                    padding: '0 12px',
+                    border: '1px solid #D4D4D4',
+                    background: '#fff',
+                    fontFamily: 'inherit',
+                    fontSize: 14,
+                    color: '#111',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+              <button
+                type="submit"
+                disabled={saving}
+                style={{
+                  minHeight: 40,
+                  padding: '0 18px',
+                  border: 'none',
+                  background: ACCENT,
+                  color: '#fff',
+                  fontFamily: 'inherit',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: saving ? 'wait' : 'pointer',
+                  opacity: saving ? 0.7 : 1,
+                }}
+              >
+                {saving
+                  ? isEn
+                    ? 'Saving…'
+                    : 'Sine-save…'
+                  : isEn
+                    ? 'Save changes'
+                    : 'I-save ang pagbabago'}
+              </button>
+              {notice && (
+                <span
+                  role="status"
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: notice.isError ? '#C62828' : ACCENT,
+                  }}
+                >
+                  {notice.text}
+                </span>
+              )}
+            </div>
+          </form>
+        )}
       </section>
     </>
   );

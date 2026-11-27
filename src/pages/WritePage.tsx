@@ -63,6 +63,7 @@ function WriteStudio({
   const [status, setStatus] = useState<'published' | 'draft'>('published');
   const [saving, setSaving] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [mobileTab, setMobileTab] = useState<'add' | 'edit'>('add');
   const [notice, setNotice] = useState<{ text: string; isError: boolean } | null>(null);
 
   const isEn = lang === 'en';
@@ -102,6 +103,7 @@ function WriteStudio({
     setPhotoUrl('/images/congress-session.jpg');
     setStatus('published');
     setNotice(null);
+    setMobileTab('add');
   };
 
   const handleSelectArticle = (art: D1ArticleRow) => {
@@ -114,6 +116,7 @@ function WriteStudio({
     setPhotoUrl(art.photo_url || '/images/congress-session.jpg');
     setStatus(art.status === 'draft' ? 'draft' : 'published');
     setNotice(null);
+    setMobileTab('add');
   };
 
   const handleSave = async (e: FormEvent) => {
@@ -417,10 +420,60 @@ function WriteStudio({
         )}
       </div>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 40, alignItems: 'flex-start' }}>
+      {/* Mobile Add / Edit switcher */}
+      <div
+        className="write-mobile-tabs"
+        role="tablist"
+        aria-label={isEn ? 'Newsroom mode' : 'Mode ng Newsroom'}
+        style={{
+          marginBottom: 22,
+          border: '1px solid #111',
+        }}
+      >
+        <button
+          type="button"
+          role="tab"
+          aria-selected={mobileTab === 'add'}
+          onClick={() => setMobileTab('add')}
+          style={{
+            minHeight: 40,
+            border: 'none',
+            background: mobileTab === 'add' ? ACCENT : '#fff',
+            color: mobileTab === 'add' ? '#fff' : '#111',
+            fontFamily: 'inherit',
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: 'pointer',
+          }}
+        >
+          {isEn ? 'Add' : 'Dagdag'}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={mobileTab === 'edit'}
+          onClick={() => setMobileTab('edit')}
+          style={{
+            minHeight: 40,
+            border: 'none',
+            borderLeft: '1px solid #111',
+            background: mobileTab === 'edit' ? ACCENT : '#fff',
+            color: mobileTab === 'edit' ? '#fff' : '#111',
+            fontFamily: 'inherit',
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: 'pointer',
+          }}
+        >
+          {isEn ? `Edit (${articles.length})` : `I-edit (${articles.length})`}
+        </button>
+      </div>
+
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 40, alignItems: 'stretch' }}>
         {/* Form */}
         <form
           onSubmit={handleSave}
+          className={mobileTab === 'edit' ? 'write-mobile-hidden' : undefined}
           style={{ flex: '2 1 480px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 18 }}
         >
           <div
@@ -593,139 +646,149 @@ function WriteStudio({
         </form>
 
         {/* Published / Draft D1 articles list */}
-        <aside style={{ flex: '1 1 280px', minWidth: 0 }}>
-          <h2
-            style={{
-              margin: '0 0 12px',
-              fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              borderBottom: '2px solid #111',
-              paddingBottom: 10,
-            }}
-          >
-            {isEn ? `D1 Articles (${articles.length})` : `Mga Artikulo sa D1 (${articles.length})`}
-          </h2>
-          {role === 'admin' && (
-            <button
-              type="button"
-              disabled={importing}
-              onClick={handleImportStarter}
+        <aside
+          className={mobileTab === 'add' ? 'write-aside write-mobile-hidden' : 'write-aside'}
+          style={{ flex: '1 1 280px', minWidth: 0 }}
+        >
+          <div className="write-aside-inner">
+            <h2
               style={{
-                width: '100%',
-                minHeight: 38,
-                marginBottom: 14,
-                padding: '0 12px',
-                border: '1px solid #111',
-                background: '#fff',
-                color: '#111',
+                margin: '0 0 12px',
                 fontSize: 12,
                 fontWeight: 600,
-                cursor: importing ? 'wait' : 'pointer',
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                borderBottom: '2px solid #111',
+                paddingBottom: 10,
+                flex: 'none',
               }}
             >
-              {importing
-                ? isEn
-                  ? 'Importing…'
-                  : 'Ini-import…'
-                : isEn
-                  ? `Import ${ARTICLES.length} starter articles`
-                  : `I-import ang ${ARTICLES.length} starter articles`}
-            </button>
-          )}
-          {loadingList ? (
-            <p style={{ fontSize: 13, color: '#666' }}>{isEn ? 'Loading…' : 'Nilo-load…'}</p>
-          ) : articles.length === 0 ? (
-            <p style={{ fontSize: 13, color: '#666', lineHeight: 1.5 }}>
-              {isEn
-                ? 'No articles in D1 yet. Publish your first story on the left!'
-                : 'Wala pang artikulo sa D1. Mag-publish gamit ang form sa kaliwa!'}
-            </p>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {articles.map((art) => (
-                <div
-                  key={art.slug}
-                  style={{
-                    padding: '12px 14px',
-                    border: editingSlug === art.slug ? `1px solid ${ACCENT}` : '1px solid #E5E5E5',
-                    background: editingSlug === art.slug ? '#F4F6FA' : '#fff',
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginBottom: 4 }}>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: ACCENT, textTransform: 'uppercase' }}>
-                      {art.status}
-                    </span>
-                    <span style={{ fontSize: 11, color: '#666' }}>{art.category}</span>
-                  </div>
-                  <p
+              {isEn ? `D1 Articles (${articles.length})` : `Mga Artikulo sa D1 (${articles.length})`}
+            </h2>
+            {role === 'admin' && (
+              <button
+                type="button"
+                disabled={importing}
+                onClick={handleImportStarter}
+                style={{
+                  width: '100%',
+                  minHeight: 38,
+                  marginBottom: 14,
+                  padding: '0 12px',
+                  border: '1px solid #111',
+                  background: '#fff',
+                  color: '#111',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  cursor: importing ? 'wait' : 'pointer',
+                  flex: 'none',
+                }}
+              >
+                {importing
+                  ? isEn
+                    ? 'Importing…'
+                    : 'Ini-import…'
+                  : isEn
+                    ? `Import ${ARTICLES.length} starter articles`
+                    : `I-import ang ${ARTICLES.length} starter articles`}
+              </button>
+            )}
+            {loadingList ? (
+              <p style={{ fontSize: 13, color: '#666' }}>{isEn ? 'Loading…' : 'Nilo-load…'}</p>
+            ) : articles.length === 0 ? (
+              <p style={{ fontSize: 13, color: '#666', lineHeight: 1.5 }}>
+                {isEn
+                  ? 'No articles in D1 yet. Publish your first story on the left!'
+                  : 'Wala pang artikulo sa D1. Mag-publish gamit ang form sa kaliwa!'}
+              </p>
+            ) : (
+              <div
+                className="write-aside-list"
+                style={{ display: 'flex', flexDirection: 'column', gap: 12 }}
+              >
+                {articles.map((art) => (
+                  <div
+                    key={art.slug}
                     style={{
-                      margin: '0 0 10px',
-                      fontFamily: 'Newsreader, Georgia, serif',
-                      fontSize: 17,
-                      fontWeight: 500,
-                      lineHeight: 1.25,
+                      padding: '12px 14px',
+                      border: editingSlug === art.slug ? `1px solid ${ACCENT}` : '1px solid #E5E5E5',
+                      background: editingSlug === art.slug ? '#F4F6FA' : '#fff',
                     }}
                   >
-                    {art.title_en}
-                  </p>
-                  <div style={{ display: 'flex', gap: 12, fontSize: 12, fontWeight: 600 }}>
-                    <button
-                      type="button"
-                      onClick={() => handleSelectArticle(art)}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginBottom: 4 }}>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: ACCENT, textTransform: 'uppercase' }}>
+                        {art.status}
+                      </span>
+                      <span style={{ fontSize: 11, color: '#666' }}>{art.category}</span>
+                    </div>
+                    <p
                       style={{
-                        padding: 0,
-                        border: 'none',
-                        background: 'transparent',
-                        color: ACCENT,
-                        cursor: 'pointer',
-                        fontWeight: 600,
-                        fontSize: 12,
+                        margin: '0 0 10px',
+                        fontFamily: 'Newsreader, Georgia, serif',
+                        fontSize: 17,
+                        fontWeight: 500,
+                        lineHeight: 1.25,
                       }}
                     >
-                      {isEn ? 'Edit' : 'I-edit'}
-                    </button>
-                    {art.status === 'published' && (
+                      {art.title_en}
+                    </p>
+                    <div style={{ display: 'flex', gap: 12, fontSize: 12, fontWeight: 600 }}>
                       <button
                         type="button"
-                        onClick={() => onOpenArticle(art.slug)}
+                        onClick={() => handleSelectArticle(art)}
                         style={{
                           padding: 0,
                           border: 'none',
                           background: 'transparent',
-                          color: '#111',
+                          color: ACCENT,
                           cursor: 'pointer',
                           fontWeight: 600,
                           fontSize: 12,
                         }}
                       >
-                        {isEn ? 'View →' : 'Tingnan →'}
+                        {isEn ? 'Edit' : 'I-edit'}
                       </button>
-                    )}
-                    {role === 'admin' && (
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(art.slug)}
-                        style={{
-                          padding: 0,
-                          border: 'none',
-                          background: 'transparent',
-                          color: '#C62828',
-                          cursor: 'pointer',
-                          fontWeight: 600,
-                          fontSize: 12,
-                          marginLeft: 'auto',
-                        }}
-                      >
-                        {isEn ? 'Delete' : 'Tanggalin'}
-                      </button>
-                    )}
+                      {art.status === 'published' && (
+                        <button
+                          type="button"
+                          onClick={() => onOpenArticle(art.slug)}
+                          style={{
+                            padding: 0,
+                            border: 'none',
+                            background: 'transparent',
+                            color: '#111',
+                            cursor: 'pointer',
+                            fontWeight: 600,
+                            fontSize: 12,
+                          }}
+                        >
+                          {isEn ? 'View →' : 'Tingnan →'}
+                        </button>
+                      )}
+                      {role === 'admin' && (
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(art.slug)}
+                          style={{
+                            padding: 0,
+                            border: 'none',
+                            background: 'transparent',
+                            color: '#C62828',
+                            cursor: 'pointer',
+                            fontWeight: 600,
+                            fontSize: 12,
+                            marginLeft: 'auto',
+                          }}
+                        >
+                          {isEn ? 'Delete' : 'Tanggalin'}
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </aside>
       </div>
     </div>

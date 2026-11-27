@@ -486,4 +486,76 @@ a:hover .ph--photo img {
   textarea {
     font-size: 16px !important;
   }
+
+  .profile-header {
+    padding-bottom: 18px !important;
+    gap: 12px !important;
+  }
+
+  .profile-avatar {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .profile-title {
+    font-size: 26px !important;
+  }
+
+  .profile-meta {
+    font-size: 13px !important;
+  }
+
+  .profile-joined {
+    display: none;
+  }
+
+  .profile-section {
+    padding: 18px 0 !important;
+    gap: 12px !important;
+  }
+
+  .profile-section h2 {
+    font-size: 19px !important;
+  }
+
+  .profile-cta {
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+}
+
+.write-mobile-tabs {
+  display: none;
+}
+
+@media (max-width: 859px) {
+  .write-mobile-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .write-mobile-hidden {
+    display: none !important;
+  }
+}
+
+@media (min-width: 860px) {
+  .write-aside {
+    position: relative;
+  }
+
+  .write-aside-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .write-aside-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
 }
