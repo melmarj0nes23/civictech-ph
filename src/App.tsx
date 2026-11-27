@@ -15,6 +15,7 @@ import { CategoryPage } from './pages/CategoryPage';
 import { DirectoryPage } from './pages/DirectoryPage';
 import { HomePage } from './pages/HomePage';
 import { InfoPage } from './pages/InfoPage';
+import { ProfilePage } from './pages/ProfilePage';
 import { SubmitPage } from './pages/SubmitPage';
 
 type RouteState =
@@ -22,6 +23,7 @@ type RouteState =
   | { kind: 'civictools' }
   | { kind: 'submit' }
   | { kind: 'auth'; mode: 'login' | 'signup' }
+  | { kind: 'profile' }
   | { kind: 'sso-callback' }
   | { kind: 'category'; slug: CategorySlug }
   | { kind: 'article'; slug: string }
@@ -30,6 +32,7 @@ type RouteState =
 function getRouteFromPath(): RouteState {
   const path = window.location.pathname.replace(/\/+$/, '') || '/';
   if (path === '/sso-callback') return { kind: 'sso-callback' };
+  if (path === '/profile') return { kind: 'profile' };
   if (path === '/login') return { kind: 'auth', mode: 'login' };
   if (path === '/signup') return { kind: 'auth', mode: 'signup' };
   if (path === '/civictools/submit') return { kind: 'submit' };
@@ -121,6 +124,24 @@ export function App() {
       );
       return;
     }
+    if (route.kind === 'profile') {
+      applyDocumentSeo(
+        {
+          path: '/profile',
+          title: {
+            en: 'Account Profile — Civic Tech by BetterGov.ph',
+            fil: 'Profile ng Account — Civic Tech ng BetterGov.ph',
+          },
+          description: {
+            en: 'Manage your Civic Tech by BetterGov.ph reader account and preferences.',
+            fil: 'Pamahalaan ang iyong Civic Tech ng BetterGov.ph account.',
+          },
+          type: 'website',
+        },
+        lang
+      );
+      return;
+    }
     if (route.kind === 'auth') {
       applyDocumentSeo(
         {
@@ -168,6 +189,7 @@ export function App() {
     if (next.kind === 'civictools') targetPath = '/civictools';
     else if (next.kind === 'submit') targetPath = '/civictools/submit';
     else if (next.kind === 'sso-callback') targetPath = '/sso-callback';
+    else if (next.kind === 'profile') targetPath = '/profile';
     else if (next.kind === 'auth') targetPath = next.mode === 'login' ? '/login' : '/signup';
     else if (next.kind === 'info') targetPath = `/${next.slug}`;
     else if (next.kind === 'category') targetPath = `/category/${next.slug}`;
@@ -207,6 +229,21 @@ export function App() {
       >
         <AuthenticateWithRedirectCallback signInForceRedirectUrl="/" signUpForceRedirectUrl="/" />
       </div>
+    );
+  }
+
+  if (route.kind === 'profile') {
+    return (
+      <ProfilePage
+        lang={lang}
+        onLangChange={handleLangChange}
+        onBackHome={() => navigate({ kind: 'home' })}
+        onOpenCivicTools={() => navigate({ kind: 'civictools' })}
+        onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
+        onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
+        onOpenInfo={(slug) => navigate({ kind: 'info', slug })}
+        onOpenLogin={() => navigate({ kind: 'auth', mode: 'login' })}
+      />
     );
   }
 

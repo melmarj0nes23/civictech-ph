@@ -257,7 +257,12 @@ export function SiteHeader({
                 </a>
               </Show>
               <Show when="signed-in">
-                <UserButton appearance={CLERK_THEME} userProfileProps={USER_PROFILE_PROPS} />
+                <UserButton
+                  appearance={CLERK_THEME}
+                  userProfileProps={USER_PROFILE_PROPS}
+                  userProfileMode="navigation"
+                  userProfileUrl="/profile"
+                />
               </Show>
             </>
           ) : (
@@ -281,7 +286,12 @@ export function SiteHeader({
             </Show>
             <Show when="signed-in">
               <div className="mobile-user-btn">
-                <UserButton appearance={CLERK_THEME} userProfileProps={USER_PROFILE_PROPS} />
+                <UserButton
+                  appearance={CLERK_THEME}
+                  userProfileProps={USER_PROFILE_PROPS}
+                  userProfileMode="navigation"
+                  userProfileUrl="/profile"
+                />
               </div>
             </Show>
           </>
