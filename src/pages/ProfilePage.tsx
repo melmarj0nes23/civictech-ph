@@ -1,4 +1,4 @@
-import { useClerk, useUser } from '@clerk/react';
+import { useAuth, useClerk, useUser } from '@clerk/react';
 import { useEffect, useState, type FormEvent, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
 import { SiteHeader } from '../components/SiteHeader';
@@ -28,6 +28,7 @@ function ClerkProfileContent({
   onOpenWrite,
 }: Pick<ProfilePageProps, 'lang' | 'onBackHome' | 'onOpenLogin' | 'onOpenWrite'>) {
   const { isLoaded, isSignedIn, user } = useUser();
+  const { getToken } = useAuth();
   const { signOut, openUserProfile } = useClerk();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -36,6 +37,14 @@ function ClerkProfileContent({
   const [notice, setNotice] = useState<{ text: string; isError: boolean } | null>(null);
   const [nlActive, setNlActive] = useState<boolean | null>(null);
   const [nlBusy, setNlBusy] = useState(false);
+  const [showTeam, setShowTeam] = useState(false);
+  const [teamQuery, setTeamQuery] = useState('');
+  const [teamUsers, setTeamUsers] = useState<
+    Array<{ id: string; name: string; email: string; imageUrl: string; role: string }>
+  >([]);
+  const [teamLoading, setTeamLoading] = useState(false);
+  const [teamNotice, setTeamNotice] = useState<string | null>(null);
+  const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
 
   const isEn = lang === 'en';
 
@@ -181,6 +190,65 @@ function ClerkProfileContent({
     (user.publicMetadata as { role?: string } | undefined)?.role || ''
   ).toLowerCase();
   const canPublish = role === 'admin' || role === 'editor';
+  const isAdmin = role === 'admin';
+
+  const loadTeamUsers = async (queryText = '') => {
+    if (!isAdmin) return;
+    setTeamLoading(true);
+    setTeamNotice(null);
+    try {
+      const token = await getToken();
+      const url = queryText.trim()
+        ? `/api/users?query=${encodeURIComponent(queryText.trim())}`
+        : '/api/users';
+      const res = await fetch(url, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        users?: Array<{ id: string; name: string; email: string; imageUrl: string; role: string }>;
+        error?: string;
+      };
+      if (!res.ok || !data.ok) {
+        setTeamNotice(data.error || (isEn ? 'Could not load users.' : 'Hindi ma-load ang mga user.'));
+        return;
+      }
+      setTeamUsers(data.users ?? []);
+    } catch {
+      setTeamNotice(isEn ? 'Could not reach users API.' : 'Hindi maabot ang users API.');
+    } finally {
+      setTeamLoading(false);
+    }
+  };
+
+  const handleRoleChange = async (targetUserId: string, nextRole: string) => {
+    setUpdatingUserId(targetUserId);
+    setTeamNotice(null);
+    try {
+      const token = await getToken();
+      const res = await fetch('/api/users', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ userId: targetUserId, role: nextRole }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !data.ok) {
+        setTeamNotice(data.error || (isEn ? 'Could not update role.' : 'Hindi ma-update ang role.'));
+        return;
+      }
+      setTeamUsers((prev) =>
+        prev.map((u) => (u.id === targetUserId ? { ...u, role: nextRole } : u))
+      );
+      setTeamNotice(isEn ? 'Role updated.' : 'Na-update ang role.');
+    } catch {
+      setTeamNotice(isEn ? 'Network error updating role.' : 'May error sa pag-update ng role.');
+    } finally {
+      setUpdatingUserId(null);
+    }
+  };
   const displayName =
     [user.firstName, user.lastName].filter(Boolean).join(' ') || primaryEmail || 'Reader';
   const connectedProviders = user.externalAccounts
@@ -410,7 +478,13 @@ function ClerkProfileContent({
       </section>
 
       {/* Profile & security (compact) */}
-      <section className="profile-section" style={{ padding: '24px 0 0' }}>
+      <section
+        className="profile-section"
+        style={{
+          padding: isAdmin ? '24px 0' : '24px 0 0',
+          borderBottom: isAdmin ? '1px solid #E5E5E5' : 'none',
+        }}
+      >
         <div
           style={{
             display: 'flex',
@@ -629,6 +703,189 @@ function ClerkProfileContent({
           </form>
         )}
       </section>
+
+      {/* Team roles (admin only) */}
+      {isAdmin && (
+        <section className="profile-section" style={{ padding: '24px 0 0' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: 14,
+            }}
+          >
+            <div>
+              <h2
+                style={{
+                  margin: '0 0 4px',
+                  fontFamily: 'Newsreader, Georgia, serif',
+                  fontSize: 21,
+                  fontWeight: 500,
+                }}
+              >
+                {isEn ? 'Team roles' : 'Mga role ng team'}
+              </h2>
+              <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: '#555' }}>
+                {isEn
+                  ? 'Promote writers, editors, or admins.'
+                  : 'Mag-promote ng mga writer, editor, o admin.'}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                const next = !showTeam;
+                setShowTeam(next);
+                if (next && teamUsers.length === 0) {
+                  loadTeamUsers();
+                }
+              }}
+              style={{
+                padding: 0,
+                border: 'none',
+                background: 'transparent',
+                color: ACCENT,
+                fontFamily: 'inherit',
+                fontSize: 13,
+                fontWeight: 600,
+                textDecoration: 'underline',
+                textUnderlineOffset: 3,
+                cursor: 'pointer',
+              }}
+            >
+              {showTeam
+                ? isEn
+                  ? 'Hide team roles'
+                  : 'Itago ang team roles'
+                : isEn
+                  ? 'Manage team roles'
+                  : 'Pamahalaan ang team roles'}
+            </button>
+          </div>
+
+          {showTeam && (
+            <div
+              style={{
+                marginTop: 18,
+                padding: 16,
+                border: '1px solid #E5E5E5',
+                background: '#FAFAFA',
+              }}
+            >
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  loadTeamUsers(teamQuery);
+                }}
+                style={{ display: 'flex', gap: 8, marginBottom: 12 }}
+              >
+                <input
+                  type="search"
+                  value={teamQuery}
+                  onChange={(e) => setTeamQuery(e.target.value)}
+                  placeholder={isEn ? 'Search user by name or email…' : 'Maghanap ng user…'}
+                  style={{
+                    flex: 1,
+                    minWidth: 0,
+                    minHeight: 38,
+                    padding: '0 12px',
+                    border: '1px solid #D4D4D4',
+                    background: '#fff',
+                    fontFamily: 'inherit',
+                    fontSize: 13,
+                    color: '#111',
+                  }}
+                />
+                <button
+                  type="submit"
+                  style={{
+                    minHeight: 38,
+                    padding: '0 14px',
+                    border: '1px solid #111',
+                    background: '#fff',
+                    color: '#111',
+                    fontFamily: 'inherit',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {isEn ? 'Search' : 'Hanapin'}
+                </button>
+              </form>
+
+              {teamNotice && (
+                <p style={{ margin: '0 0 10px', fontSize: 12, fontWeight: 600, color: ACCENT }}>
+                  {teamNotice}
+                </p>
+              )}
+
+              {teamLoading ? (
+                <p style={{ margin: 0, fontSize: 13, color: '#666' }}>
+                  {isEn ? 'Loading users…' : 'Nilo-load ang mga user…'}
+                </p>
+              ) : teamUsers.length === 0 ? (
+                <p style={{ margin: 0, fontSize: 13, color: '#666' }}>
+                  {isEn ? 'No users found.' : 'Walang nahanap na user.'}
+                </p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {teamUsers.map((u) => {
+                    const isSelf = u.id === user.id;
+                    return (
+                      <div
+                        key={u.id}
+                        style={{
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          gap: 10,
+                          padding: '10px 12px',
+                          border: '1px solid #E5E5E5',
+                          background: '#fff',
+                        }}
+                      >
+                        <div style={{ minWidth: 0 }}>
+                          <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#111' }}>
+                            {u.name} {isSelf ? (isEn ? '(You)' : '(Ikaw)') : ''}
+                          </p>
+                          <p style={{ margin: '2px 0 0', fontSize: 12, color: '#666' }}>{u.email}</p>
+                        </div>
+
+                        <select
+                          aria-label={`Role for ${u.email || u.name}`}
+                          value={u.role}
+                          disabled={isSelf || updatingUserId === u.id}
+                          onChange={(e) => handleRoleChange(u.id, e.target.value)}
+                          style={{
+                            minHeight: 34,
+                            padding: '0 10px',
+                            border: '1px solid #D4D4D4',
+                            background: isSelf ? '#F5F5F5' : '#fff',
+                            fontFamily: 'inherit',
+                            fontSize: 12,
+                            fontWeight: 600,
+                            color: '#111',
+                            cursor: isSelf ? 'not-allowed' : 'pointer',
+                          }}
+                        >
+                          <option value="">{isEn ? 'Reader' : 'Reader'}</option>
+                          <option value="editor">{isEn ? 'Writer / Editor' : 'Writer / Editor'}</option>
+                          <option value="admin">{isEn ? 'Admin' : 'Admin'}</option>
+                        </select>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+        </section>
+      )}
     </>
   );
 }
