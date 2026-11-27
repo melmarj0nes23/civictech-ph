@@ -1,5 +1,6 @@
-import { useEffect, useState, type FormEvent, type MouseEvent } from 'react';
+import { useEffect, useState, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
+import { NewsletterBand } from '../components/NewsletterBand';
 import { SiteHeader } from '../components/SiteHeader';
 import {
   ARTICLES,
@@ -47,9 +48,6 @@ export function HomePage({
   onOpenInfo,
 }: HomePageProps) {
   const t = TRANSLATIONS[lang];
-  const [nlEmail, setNlEmail] = useState('');
-  const [nlSubmitting, setNlSubmitting] = useState(false);
-  const [nlSubscribed, setNlSubscribed] = useState<string | null>(null);
   const initialCached = readCachedD1Articles();
   const [d1Stories, setD1Stories] = useState<CachedArticleItem[]>(initialCached ?? []);
   const [loadingFeed, setLoadingFeed] = useState(initialCached === null);
@@ -95,29 +93,6 @@ export function HomePage({
     ...DIRECTORY_ENTRIES.filter((e) => e.kind === 'project' && e.website).slice(0, 3),
     ...DIRECTORY_ENTRIES.filter((e) => e.kind === 'cso' && e.website).slice(0, 1),
   ];
-
-  const handleNlSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    const clean = nlEmail.trim();
-    if (!clean) return;
-    setNlSubmitting(true);
-    try {
-      const res = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: clean, lang }),
-      });
-      if (res.ok) {
-        setNlSubscribed(clean);
-        return;
-      }
-    } catch {
-      // Fallback when running plain Vite dev server without Pages Functions
-    } finally {
-      setNlSubmitting(false);
-    }
-    setNlSubscribed(clean);
-  };
 
   const handleOpenArticle = (slug: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -717,149 +692,7 @@ export function HomePage({
           </aside>
         </section>
 
-        {/* Newsletter */}
-        <section
-          id="newsletter"
-          aria-labelledby="nl"
-          style={{
-            margin: '40px 0',
-            padding: '52px 24px',
-            background: '#F4F6FA',
-            border: '1px solid #E5E5E5',
-            textAlign: 'center',
-          }}
-        >
-          <h2
-            id="nl"
-            style={{
-              margin: 0,
-              fontFamily: 'Newsreader, Georgia, serif',
-              fontSize: 36,
-              fontWeight: 500,
-              lineHeight: 1.15,
-            }}
-          >
-            {t.home.nlTitle}
-          </h2>
-          <p
-            style={{
-              margin: '10px auto 0',
-              maxWidth: 520,
-              fontSize: 16,
-              lineHeight: 1.5,
-              color: '#444',
-            }}
-          >
-            {t.home.nlDesc}
-          </p>
-          {nlSubscribed ? (
-            <div
-              role="status"
-              style={{
-                margin: '24px auto 0',
-                maxWidth: 520,
-                padding: '14px 16px',
-                background: '#F4F6FA',
-                borderLeft: `3px solid ${ACCENT}`,
-                textAlign: 'left',
-                fontSize: 14,
-                lineHeight: 1.5,
-                color: '#1A1A1A',
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: 8,
-              }}
-            >
-              <span>
-                {lang === 'en'
-                  ? `Subscribed (${nlSubscribed}) — preview confirmation.`
-                  : `Naka-subscribe na (${nlSubscribed}) — preview confirmation.`}
-              </span>
-              <button
-                type="button"
-                onClick={() => {
-                  setNlSubscribed(null);
-                  setNlEmail('');
-                }}
-                style={{
-                  border: 'none',
-                  background: 'transparent',
-                  color: ACCENT,
-                  fontWeight: 600,
-                  fontSize: 13,
-                  cursor: 'pointer',
-                  padding: 0,
-                }}
-              >
-                {lang === 'en' ? 'Change email' : 'Palitan ang email'}
-              </button>
-            </div>
-          ) : (
-            <form
-              onSubmit={handleNlSubmit}
-              className="newsletter-form"
-              style={{
-                margin: '24px auto 0',
-                maxWidth: 520,
-                display: 'flex',
-                flexWrap: 'nowrap',
-                gap: 8,
-                textAlign: 'left',
-              }}
-            >
-              <label
-                htmlFor="nl-email"
-                style={{
-                  position: 'absolute',
-                  width: 1,
-                  height: 1,
-                  overflow: 'hidden',
-                  clip: 'rect(0 0 0 0)',
-                }}
-              >
-                {t.home.nlEmailLabel}
-              </label>
-              <input
-                id="nl-email"
-                type="email"
-                required
-                value={nlEmail}
-                onChange={(e) => setNlEmail(e.target.value)}
-                placeholder={t.home.nlPlaceholder}
-                style={{
-                  flex: '1 1 0',
-                  minWidth: 0,
-                  minHeight: 48,
-                  padding: '0 16px',
-                  border: '1px solid #111',
-                  font: '400 16px Inter, sans-serif',
-                  boxSizing: 'border-box',
-                }}
-              />
-              <button
-                type="submit"
-                disabled={nlSubmitting}
-                className="newsletter-submit"
-                style={{
-                  flex: 'none',
-                  minHeight: 48,
-                  padding: '0 24px',
-                  border: 0,
-                  background: ACCENT,
-                  color: '#fff',
-                  font: '600 15px Inter, sans-serif',
-                  whiteSpace: 'nowrap',
-                  cursor: nlSubmitting ? 'wait' : 'pointer',
-                  opacity: nlSubmitting ? 0.7 : 1,
-                }}
-              >
-                {nlSubmitting ? (lang === 'en' ? 'Saving…' : 'Sine-save…') : t.home.nlSignUp}
-              </button>
-            </form>
-          )}
-        </section>
+        <NewsletterBand lang={lang} />
       </main>
 
       <Footer

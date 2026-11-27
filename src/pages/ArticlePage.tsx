@@ -1,5 +1,6 @@
 import { useEffect, useState, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
+import { NewsletterBand } from '../components/NewsletterBand';
 import { SiteHeader } from '../components/SiteHeader';
 import {
   ARTICLES,
@@ -102,8 +103,6 @@ export function ArticlePage({
   const sameCategory = otherArticles.filter((a) => a.category === article.category);
   const diffCategory = otherArticles.filter((a) => a.category !== article.category);
   const relatedStories = [...sameCategory, ...diffCategory].slice(0, 3);
-  const relatedSlugs = new Set(relatedStories.map((s) => s.slug));
-  const moreStories = otherArticles.filter((a) => !relatedSlugs.has(a.slug)).slice(0, 3);
   const authorInitials = article.author[lang]
     .split(/\s+/)
     .filter(Boolean)
@@ -151,11 +150,11 @@ export function ArticlePage({
       />
 
       <article>
-        {/* Headline block */}
-        <div style={{ maxWidth: 860, margin: '0 auto', padding: '28px 24px 28px', textAlign: 'center' }}>
+        {/* GovInsider-style centered 960px header + 16:9 hero */}
+        <div style={{ maxWidth: 960, margin: '0 auto', padding: '36px 24px 0' }}>
           <p
             style={{
-              margin: '0 0 16px',
+              margin: '0 0 14px',
               fontSize: 12,
               fontWeight: 600,
               letterSpacing: '0.12em',
@@ -170,224 +169,202 @@ export function ArticlePage({
             style={{
               margin: 0,
               fontFamily: 'Newsreader, Georgia, serif',
-              fontWeight: 500,
-              fontSize: 58,
-              lineHeight: 1.06,
+              fontWeight: 600,
+              fontSize: 50,
+              lineHeight: 1.08,
               letterSpacing: '-0.02em',
+              color: '#111',
             }}
           >
             {article.title[lang]}
           </h1>
+
+          {/* Byline + Date + Share */}
+          <div
+            style={{
+              margin: '20px 0 0',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '12px 20px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '6px 12px',
+                alignItems: 'center',
+                fontSize: 14,
+                color: '#555',
+              }}
+            >
+              <span>
+                {t.home.byWord}{' '}
+                <span style={{ color: ACCENT, fontWeight: 600 }}>{article.author[lang]}</span>
+              </span>
+              <span aria-hidden="true">·</span>
+              <span>{article.date[lang]}</span>
+            </div>
+
+            <div aria-label="Share" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button
+                type="button"
+                aria-label={t.article.shareFb}
+                onClick={handleShareFb}
+                style={{
+                  width: 34,
+                  height: 34,
+                  border: '1px solid #DADADA',
+                  background: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  color: '#111',
+                }}
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  aria-hidden="true"
+                >
+                  <path d="M15 3h-2.5A3.5 3.5 0 0 0 9 6.5V10H6.5v3.5H9V21h3.5v-7.5H15l.5-3.5h-3V7a1 1 0 0 1 1-1H15z" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                aria-label={t.article.shareX}
+                onClick={handleShareX}
+                style={{
+                  width: 34,
+                  height: 34,
+                  border: '1px solid #DADADA',
+                  background: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  color: '#111',
+                }}
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  aria-hidden="true"
+                >
+                  <path d="M4 4l16 16M20 4L4 20" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                aria-label={t.article.shareCopy}
+                onClick={handleCopyLink}
+                title={copied ? (lang === 'en' ? 'Link copied' : 'Nakopya ang link') : t.article.shareCopy}
+                style={{
+                  width: 34,
+                  height: 34,
+                  border: `1px solid ${copied ? ACCENT : '#DADADA'}`,
+                  background: copied ? '#F4F6FA' : '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  color: copied ? ACCENT : '#111',
+                }}
+              >
+                {copied ? (
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                ) : (
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    aria-hidden="true"
+                  >
+                    <path d="M10 14a4 4 0 0 0 5.6 0l3-3a4 4 0 0 0-5.6-5.6l-1 1" />
+                    <path d="M14 10a4 4 0 0 0-5.6 0l-3 3a4 4 0 0 0 5.6 5.6l1-1" />
+                  </svg>
+                )}
+              </button>
+              {copied && (
+                <span role="status" style={{ fontSize: 12, fontWeight: 600, color: ACCENT }}>
+                  {lang === 'en' ? 'Copied' : 'Nakopya'}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Bold sans-serif deck above hero */}
           <p
             className="article-deck"
             style={{
-              margin: '20px auto 0',
-              maxWidth: 680,
-              fontFamily: 'Newsreader, Georgia, serif',
-              fontSize: 22,
-              lineHeight: 1.45,
-              color: '#333',
+              margin: '22px 0 0',
+              fontFamily: 'Inter, system-ui, sans-serif',
+              fontSize: 18,
+              fontWeight: 600,
+              lineHeight: 1.5,
+              color: '#111',
             }}
           >
             {article.deck[lang]}
           </p>
-          <div
-            style={{
-              margin: '28px 0 0',
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '8px 20px',
-              justifyContent: 'center',
-              alignItems: 'center',
-              fontSize: 14,
-              color: '#555',
-            }}
-          >
-            <span>
-              {t.home.byWord}{' '}
-              <span style={{ color: '#111', fontWeight: 600 }}>{article.author[lang]}</span>
-            </span>
-            <span aria-hidden="true">·</span>
-            <span>{article.date[lang]}</span>
-            <span aria-hidden="true">·</span>
-            <span>{article.readTime[lang]}</span>
-          </div>
-        </div>
 
-        {/* Hero photo */}
-        <figure style={{ maxWidth: 1240, margin: '0 auto', padding: '0 24px' }}>
-          <div
-            className="ph ph--photo"
-            style={{ aspectRatio: '16 / 8', width: '100%' }}
-          >
-            <img src={article.photoUrl || getArticlePhoto(article.slug)} alt={article.photoLabel[lang]} />
-          </div>
-          <figcaption style={{ marginTop: 10, fontSize: 13, lineHeight: 1.5, color: '#555' }}>
-            {isLead ? t.article.heroCaption : article.photoLabel[lang]}
-          </figcaption>
-        </figure>
-
-        {/* Share bar underneath hero image */}
-        <div
-          aria-label="Share"
-          style={{
-            maxWidth: 1240,
-            margin: '0 auto',
-            padding: '18px 24px 0',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-          }}
-        >
-          <span
-            style={{
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: '#555',
-              marginRight: 4,
-            }}
-          >
-            {lang === 'en' ? 'Share' : 'Ibahagi'}
-          </span>
-          <button
-            type="button"
-            aria-label={t.article.shareFb}
-            onClick={handleShareFb}
-            style={{
-              width: 40,
-              height: 40,
-              border: '1px solid #DADADA',
-              background: '#fff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: '#111',
-            }}
-          >
-            <svg
-              width="17"
-              height="17"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              aria-hidden="true"
-            >
-              <path d="M15 3h-2.5A3.5 3.5 0 0 0 9 6.5V10H6.5v3.5H9V21h3.5v-7.5H15l.5-3.5h-3V7a1 1 0 0 1 1-1H15z" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            aria-label={t.article.shareX}
-            onClick={handleShareX}
-            style={{
-              width: 40,
-              height: 40,
-              border: '1px solid #DADADA',
-              background: '#fff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: '#111',
-            }}
-          >
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              aria-hidden="true"
-            >
-              <path d="M4 4l16 16M20 4L4 20" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            aria-label={t.article.shareCopy}
-            onClick={handleCopyLink}
-            title={copied ? (lang === 'en' ? 'Link copied' : 'Nakopya ang link') : t.article.shareCopy}
-            style={{
-              width: 40,
-              height: 40,
-              border: `1px solid ${copied ? ACCENT : '#DADADA'}`,
-              background: copied ? '#F4F6FA' : '#fff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: copied ? ACCENT : '#111',
-            }}
-          >
-            {copied ? (
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
+          {/* 16:9 Hero photo */}
+          <figure style={{ margin: '28px 0 0' }}>
+            <div className="ph ph--photo" style={{ aspectRatio: '16 / 9', width: '100%' }}>
+              <img src={article.photoUrl || getArticlePhoto(article.slug)} alt={article.photoLabel[lang]} />
+            </div>
+            {isLead && (
+              <figcaption
+                style={{
+                  marginTop: 12,
+                  paddingLeft: 12,
+                  borderLeft: `2px solid ${ACCENT}`,
+                  fontSize: 13,
+                  fontStyle: 'italic',
+                  lineHeight: 1.5,
+                  color: '#555',
+                }}
               >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            ) : (
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                aria-hidden="true"
-              >
-                <path d="M10 14a4 4 0 0 0 5.6 0l3-3a4 4 0 0 0-5.6-5.6l-1 1" />
-                <path d="M14 10a4 4 0 0 0-5.6 0l-3 3a4 4 0 0 0 5.6 5.6l1-1" />
-              </svg>
+                {t.article.heroCaption}
+              </figcaption>
             )}
-          </button>
-          {copied && (
-            <span
-              role="status"
-              style={{
-                fontSize: 12,
-                fontWeight: 600,
-                color: ACCENT,
-              }}
-            >
-              {lang === 'en' ? 'Copied' : 'Nakopya'}
-            </span>
-          )}
+          </figure>
         </div>
 
-        {/* Body + Related */}
-        <div
-          style={{
-            maxWidth: 1240,
-            margin: '0 auto',
-            padding: '28px 24px 0',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '32px 56px',
-            justifyContent: 'space-between',
-          }}
-        >
+        {/* Reading column aligned to hero image width (960px) */}
+        <div style={{ maxWidth: 960, margin: '0 auto', padding: '36px 24px 0' }}>
           <div
             className="body"
             style={{
-              flex: '1 1 600px',
-              maxWidth: 680,
-              minWidth: 0,
               fontFamily: 'Newsreader, Georgia, serif',
               fontSize: 20,
-              lineHeight: 1.65,
+              lineHeight: 1.68,
               color: '#1A1A1A',
             }}
           >
@@ -571,87 +548,41 @@ export function ArticlePage({
               </div>
             </div>
           </div>
-
-          <aside aria-labelledby="related" className="article-related" style={{ flex: '0 1 300px', minWidth: 0 }}>
-            <h2
-              id="related"
-              style={{
-                margin: '0 0 4px',
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                borderBottom: '2px solid #111',
-                paddingBottom: 10,
-              }}
-            >
-              {t.article.related}
-            </h2>
-            {relatedStories.map((story, idx) => (
-              <a
-                key={story.slug}
-                href={`/article/${story.slug}`}
-                onClick={handleArticleClick(story.slug)}
-                className="story-card"
-                style={{
-                  display: 'block',
-                  padding: '16px 0',
-                  borderBottom: idx < relatedStories.length - 1 ? '1px solid #E5E5E5' : 'none',
-                }}
-              >
-                {idx === 0 && (
-                  <div className="ph ph--photo" style={{ aspectRatio: '3 / 2', marginBottom: 12 }}>
-                    <img src={getArticlePhoto(story.slug)} alt={story.photoLabel[lang]} loading="lazy" />
-                  </div>
-                )}
-                <p
-                  className="story-title"
-                  style={{
-                    margin: 0,
-                    fontFamily: 'Newsreader, Georgia, serif',
-                    fontSize: 19,
-                    lineHeight: 1.25,
-                    fontWeight: 500,
-                  }}
-                >
-                  {story.title[lang]}
-                </p>
-              </a>
-            ))}
-          </aside>
         </div>
       </article>
 
-      {/* More from Civic Tech */}
+      {/* Related stories grid (3 articles) */}
       <section
-        aria-labelledby="more"
+        aria-labelledby="related"
         style={{
-          maxWidth: 1240,
-          margin: '40px auto 0',
-          padding: '40px 24px 56px',
-          borderTop: '1px solid #111',
+          maxWidth: 960,
+          margin: '48px auto 0',
+          padding: '40px 24px 0',
+          borderTop: '1px solid #E5E5E5',
         }}
       >
         <h2
-          id="more"
+          id="related"
           style={{
             margin: '0 0 24px',
-            fontSize: 12,
-            fontWeight: 600,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
+            fontFamily: 'Newsreader, Georgia, serif',
+            fontSize: 26,
+            fontWeight: 500,
+            paddingBottom: 10,
+            borderBottom: `2px solid ${ACCENT}`,
+            display: 'inline-block',
           }}
         >
-          {t.article.moreHeading}
+          {t.article.related}
         </h2>
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
-            gap: 32,
+            gap: 28,
           }}
         >
-          {moreStories.map((story) => (
+          {relatedStories.map((story) => (
             <a
               key={story.slug}
               href={`/article/${story.slug}`}
@@ -659,12 +590,12 @@ export function ArticlePage({
               className="story-card"
               style={{ display: 'block' }}
             >
-              <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
+              <div className="ph ph--photo" style={{ aspectRatio: '16 / 9' }}>
                 <img src={getArticlePhoto(story.slug)} alt={story.photoLabel[lang]} loading="lazy" />
               </div>
               <p
                 style={{
-                  margin: '14px 0 6px',
+                  margin: '12px 0 6px',
                   fontSize: 11,
                   fontWeight: 600,
                   letterSpacing: '0.12em',
@@ -679,17 +610,22 @@ export function ArticlePage({
                 style={{
                   margin: 0,
                   fontFamily: 'Newsreader, Georgia, serif',
-                  fontSize: 22,
-                  lineHeight: 1.2,
+                  fontSize: 20,
+                  lineHeight: 1.25,
                   fontWeight: 500,
                 }}
               >
                 {story.title[lang]}
               </p>
+              <p style={{ margin: '8px 0 0', fontSize: 12, color: '#666' }}>{story.date[lang]}</p>
             </a>
           ))}
         </div>
       </section>
+
+      <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 24px' }}>
+        <NewsletterBand lang={lang} />
+      </div>
 
       <Footer
         lang={lang}
