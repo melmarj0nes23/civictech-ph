@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react';
+import { Show, UserButton } from '@clerk/react';
 import { useState, type MouseEvent } from 'react';
 import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
@@ -190,7 +190,7 @@ export function SiteHeader({
 
           {HAS_CLERK ? (
             <>
-              <SignedOut>
+              <Show when="signed-out">
                 <a
                   href="/login"
                   onClick={(e) => {
@@ -201,10 +201,10 @@ export function SiteHeader({
                 >
                   {lang === 'en' ? 'Login / Sign up' : 'Mag-login'}
                 </a>
-              </SignedOut>
-              <SignedIn>
+              </Show>
+              <Show when="signed-in">
                 <UserButton />
-              </SignedIn>
+              </Show>
             </>
           ) : (
             <a
@@ -222,14 +222,14 @@ export function SiteHeader({
 
         {HAS_CLERK ? (
           <>
-            <SignedOut>
+            <Show when="signed-out">
               <MobileAuthButton lang={lang} onClick={handleOpenAuthPage} />
-            </SignedOut>
-            <SignedIn>
+            </Show>
+            <Show when="signed-in">
               <div className="mobile-user-btn">
                 <UserButton />
               </div>
-            </SignedIn>
+            </Show>
           </>
         ) : (
           <MobileAuthButton lang={lang} onClick={handleOpenAuthPage} />

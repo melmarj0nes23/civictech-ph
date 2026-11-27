@@ -1,4 +1,4 @@
-import { SignIn, SignUp } from '@clerk/clerk-react';
+import { SignIn, SignUp } from '@clerk/react';
 import { useState, type FormEvent, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
 import { SiteHeader } from '../components/SiteHeader';
