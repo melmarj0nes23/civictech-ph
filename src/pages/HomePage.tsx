@@ -106,8 +106,8 @@ export function HomePage({
     ...ARTICLES.filter((a) => !d1Slugs.has(a.slug)),
   ];
   const leadStory = feedStories[0] ?? ARTICLES[0];
-  const topStories = feedStories.slice(1, 5);
-  const latestStories = feedStories.slice(5, 9);
+  const topStories = feedStories.slice(1, 6);
+  const latestStories = feedStories.slice(6, 10);
   const longReadStory: ArticleItem & { photoUrl?: string; isLongRead?: boolean } =
     feedStories.find((s) => s.isLongRead) ??
     feedStories.find((s) => s.slug === 'last-mile-connectivity') ??
@@ -121,7 +121,7 @@ export function HomePage({
   ].slice(0, 3);
 
   const featuredTools = [
-    ...DIRECTORY_ENTRIES.filter((e) => e.kind === 'project' && e.website).slice(0, 1),
+    ...DIRECTORY_ENTRIES.filter((e) => e.kind === 'project' && e.website).slice(0, 3),
     ...DIRECTORY_ENTRIES.filter((e) => e.kind === 'cso' && e.website).slice(0, 1),
   ];
 
@@ -206,7 +206,7 @@ export function HomePage({
             borderBottom: '1px solid #E5E5E5',
           }}
         >
-          <article style={{ flex: '999 1 560px', minWidth: 0 }}>
+          <article className="story-card" style={{ flex: '999 1 560px', minWidth: 0 }}>
             <a
               href={`/article/${leadStory.slug}`}
               onClick={handleOpenArticle(leadStory.slug)}
@@ -238,7 +238,7 @@ export function HomePage({
               {getCategoryBySlug(leadStory.category)?.label[lang] ?? leadStory.kicker[lang]}
             </p>
             <h2
-              className="hero-title"
+              className="hero-title story-title"
               style={{
                 margin: 0,
                 fontFamily: 'Newsreader, Georgia, serif',
@@ -298,6 +298,7 @@ export function HomePage({
                 key={story.slug}
                 href={`/article/${story.slug}`}
                 onClick={handleOpenArticle(story.slug)}
+                className="story-card"
                 style={{
                   display: 'flex',
                   gap: 16,
@@ -319,6 +320,7 @@ export function HomePage({
                     {getCategoryBySlug(story.category)?.label[lang] ?? story.kicker[lang]}
                   </p>
                   <p
+                    className="story-title"
                     style={{
                       margin: 0,
                       fontFamily: 'Newsreader, Georgia, serif',
@@ -385,6 +387,7 @@ export function HomePage({
                 <a
                   href={`/article/${story.slug}`}
                   onClick={handleOpenArticle(story.slug)}
+                  className="story-card"
                   style={{ display: 'block' }}
                 >
                   <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
@@ -407,6 +410,7 @@ export function HomePage({
                     {getCategoryBySlug(story.category)?.label[lang] ?? story.kicker[lang]}
                   </p>
                   <h3
+                    className="story-title"
                     style={{
                       margin: 0,
                       fontFamily: 'Newsreader, Georgia, serif',
@@ -419,6 +423,11 @@ export function HomePage({
                   </h3>
                   <p style={{ margin: '10px 0 0', fontSize: 15, lineHeight: 1.5, color: '#444' }}>
                     {story.deck[lang]}
+                  </p>
+                  <p style={{ margin: '10px 0 0', fontSize: 12, color: '#666' }}>
+                    <span style={{ fontWeight: 600, color: '#222' }}>{story.author[lang]}</span>
+                    {' · '}
+                    {story.readTime[lang]}
                   </p>
                 </a>
               </article>
@@ -532,39 +541,77 @@ export function HomePage({
                 paddingTop: 16,
               }}
             >
-              {opinionStories.map((story) => (
-                <a
-                  key={story.slug}
-                  href={`/article/${story.slug}`}
-                  onClick={handleOpenArticle(story.slug)}
-                  style={{ display: 'block' }}
-                >
-                  <p
-                    style={{
-                      margin: 0,
-                      fontFamily: 'Newsreader, Georgia, serif',
-                      fontStyle: 'italic',
-                      fontSize: 22,
-                      lineHeight: 1.3,
-                    }}
+              {opinionStories.map((story) => {
+                const initials = story.author[lang]
+                  .split(/\s+/)
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .map((w) => w[0]?.toUpperCase() ?? '')
+                  .join('');
+                return (
+                  <a
+                    key={story.slug}
+                    href={`/article/${story.slug}`}
+                    onClick={handleOpenArticle(story.slug)}
+                    className="story-card"
+                    style={{ display: 'block' }}
                   >
-                    {story.title[lang]}
-                  </p>
-                  <p
-                    style={{
-                      margin: '10px 0 0',
-                      fontSize: 14,
-                      lineHeight: 1.5,
-                      color: '#444',
-                    }}
-                  >
-                    {story.deck[lang]}
-                  </p>
-                  <p style={{ margin: '10px 0 0', fontSize: 13, color: '#555' }}>
-                    {story.author[lang]}
-                  </p>
-                </a>
-              ))}
+                    <p
+                      className="story-title"
+                      style={{
+                        margin: 0,
+                        fontFamily: 'Newsreader, Georgia, serif',
+                        fontStyle: 'italic',
+                        fontSize: 22,
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      {story.title[lang]}
+                    </p>
+                    <p
+                      style={{
+                        margin: '10px 0 0',
+                        fontSize: 14,
+                        lineHeight: 1.5,
+                        color: '#444',
+                      }}
+                    >
+                      {story.deck[lang]}
+                    </p>
+                    <div
+                      style={{
+                        marginTop: 12,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8,
+                      }}
+                    >
+                      <span
+                        aria-hidden="true"
+                        style={{
+                          width: 26,
+                          height: 26,
+                          borderRadius: '50%',
+                          background: '#F4F6FA',
+                          border: '1px solid #D9E2F2',
+                          color: ACCENT,
+                          fontSize: 10,
+                          fontWeight: 700,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flex: 'none',
+                        }}
+                      >
+                        {initials || 'CT'}
+                      </span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: '#333' }}>
+                        {story.author[lang]}
+                      </span>
+                    </div>
+                  </a>
+                );
+              })}
             </div>
           </div>
           <aside aria-labelledby="tools" style={{ flex: '1 1 320px', minWidth: 0 }}>
@@ -599,8 +646,12 @@ export function HomePage({
               </a>
             </div>
             <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-              {featuredTools.map((entry) => (
-                <li key={entry.slug} style={{ borderBottom: '1px solid #E5E5E5' }}>
+              {featuredTools.map((entry, idx) => (
+                <li
+                  key={entry.slug}
+                  className={idx >= 2 ? 'civic-tool-mobile-only' : undefined}
+                  style={{ borderBottom: '1px solid #E5E5E5' }}
+                >
                   <a
                     href={entry.website || '/civictools'}
                     target={entry.website ? '_blank' : undefined}
@@ -687,7 +738,13 @@ export function HomePage({
         <section
           id="newsletter"
           aria-labelledby="nl"
-          style={{ padding: '56px 0', textAlign: 'center' }}
+          style={{
+            margin: '40px 0',
+            padding: '52px 24px',
+            background: '#F4F6FA',
+            border: '1px solid #E5E5E5',
+            textAlign: 'center',
+          }}
         >
           <h2
             id="nl"

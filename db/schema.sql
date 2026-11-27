@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS articles (
   body_fil TEXT NOT NULL DEFAULT '',
   author_name TEXT NOT NULL,
   author_email TEXT NOT NULL DEFAULT '',
+  author_bio TEXT NOT NULL DEFAULT '',
   photo_url TEXT NOT NULL DEFAULT '/images/congress-session.jpg',
   status TEXT NOT NULL DEFAULT 'published',
   is_featured INTEGER NOT NULL DEFAULT 0,

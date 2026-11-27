@@ -71,6 +71,11 @@ async function ensurePlacementColumns(db: D1Database) {
   } catch {
     // Column already exists
   }
+  try {
+    await db.prepare("ALTER TABLE articles ADD COLUMN author_bio TEXT NOT NULL DEFAULT ''").run();
+  } catch {
+    // Column already exists
+  }
   ensuredPlacementColumns = true;
 }
 
@@ -88,7 +93,7 @@ export async function onRequestGet({ request, env }: PagesContext) {
   if (slug) {
     const row = await env.DB.prepare(
       `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
-              body_en, body_fil, author_name, photo_url, status, is_featured, is_long_read, created_at, updated_at
+              body_en, body_fil, author_name, author_bio, photo_url, status, is_featured, is_long_read, created_at, updated_at
        FROM articles
        WHERE slug = ?`
     )
@@ -104,7 +109,7 @@ export async function onRequestGet({ request, env }: PagesContext) {
     }
     const { results } = await env.DB.prepare(
       `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
-              body_en, body_fil, author_name, photo_url, status, is_featured, is_long_read, created_at, updated_at
+              body_en, body_fil, author_name, author_bio, photo_url, status, is_featured, is_long_read, created_at, updated_at
        FROM articles
        ORDER BY is_featured DESC, created_at DESC
        LIMIT 100`
@@ -115,7 +120,7 @@ export async function onRequestGet({ request, env }: PagesContext) {
   const stmt = category
     ? env.DB.prepare(
         `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
-                body_en, body_fil, author_name, photo_url, status, is_featured, is_long_read, created_at
+                body_en, body_fil, author_name, author_bio, photo_url, status, is_featured, is_long_read, created_at
          FROM articles
          WHERE status = 'published' AND category = ?
          ORDER BY is_featured DESC, created_at DESC
@@ -123,7 +128,7 @@ export async function onRequestGet({ request, env }: PagesContext) {
       ).bind(category)
     : env.DB.prepare(
         `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
-                body_en, body_fil, author_name, photo_url, status, is_featured, is_long_read, created_at
+                body_en, body_fil, author_name, author_bio, photo_url, status, is_featured, is_long_read, created_at
          FROM articles
          WHERE status = 'published'
          ORDER BY is_featured DESC, created_at DESC
@@ -206,6 +211,7 @@ export async function onRequestPost({ request, env }: PagesContext) {
   const category = (body.category || 'open-data').trim();
   const content = (body.content || '').trim();
   const authorName = (body.authorName || 'Civic Tech Newsroom').trim();
+  const authorBio = String((body as { authorBio?: string }).authorBio || '').trim();
   const photoUrl = (body.photoUrl || '/images/congress-session.jpg').trim();
   const status = body.status === 'draft' ? 'draft' : 'published';
   const isFeatured = Boolean((body as { isFeatured?: boolean }).isFeatured);
@@ -230,8 +236,8 @@ export async function onRequestPost({ request, env }: PagesContext) {
   await env.DB.prepare(
     `INSERT INTO articles (
        slug, category, kicker_en, kicker_fil, title_en, title_fil,
-       deck_en, deck_fil, body_en, body_fil, author_name, author_email, photo_url, status, is_featured, is_long_read
-     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+       deck_en, deck_fil, body_en, body_fil, author_name, author_email, author_bio, photo_url, status, is_featured, is_long_read
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   )
     .bind(
       slug,
@@ -246,6 +252,7 @@ export async function onRequestPost({ request, env }: PagesContext) {
       content,
       authorName,
       user.email || user.userId,
+      authorBio,
       photoUrl,
       status,
       isFeatured ? 1 : 0,
@@ -280,11 +287,23 @@ export async function onRequestPatch({ request, env }: PagesContext) {
     status?: 'published' | 'draft';
     isFeatured?: boolean;
     isLongRead?: boolean;
+    authorBio?: string;
+    syncAuthorBio?: string;
   };
   try {
     body = (await request.json()) as typeof body;
   } catch {
     return json({ ok: false, error: 'Invalid JSON body.' }, 400);
+  }
+
+  await ensurePlacementColumns(env.DB);
+
+  if (typeof body.syncAuthorBio === 'string') {
+    const authorIdentifier = user.email || user.userId;
+    await env.DB.prepare('UPDATE articles SET author_bio = ? WHERE author_email = ?')
+      .bind(body.syncAuthorBio.trim(), authorIdentifier)
+      .run();
+    return json({ ok: true, synced: true });
   }
 
   const slug = (body.slug || '').trim();
@@ -296,13 +315,13 @@ export async function onRequestPatch({ request, env }: PagesContext) {
   const status = body.status === 'draft' ? 'draft' : 'published';
   const isFeatured = Boolean(body.isFeatured);
   const isLongRead = Boolean(body.isLongRead);
+  const authorBio = typeof body.authorBio === 'string' ? body.authorBio.trim() : null;
   const kicker = (body.kicker || category.replace(/-/g, ' ')).trim();
 
   if (!slug || !title || !deck || !content) {
     return json({ ok: false, error: 'Slug, title, deck, and body are required.' }, 400);
   }
 
-  await ensurePlacementColumns(env.DB);
   if (isFeatured) {
     await env.DB.prepare('UPDATE articles SET is_featured = 0 WHERE is_featured = 1').run();
   }
@@ -314,7 +333,8 @@ export async function onRequestPatch({ request, env }: PagesContext) {
     `UPDATE articles
      SET category = ?, kicker_en = ?, kicker_fil = ?, title_en = ?, title_fil = ?,
          deck_en = ?, deck_fil = ?, body_en = ?, body_fil = ?, photo_url = ?,
-         status = ?, is_featured = ?, is_long_read = ?, updated_at = datetime('now')
+         status = ?, is_featured = ?, is_long_read = ?,
+         author_bio = COALESCE(?, author_bio), updated_at = datetime('now')
      WHERE slug = ?`
   )
     .bind(
@@ -331,6 +351,7 @@ export async function onRequestPatch({ request, env }: PagesContext) {
       status,
       isFeatured ? 1 : 0,
       isLongRead ? 1 : 0,
+      authorBio,
       slug
     )
     .run();

@@ -97,11 +97,11 @@ a:hover .ph--photo img {
 .site-header-inner {
   max-width: 1240px;
   margin: 0 auto;
-  padding: 12px 24px;
+  padding: 16px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 24px;
 }
 
 .site-brand {
@@ -123,8 +123,8 @@ a:hover .ph--photo img {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 4px 18px;
-  font-size: 13px;
+  gap: 6px 20px;
+  font-size: 15px;
   font-weight: 500;
   letter-spacing: 0.01em;
 }
@@ -145,7 +145,7 @@ a:hover .ph--photo img {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: #111;
   white-space: nowrap;
@@ -159,7 +159,7 @@ a:hover .ph--photo img {
   background: transparent;
   border: 1px solid transparent;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: #111;
   cursor: pointer;
@@ -173,12 +173,12 @@ a:hover .ph--photo img {
 .site-auth-btn {
   background: #0B3D91;
   color: #fff;
-  padding: 0 16px;
+  padding: 0 18px;
   min-height: 40px;
   display: inline-flex;
   align-items: center;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 14px;
   white-space: nowrap;
 }
 
@@ -523,6 +523,46 @@ a:hover .ph--photo img {
     justify-content: center;
     box-sizing: border-box;
   }
+
+  .civic-tool-mobile-only {
+    display: list-item;
+  }
+}
+
+.site-brand-logo {
+  height: 26px;
+  width: auto;
+  display: block;
+}
+
+@media (min-width: 769px) {
+  .civic-tool-mobile-only {
+    display: none;
+  }
+
+  .site-brand-logo {
+    height: 30px;
+  }
+}
+
+.story-card .ph {
+  overflow: hidden;
+}
+
+.story-card .ph img {
+  transition: transform 0.35s ease;
+}
+
+.story-card:hover .ph img {
+  transform: scale(1.025);
+}
+
+.story-card .story-title {
+  transition: color 0.18s ease;
+}
+
+.story-card:hover .story-title {
+  color: #0B3D91;
 }
 
 .write-mobile-tabs {

@@ -144,7 +144,7 @@ export function SiteHeader({
               alignItems: 'center',
               gap: 8,
               fontFamily: 'Newsreader, Georgia, serif',
-              fontSize: 28,
+              fontSize: 32,
               fontWeight: 600,
               letterSpacing: '-0.02em',
               color: '#111',
@@ -154,7 +154,7 @@ export function SiteHeader({
             <img
               src="/logo.png"
               alt="Civic Tech logo"
-              style={{ height: 26, width: 'auto', display: 'block' }}
+              className="site-brand-logo"
             />
             Civic Tech
           </a>

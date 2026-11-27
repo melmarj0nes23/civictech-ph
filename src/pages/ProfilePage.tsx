@@ -32,6 +32,7 @@ function ClerkProfileContent({
   const { signOut, openUserProfile } = useClerk();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [authorBio, setAuthorBio] = useState('');
   const [saving, setSaving] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [notice, setNotice] = useState<{ text: string; isError: boolean } | null>(null);
@@ -52,6 +53,7 @@ function ClerkProfileContent({
     if (user) {
       setFirstName(user.firstName ?? '');
       setLastName(user.lastName ?? '');
+      setAuthorBio(String((user.unsafeMetadata as { bio?: string } | undefined)?.bio || ''));
       const email =
         user.primaryEmailAddress?.emailAddress ?? user.emailAddresses[0]?.emailAddress;
       if (email) {
@@ -135,10 +137,32 @@ function ClerkProfileContent({
     setNotice(null);
     setSaving(true);
     try {
+      const trimmedBio = authorBio.trim();
       await user.update({
         firstName: firstName.trim(),
         lastName: lastName.trim(),
+        ...(canPublish
+          ? {
+              unsafeMetadata: {
+                ...(user.unsafeMetadata as Record<string, unknown> | undefined),
+                bio: trimmedBio,
+              },
+            }
+          : {}),
       });
+      if (canPublish) {
+        const token = await getToken();
+        fetch('/api/articles', {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({ syncAuthorBio: trimmedBio }),
+        }).catch(() => {
+          // ignore if D1 unavailable
+        });
+      }
       setNotice({
         text: isEn ? 'Profile updated.' : 'Na-update ang profile.',
         isError: false,
@@ -540,9 +564,13 @@ function ClerkProfileContent({
                 ? isEn
                   ? 'Cancel'
                   : 'Kanselahin'
-                : isEn
-                  ? 'Edit name'
-                  : 'I-edit ang pangalan'}
+                : canPublish
+                  ? isEn
+                    ? 'Edit profile'
+                    : 'I-edit ang profile'
+                  : isEn
+                    ? 'Edit name'
+                    : 'I-edit ang pangalan'}
             </button>
             <button
               type="button"
@@ -661,6 +689,46 @@ function ClerkProfileContent({
                 />
               </div>
             </div>
+
+            {canPublish && (
+              <div>
+                <label
+                  htmlFor="profile-author-bio"
+                  style={{
+                    display: 'block',
+                    marginBottom: 6,
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: '#222',
+                  }}
+                >
+                  {isEn ? 'Writer bio (shown under your articles)' : 'Bio ng manunulat (makikita sa iyong mga artikulo)'}
+                </label>
+                <textarea
+                  id="profile-author-bio"
+                  rows={2}
+                  maxLength={240}
+                  value={authorBio}
+                  onChange={(e) => setAuthorBio(e.target.value)}
+                  placeholder={
+                    isEn
+                      ? 'Short bio — your beat, background, or organization…'
+                      : 'Maikling bio — iyong paksa o organisasyon…'
+                  }
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    border: '1px solid #D4D4D4',
+                    background: '#fff',
+                    fontFamily: 'inherit',
+                    fontSize: 14,
+                    color: '#111',
+                    boxSizing: 'border-box',
+                    resize: 'vertical',
+                  }}
+                />
+              </div>
+            )}
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
               <button

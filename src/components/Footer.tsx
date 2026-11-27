@@ -118,8 +118,13 @@ export function Footer({
             <a href="/volunteer" onClick={handleOpenInfo('volunteer')} style={{ color: '#555' }}>
               {t.footer.volunteer}
             </a>
-            <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
-              {t.footer.sendATip}
+            <a
+              href="https://web.facebook.com/groups/bettergovph"
+              target="_blank"
+              rel="noreferrer"
+              style={{ color: '#555' }}
+            >
+              {t.footer.facebookGroup}
             </a>
             <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
               {t.footer.contact}
@@ -134,6 +139,14 @@ export function Footer({
               style={{ color: '#555' }}
             >
               {t.footer.github}
+            </a>
+            <a
+              href="https://discord.gg/bettergovph"
+              target="_blank"
+              rel="noreferrer"
+              style={{ color: '#555' }}
+            >
+              {t.footer.discord}
             </a>
             <a
               href="https://github.com/melmarj0nes23/civictech-ph/issues"

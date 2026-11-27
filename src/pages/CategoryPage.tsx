@@ -41,7 +41,7 @@ export function CategoryPage({
   const [d1Stories, setD1Stories] = useState<(ArticleItem & { photoUrl?: string })[]>([]);
 
   useEffect(() => {
-    fetch(`/api/articles?category=${encodeURIComponent(category.slug)}`)
+    fetch('/api/articles')
       .then((r) => (r.ok ? r.json() : null))
       .then(
         (
@@ -91,18 +91,34 @@ export function CategoryPage({
   }, [category.slug]);
 
   const d1Slugs = new Set(d1Stories.map((s) => s.slug));
-  const stories: (ArticleItem & { photoUrl?: string })[] = [
+  const allStories: (ArticleItem & { photoUrl?: string })[] = [
     ...d1Stories,
-    ...ARTICLES.filter((a) => a.category === category.slug && !d1Slugs.has(a.slug)),
+    ...ARTICLES.filter((a) => !d1Slugs.has(a.slug)),
   ];
+  const stories = allStories.filter((a) => a.category === category.slug);
+  const moreStories = allStories.filter((a) => a.category !== category.slug).slice(0, 4);
 
   const handleArticleClick = (slug: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onOpenArticle(slug);
   };
 
+  const handleCategoryClick = (slug: CategorySlug) => (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    onOpenCategory(slug);
+  };
+
   return (
-    <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        fontFamily: 'Inter, system-ui, sans-serif',
+        color: '#111',
+        background: '#fff',
+      }}
+    >
       <SiteHeader
         lang={lang}
         onLangChange={onLangChange}
@@ -112,7 +128,16 @@ export function CategoryPage({
         activeCategory={category.slug}
       />
 
-      <main style={{ maxWidth: 1240, margin: '0 auto', padding: '40px 24px 64px' }}>
+      <main
+        style={{
+          width: '100%',
+          maxWidth: 1240,
+          margin: '0 auto',
+          padding: '40px 24px 72px',
+          flex: '1 0 auto',
+          boxSizing: 'border-box',
+        }}
+      >
         <div style={{ paddingBottom: 24, borderBottom: '2px solid #111', marginBottom: 32 }}>
           <p
             style={{
@@ -144,59 +169,186 @@ export function CategoryPage({
           </p>
         </div>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
-            gap: 32,
-          }}
-        >
-          {stories.map((story) => (
-            <article key={story.slug}>
-              <a
-                href={story.slug === 'volunteers-national-budget' ? '/article' : `/article/${story.slug}`}
-                onClick={handleArticleClick(story.slug)}
-                style={{ display: 'block' }}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 40, alignItems: 'flex-start' }}>
+          {/* Main section feed */}
+          <div style={{ flex: '999 1 560px', minWidth: 0 }}>
+            {stories.length === 0 ? (
+              <p style={{ margin: 0, fontSize: 15, color: '#555' }}>
+                {lang === 'en'
+                  ? 'No articles published in this section yet.'
+                  : 'Wala pang nailathalang artikulo sa seksyong ito.'}
+              </p>
+            ) : (
+              stories.map((story, idx) => (
+                <article
+                  key={story.slug}
+                  style={{
+                    padding: idx === 0 ? '0 0 24px' : '24px 0',
+                    borderBottom: '1px solid #E5E5E5',
+                  }}
+                >
+                  <a
+                    href={story.slug === 'volunteers-national-budget' ? '/article' : `/article/${story.slug}`}
+                    onClick={handleArticleClick(story.slug)}
+                    className="story-card"
+                    style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: 24,
+                      alignItems: 'flex-start',
+                    }}
+                  >
+                    <div
+                      className="ph ph--photo"
+                      style={{ flex: '1 1 240px', maxWidth: 320, aspectRatio: '3 / 2' }}
+                    >
+                      <img
+                        src={story.photoUrl || getArticlePhoto(story.slug)}
+                        alt={story.photoLabel[lang]}
+                        loading="lazy"
+                      />
+                    </div>
+                    <div style={{ flex: '999 1 280px', minWidth: 0 }}>
+                      <p
+                        style={{
+                          margin: '0 0 6px',
+                          fontSize: 11,
+                          fontWeight: 600,
+                          letterSpacing: '0.12em',
+                          textTransform: 'uppercase',
+                          color: ACCENT,
+                        }}
+                      >
+                        {story.kicker[lang]}
+                      </p>
+                      <h2
+                        className="story-title"
+                        style={{
+                          margin: 0,
+                          fontFamily: 'Newsreader, Georgia, serif',
+                          fontSize: 26,
+                          lineHeight: 1.18,
+                          fontWeight: 500,
+                        }}
+                      >
+                        {story.title[lang]}
+                      </h2>
+                      <p style={{ margin: '10px 0 0', fontSize: 15, lineHeight: 1.5, color: '#444' }}>
+                        {story.deck[lang]}
+                      </p>
+                      <p style={{ margin: '12px 0 0', fontSize: 13, color: '#555' }}>
+                        <span style={{ fontWeight: 600, color: '#222' }}>{story.author[lang]}</span>
+                        {' · '}
+                        {story.date[lang]} · {story.readTime[lang]}
+                      </p>
+                    </div>
+                  </a>
+                </article>
+              ))
+            )}
+          </div>
+
+          {/* Right rail: Latest across Civic Tech + Other sections */}
+          <aside style={{ flex: '1 1 300px', minWidth: 0 }}>
+            <p
+              style={{
+                margin: '0 0 4px',
+                fontSize: 12,
+                fontWeight: 600,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                borderBottom: '2px solid #111',
+                paddingBottom: 10,
+              }}
+            >
+              {lang === 'en' ? 'More from Civic Tech' : 'Iba pang balita'}
+            </p>
+            <div>
+              {moreStories.map((story, idx) => (
+                <a
+                  key={story.slug}
+                  href={`/article/${story.slug}`}
+                  onClick={handleArticleClick(story.slug)}
+                  className="story-card"
+                  style={{
+                    display: 'flex',
+                    gap: 14,
+                    padding: '16px 0',
+                    borderBottom: idx < moreStories.length - 1 ? '1px solid #E5E5E5' : 'none',
+                  }}
+                >
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p
+                      style={{
+                        margin: '0 0 4px',
+                        fontSize: 11,
+                        fontWeight: 600,
+                        letterSpacing: '0.12em',
+                        textTransform: 'uppercase',
+                        color: ACCENT,
+                      }}
+                    >
+                      {getCategoryBySlug(story.category)?.label[lang] ?? story.kicker[lang]}
+                    </p>
+                    <p
+                      className="story-title"
+                      style={{
+                        margin: 0,
+                        fontFamily: 'Newsreader, Georgia, serif',
+                        fontSize: 18,
+                        lineHeight: 1.25,
+                        fontWeight: 500,
+                      }}
+                    >
+                      {story.title[lang]}
+                    </p>
+                  </div>
+                  <div className="ph ph--photo" style={{ width: 80, height: 80, flex: 'none' }}>
+                    <img
+                      src={story.photoUrl || getArticlePhoto(story.slug)}
+                      alt={story.title[lang]}
+                      loading="lazy"
+                    />
+                  </div>
+                </a>
+              ))}
+            </div>
+
+            <div style={{ marginTop: 28 }}>
+              <p
+                style={{
+                  margin: '0 0 12px',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  borderBottom: '2px solid #111',
+                  paddingBottom: 10,
+                }}
               >
-                <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
-                  <img
-                    src={story.photoUrl || getArticlePhoto(story.slug)}
-                    alt={story.photoLabel[lang]}
-                    loading="lazy"
-                  />
-                </div>
-                <p
-                  style={{
-                    margin: '14px 0 6px',
-                    fontSize: 11,
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: ACCENT,
-                  }}
-                >
-                  {story.kicker[lang]}
-                </p>
-                <h2
-                  style={{
-                    margin: 0,
-                    fontFamily: 'Newsreader, Georgia, serif',
-                    fontSize: 24,
-                    lineHeight: 1.2,
-                    fontWeight: 500,
-                  }}
-                >
-                  {story.title[lang]}
-                </h2>
-                <p style={{ margin: '10px 0 0', fontSize: 15, lineHeight: 1.5, color: '#444' }}>
-                  {story.deck[lang]}
-                </p>
-                <p style={{ margin: '12px 0 0', fontSize: 13, color: '#555' }}>
-                  {story.date[lang]} · {story.readTime[lang]}
-                </p>
-              </a>
-            </article>
-          ))}
+                {lang === 'en' ? 'Sections' : 'Mga Seksyon'}
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                {CATEGORIES.filter((c) => c.slug !== category.slug).map((c) => (
+                  <a
+                    key={c.slug}
+                    href={`/category/${c.slug}`}
+                    onClick={handleCategoryClick(c.slug)}
+                    style={{
+                      padding: '6px 12px',
+                      border: '1px solid #D4D4D4',
+                      fontSize: 12,
+                      fontWeight: 600,
+                      color: '#111',
+                      background: '#fff',
+                    }}
+                  >
+                    {c.label[lang]}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </aside>
         </div>
       </main>
 

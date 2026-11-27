@@ -130,6 +130,9 @@ function WriteStudio({
         [user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
         user?.primaryEmailAddress?.emailAddress ||
         'Civic Tech Newsroom';
+      const authorBio = String(
+        (user?.unsafeMetadata as { bio?: string } | undefined)?.bio || ''
+      ).trim();
 
       const method = editingSlug ? 'PATCH' : 'POST';
       const res = await fetch('/api/articles', {
@@ -146,6 +149,7 @@ function WriteStudio({
           deck,
           content,
           authorName,
+          authorBio,
           photoUrl,
           status,
           isFeatured,

@@ -38,7 +38,9 @@ export function ArticlePage({
 }: ArticlePageProps) {
   const t = TRANSLATIONS[lang];
   const staticArticle = getArticleBySlug(articleSlug);
-  const [d1Article, setD1Article] = useState<(ArticleItem & { photoUrl?: string }) | null>(null);
+  const [d1Article, setD1Article] = useState<
+    (ArticleItem & { photoUrl?: string; authorBio?: string }) | null
+  >(null);
   const [readProgress, setReadProgress] = useState(0);
   const [copied, setCopied] = useState(false);
 
@@ -62,6 +64,7 @@ export function ArticlePage({
               body_en: string;
               body_fil: string;
               author_name: string;
+              author_bio?: string;
               photo_url: string;
               created_at: string;
             } | null;
@@ -84,6 +87,7 @@ export function ArticlePage({
               fil: (a.body_fil || a.body_en).split(/\n\n+/),
             },
             photoUrl: a.photo_url,
+            authorBio: a.author_bio || '',
           });
         }
       )
@@ -92,7 +96,8 @@ export function ArticlePage({
       });
   }, [articleSlug]);
 
-  const article: ArticleItem & { photoUrl?: string } = d1Article ?? staticArticle;
+  const article: ArticleItem & { photoUrl?: string; authorBio?: string } =
+    d1Article ?? staticArticle;
 
   useEffect(() => {
     const onScroll = () => {
@@ -127,10 +132,18 @@ export function ArticlePage({
     window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'noopener,noreferrer');
   };
   const isLead = article.slug === 'volunteers-national-budget';
-  const relatedStories = ARTICLES.filter(
-    (a) => a.slug !== article.slug && a.slug !== 'volunteers-national-budget'
-  ).slice(0, 3);
-  const moreStories = ARTICLES.filter((a) => a.slug !== article.slug).slice(3, 6);
+  const otherArticles = ARTICLES.filter((a) => a.slug !== article.slug);
+  const sameCategory = otherArticles.filter((a) => a.category === article.category);
+  const diffCategory = otherArticles.filter((a) => a.category !== article.category);
+  const relatedStories = [...sameCategory, ...diffCategory].slice(0, 3);
+  const relatedSlugs = new Set(relatedStories.map((s) => s.slug));
+  const moreStories = otherArticles.filter((a) => !relatedSlugs.has(a.slug)).slice(0, 3);
+  const authorInitials = article.author[lang]
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .join('');
 
   const handleOpenCivicTools = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -244,10 +257,7 @@ export function ArticlePage({
             <img src={article.photoUrl || getArticlePhoto(article.slug)} alt={article.photoLabel[lang]} />
           </div>
           <figcaption style={{ marginTop: 10, fontSize: 13, lineHeight: 1.5, color: '#555' }}>
-            {t.article.heroCaption}{' '}
-            <span style={{ color: '#777' }}>
-              {t.article.heroCreditPrefix} {t.home.photographerPlaceholder} {t.article.heroCreditSuffix}
-            </span>
+            {isLead ? t.article.heroCaption : article.photoLabel[lang]}
           </figcaption>
         </figure>
 
@@ -407,6 +417,7 @@ export function ArticlePage({
             className="body"
             style={{
               flex: '1 1 600px',
+              maxWidth: 680,
               minWidth: 0,
               fontFamily: 'Newsreader, Georgia, serif',
               fontSize: 20,
@@ -517,10 +528,18 @@ export function ArticlePage({
                   color: ACCENT,
                 }}
               >
-                {t.article.exploreEyebrow}
+                {isLead || article.category === 'budget'
+                  ? t.article.exploreEyebrow
+                  : lang === 'en'
+                    ? 'Civic Tech & CSO Directory'
+                    : 'Direktoryo ng Civic Tech at CSO'}
               </p>
               <p style={{ margin: '0 0 16px', fontSize: 16, lineHeight: 1.5, color: '#222' }}>
-                {t.article.exploreDesc}
+                {isLead || article.category === 'budget'
+                  ? t.article.exploreDesc
+                  : lang === 'en'
+                    ? 'Explore 217 civic technology projects and civil society organizations across the Philippines.'
+                    : 'Tuklasin ang 217 proyekto ng civic technology at mga CSO sa buong Pilipinas.'}
               </p>
               <a
                 href="/civictools"
@@ -536,8 +555,54 @@ export function ArticlePage({
                   fontWeight: 600,
                 }}
               >
-                {t.article.exploreCta}
+                {isLead || article.category === 'budget'
+                  ? t.article.exploreCta
+                  : lang === 'en'
+                    ? 'Browse the directory →'
+                    : 'Tingnan ang direktoryo →'}
               </a>
+            </div>
+
+            {/* Author box */}
+            <div
+              style={{
+                margin: '40px 0 0',
+                padding: '24px 0 0',
+                borderTop: '1px solid #E5E5E5',
+                display: 'flex',
+                gap: 16,
+                alignItems: 'center',
+                fontFamily: 'Inter, sans-serif',
+              }}
+            >
+              <div
+                aria-hidden="true"
+                style={{
+                  width: 52,
+                  height: 52,
+                  borderRadius: '50%',
+                  background: '#F4F6FA',
+                  border: '1px solid #D9E2F2',
+                  color: ACCENT,
+                  fontSize: 15,
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flex: 'none',
+                }}
+              >
+                {authorInitials || 'CT'}
+              </div>
+              <div>
+                <p style={{ margin: 0, fontWeight: 600, fontSize: 15 }}>{article.author[lang]}</p>
+                <p style={{ margin: '4px 0 0', fontSize: 14, lineHeight: 1.5, color: '#555' }}>
+                  {article.authorBio ||
+                    (lang === 'en'
+                      ? 'Independent reporting on open data, digital government, and civic technology in the Philippines.'
+                      : 'Malayang pag-uulat tungkol sa open data, digital na gobyerno, at civic technology sa Pilipinas.')}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -561,6 +626,7 @@ export function ArticlePage({
                 key={story.slug}
                 href={`/article/${story.slug}`}
                 onClick={handleArticleClick(story.slug)}
+                className="story-card"
                 style={{
                   display: 'block',
                   padding: '16px 0',
@@ -573,6 +639,7 @@ export function ArticlePage({
                   </div>
                 )}
                 <p
+                  className="story-title"
                   style={{
                     margin: 0,
                     fontFamily: 'Newsreader, Georgia, serif',
@@ -586,37 +653,6 @@ export function ArticlePage({
               </a>
             ))}
           </aside>
-        </div>
-
-        {/* Author box */}
-        <div
-          style={{
-            maxWidth: 680,
-            margin: '48px auto 0',
-            padding: '28px 24px',
-            borderTop: '1px solid #E5E5E5',
-            display: 'flex',
-            gap: 20,
-            alignItems: 'center',
-          }}
-        >
-          <div
-            className="ph ph--photo"
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: '50%',
-              flex: 'none',
-            }}
-          >
-            <img src="/images/election-observers.jpg" alt={article.author[lang]} loading="lazy" />
-          </div>
-          <div>
-            <p style={{ margin: 0, fontWeight: 600, fontSize: 15 }}>{article.author[lang]}</p>
-            <p style={{ margin: '4px 0 0', fontSize: 14, lineHeight: 1.5, color: '#555' }}>
-              {t.article.authorBio}
-            </p>
-          </div>
         </div>
       </article>
 
@@ -654,6 +690,7 @@ export function ArticlePage({
               key={story.slug}
               href={`/article/${story.slug}`}
               onClick={handleArticleClick(story.slug)}
+              className="story-card"
               style={{ display: 'block' }}
             >
               <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
@@ -672,6 +709,7 @@ export function ArticlePage({
                 {story.kicker[lang]}
               </p>
               <p
+                className="story-title"
                 style={{
                   margin: 0,
                   fontFamily: 'Newsreader, Georgia, serif',
