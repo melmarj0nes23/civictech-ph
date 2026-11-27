@@ -191,34 +191,6 @@ export function HomePage({
         {banners.length > 0 && (
           <section aria-label="Featured banners" style={{ marginBottom: 28 }}>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-              {banners.length > 1 && (
-                <button
-                  type="button"
-                  aria-label="Previous banner"
-                  onClick={() =>
-                    setBannerIdx((prev) => (prev - 1 + banners.length) % banners.length)
-                  }
-                  style={{
-                    position: 'absolute',
-                    left: 12,
-                    zIndex: 2,
-                    width: 34,
-                    height: 34,
-                    borderRadius: '50%',
-                    border: '1px solid #D4D4D4',
-                    background: 'rgba(255,255,255,0.92)',
-                    color: '#111',
-                    fontSize: 16,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  ‹
-                </button>
-              )}
-
               {(() => {
                 const active = banners[bannerIdx % banners.length];
                 const img = (
@@ -248,32 +220,6 @@ export function HomePage({
                   <div style={{ width: '100%' }}>{img}</div>
                 );
               })()}
-
-              {banners.length > 1 && (
-                <button
-                  type="button"
-                  aria-label="Next banner"
-                  onClick={() => setBannerIdx((prev) => (prev + 1) % banners.length)}
-                  style={{
-                    position: 'absolute',
-                    right: 12,
-                    zIndex: 2,
-                    width: 34,
-                    height: 34,
-                    borderRadius: '50%',
-                    border: '1px solid #D4D4D4',
-                    background: 'rgba(255,255,255,0.92)',
-                    color: '#111',
-                    fontSize: 16,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  ›
-                </button>
-              )}
             </div>
 
             {banners.length > 1 && (
