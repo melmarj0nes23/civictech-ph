@@ -5,9 +5,14 @@ import {
   ARTICLES,
   getArticleBySlug,
   getArticlePhoto,
-  type ArticleItem,
   type CategorySlug,
 } from '../data/articles';
+import {
+  mapD1RowToArticle,
+  readCachedD1Articles,
+  type CachedArticleItem,
+  type D1ApiArticle,
+} from '../data/articlesCache';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
 import type { InfoPageSlug } from '../data/infoPages';
 
@@ -38,66 +43,27 @@ export function ArticlePage({
 }: ArticlePageProps) {
   const t = TRANSLATIONS[lang];
   const staticArticle = getArticleBySlug(articleSlug);
-  const [d1Article, setD1Article] = useState<
-    (ArticleItem & { photoUrl?: string; authorBio?: string }) | null
-  >(null);
+  const [d1Article, setD1Article] = useState<CachedArticleItem | null>(
+    () => readCachedD1Articles()?.find((a) => a.slug === articleSlug) ?? null
+  );
   const [readProgress, setReadProgress] = useState(0);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    setD1Article(null);
+    setD1Article(readCachedD1Articles()?.find((a) => a.slug === articleSlug) ?? null);
     fetch(`/api/articles?slug=${encodeURIComponent(articleSlug)}`)
       .then((r) => (r.ok ? r.json() : null))
-      .then(
-        (
-          data: {
-            ok?: boolean;
-            article?: {
-              slug: string;
-              category: CategorySlug;
-              kicker_en: string;
-              kicker_fil: string;
-              title_en: string;
-              title_fil: string;
-              deck_en: string;
-              deck_fil: string;
-              body_en: string;
-              body_fil: string;
-              author_name: string;
-              author_bio?: string;
-              photo_url: string;
-              created_at: string;
-            } | null;
-          } | null
-        ) => {
-          const a = data?.article;
-          if (!a) return;
-          setD1Article({
-            slug: a.slug,
-            category: a.category,
-            kicker: { en: a.kicker_en, fil: a.kicker_fil || a.kicker_en },
-            title: { en: a.title_en, fil: a.title_fil || a.title_en },
-            deck: { en: a.deck_en, fil: a.deck_fil || a.deck_en },
-            author: { en: a.author_name, fil: a.author_name },
-            date: { en: a.created_at.slice(0, 10), fil: a.created_at.slice(0, 10) },
-            readTime: { en: '4 min read', fil: '4 minutong pagbabasa' },
-            photoLabel: { en: a.title_en, fil: a.title_fil || a.title_en },
-            body: {
-              en: a.body_en.split(/\n\n+/),
-              fil: (a.body_fil || a.body_en).split(/\n\n+/),
-            },
-            photoUrl: a.photo_url,
-            authorBio: a.author_bio || '',
-          });
-        }
-      )
+      .then((data: { ok?: boolean; article?: D1ApiArticle | null } | null) => {
+        const a = data?.article;
+        if (!a) return;
+        setD1Article(mapD1RowToArticle(a));
+      })
       .catch(() => {
         // ignore in local Vite dev
       });
   }, [articleSlug]);
 
-  const article: ArticleItem & { photoUrl?: string; authorBio?: string } =
-    d1Article ?? staticArticle;
+  const article: CachedArticleItem = d1Article ?? staticArticle;
 
   useEffect(() => {
     const onScroll = () => {

@@ -5,9 +5,15 @@ import {
   ARTICLES,
   getArticlePhoto,
   getCategoryBySlug,
-  type ArticleItem,
   type CategorySlug,
 } from '../data/articles';
+import {
+  mapD1RowToArticle,
+  readCachedD1Articles,
+  writeCachedD1Articles,
+  type CachedArticleItem,
+  type D1ApiArticle,
+} from '../data/articlesCache';
 import { DIRECTORY_ENTRIES } from '../data/directory';
 import { getLocalizedSummary } from '../data/directoryI18n';
 import {
@@ -44,71 +50,36 @@ export function HomePage({
   const [nlEmail, setNlEmail] = useState('');
   const [nlSubmitting, setNlSubmitting] = useState(false);
   const [nlSubscribed, setNlSubscribed] = useState<string | null>(null);
-  const [d1Stories, setD1Stories] = useState<
-    (ArticleItem & { photoUrl?: string; isLongRead?: boolean })[]
-  >([]);
+  const initialCached = readCachedD1Articles();
+  const [d1Stories, setD1Stories] = useState<CachedArticleItem[]>(initialCached ?? []);
+  const [loadingFeed, setLoadingFeed] = useState(initialCached === null);
 
   useEffect(() => {
     fetch('/api/articles')
       .then((r) => (r.ok ? r.json() : null))
-      .then(
-        (
-          data: {
-            ok?: boolean;
-            articles?: Array<{
-              slug: string;
-              category: CategorySlug;
-              kicker_en: string;
-              kicker_fil: string;
-              title_en: string;
-              title_fil: string;
-              deck_en: string;
-              deck_fil: string;
-              body_en: string;
-              body_fil: string;
-              author_name: string;
-              photo_url: string;
-              is_long_read?: number;
-              created_at: string;
-            }>;
-          } | null
-        ) => {
-          if (!data?.ok || !data.articles) return;
-          setD1Stories(
-            data.articles.map((a) => ({
-              slug: a.slug,
-              category: a.category,
-              kicker: { en: a.kicker_en, fil: a.kicker_fil || a.kicker_en },
-              title: { en: a.title_en, fil: a.title_fil || a.title_en },
-              deck: { en: a.deck_en, fil: a.deck_fil || a.deck_en },
-              author: { en: a.author_name, fil: a.author_name },
-              date: { en: a.created_at.slice(0, 10), fil: a.created_at.slice(0, 10) },
-              readTime: { en: '4 min read', fil: '4 minutong pagbabasa' },
-              photoLabel: { en: a.title_en, fil: a.title_fil || a.title_en },
-              body: {
-                en: a.body_en.split(/\n\n+/),
-                fil: (a.body_fil || a.body_en).split(/\n\n+/),
-              },
-              photoUrl: a.photo_url,
-              isLongRead: Boolean(a.is_long_read),
-            }))
-          );
-        }
-      )
+      .then((data: { ok?: boolean; articles?: D1ApiArticle[] } | null) => {
+        if (!data?.ok || !data.articles) return;
+        const mapped = data.articles.map(mapD1RowToArticle);
+        setD1Stories(mapped);
+        writeCachedD1Articles(mapped);
+      })
       .catch(() => {
         // fallback to static articles in plain Vite dev
+      })
+      .finally(() => {
+        setLoadingFeed(false);
       });
   }, []);
 
   const d1Slugs = new Set(d1Stories.map((s) => s.slug));
-  const feedStories: (ArticleItem & { photoUrl?: string; isLongRead?: boolean })[] = [
+  const feedStories: CachedArticleItem[] = [
     ...d1Stories,
     ...ARTICLES.filter((a) => !d1Slugs.has(a.slug)),
   ];
   const leadStory = feedStories[0] ?? ARTICLES[0];
   const topStories = feedStories.slice(1, 6);
   const latestStories = feedStories.slice(6, 10);
-  const longReadStory: ArticleItem & { photoUrl?: string; isLongRead?: boolean } =
+  const longReadStory: CachedArticleItem =
     feedStories.find((s) => s.isLongRead) ??
     feedStories.find((s) => s.slug === 'last-mile-connectivity') ??
     ARTICLES.find((a) => a.slug === 'last-mile-connectivity') ??
@@ -207,68 +178,80 @@ export function HomePage({
           }}
         >
           <article className="story-card" style={{ flex: '999 1 560px', minWidth: 0 }}>
-            <a
-              href={`/article/${leadStory.slug}`}
-              onClick={handleOpenArticle(leadStory.slug)}
-              style={{ display: 'block' }}
-            >
-              <div
-                className="ph ph--photo"
-                style={{
-                  aspectRatio: '16 / 9',
-                  width: '100%',
-                }}
-              >
-                <img
-                  src={leadStory.photoUrl || getArticlePhoto(leadStory.slug)}
-                  alt={leadStory.title[lang]}
-                />
+            {loadingFeed ? (
+              <div aria-busy="true" aria-label="Loading lead story">
+                <div style={{ aspectRatio: '16 / 9', width: '100%', background: '#F4F6FA' }} />
+                <div style={{ height: 14, width: 90, background: '#F4F6FA', margin: '20px 0 12px' }} />
+                <div style={{ height: 42, width: '90%', background: '#F4F6FA', marginBottom: 10 }} />
+                <div style={{ height: 42, width: '65%', background: '#F4F6FA', marginBottom: 16 }} />
+                <div style={{ height: 22, width: '80%', background: '#F4F6FA' }} />
               </div>
-            </a>
-            <p
-              style={{
-                margin: '20px 0 8px',
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                color: ACCENT,
-              }}
-            >
-              {getCategoryBySlug(leadStory.category)?.label[lang] ?? leadStory.kicker[lang]}
-            </p>
-            <h2
-              className="hero-title story-title"
-              style={{
-                margin: 0,
-                fontFamily: 'Newsreader, Georgia, serif',
-                fontWeight: 500,
-                fontSize: 46,
-                lineHeight: 1.08,
-                letterSpacing: '-0.015em',
-              }}
-            >
-              <a href={`/article/${leadStory.slug}`} onClick={handleOpenArticle(leadStory.slug)}>
-                {leadStory.title[lang]}
-              </a>
-            </h2>
-            <p
-              style={{
-                margin: '14px 0 0',
-                fontFamily: 'Newsreader, Georgia, serif',
-                fontSize: 21,
-                lineHeight: 1.45,
-                color: '#333',
-                maxWidth: 720,
-              }}
-            >
-              {leadStory.deck[lang]}
-            </p>
-            <p style={{ margin: '16px 0 0', fontSize: 13, color: '#555' }}>
-              {t.home.byWord}{' '}
-              <span style={{ color: '#111', fontWeight: 600 }}>{leadStory.author[lang]}</span>{' '}
-              &nbsp;·&nbsp; {leadStory.readTime[lang]}
-            </p>
+            ) : (
+              <>
+                <a
+                  href={`/article/${leadStory.slug}`}
+                  onClick={handleOpenArticle(leadStory.slug)}
+                  style={{ display: 'block' }}
+                >
+                  <div
+                    className="ph ph--photo"
+                    style={{
+                      aspectRatio: '16 / 9',
+                      width: '100%',
+                    }}
+                  >
+                    <img
+                      src={leadStory.photoUrl || getArticlePhoto(leadStory.slug)}
+                      alt={leadStory.title[lang]}
+                    />
+                  </div>
+                </a>
+                <p
+                  style={{
+                    margin: '20px 0 8px',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: ACCENT,
+                  }}
+                >
+                  {getCategoryBySlug(leadStory.category)?.label[lang] ?? leadStory.kicker[lang]}
+                </p>
+                <h2
+                  className="hero-title story-title"
+                  style={{
+                    margin: 0,
+                    fontFamily: 'Newsreader, Georgia, serif',
+                    fontWeight: 500,
+                    fontSize: 46,
+                    lineHeight: 1.08,
+                    letterSpacing: '-0.015em',
+                  }}
+                >
+                  <a href={`/article/${leadStory.slug}`} onClick={handleOpenArticle(leadStory.slug)}>
+                    {leadStory.title[lang]}
+                  </a>
+                </h2>
+                <p
+                  style={{
+                    margin: '14px 0 0',
+                    fontFamily: 'Newsreader, Georgia, serif',
+                    fontSize: 21,
+                    lineHeight: 1.45,
+                    color: '#333',
+                    maxWidth: 720,
+                  }}
+                >
+                  {leadStory.deck[lang]}
+                </p>
+                <p style={{ margin: '16px 0 0', fontSize: 13, color: '#555' }}>
+                  {t.home.byWord}{' '}
+                  <span style={{ color: '#111', fontWeight: 600 }}>{leadStory.author[lang]}</span>{' '}
+                  &nbsp;·&nbsp; {leadStory.readTime[lang]}
+                </p>
+              </>
+            )}
           </article>
 
           <aside

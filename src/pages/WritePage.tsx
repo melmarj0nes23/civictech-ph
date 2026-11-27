@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { Footer } from '../components/Footer';
 import { SiteHeader } from '../components/SiteHeader';
 import { ARTICLES, CATEGORIES, getArticlePhoto, type CategorySlug } from '../data/articles';
+import { clearCachedD1Articles } from '../data/articlesCache';
 import type { Lang } from '../data/i18n';
 import type { InfoPageSlug } from '../data/infoPages';
 
@@ -181,6 +182,7 @@ function WriteStudio({
             : 'Nai-publish ang artikulo sa D1!',
         isError: false,
       });
+      clearCachedD1Articles();
       await loadArticles();
       if (!editingSlug) {
         resetForm();
@@ -212,6 +214,7 @@ function WriteStudio({
         return;
       }
       if (editingSlug === slug) resetForm();
+      clearCachedD1Articles();
       await loadArticles();
     } catch {
       setNotice({
@@ -266,6 +269,7 @@ function WriteStudio({
           : `Na-import ang ${data.imported ?? seedArticles.length} na artikulo sa D1!`,
         isError: false,
       });
+      clearCachedD1Articles();
       await loadArticles();
     } catch {
       setNotice({

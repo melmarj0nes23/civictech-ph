@@ -6,9 +6,15 @@ import {
   CATEGORIES,
   getArticlePhoto,
   getCategoryBySlug,
-  type ArticleItem,
   type CategorySlug,
 } from '../data/articles';
+import {
+  mapD1RowToArticle,
+  readCachedD1Articles,
+  writeCachedD1Articles,
+  type CachedArticleItem,
+  type D1ApiArticle,
+} from '../data/articlesCache';
 import { type Lang } from '../data/i18n';
 import type { InfoPageSlug } from '../data/infoPages';
 
@@ -38,60 +44,26 @@ export function CategoryPage({
   onOpenInfo,
 }: CategoryPageProps) {
   const category = getCategoryBySlug(categorySlug) ?? CATEGORIES[0];
-  const [d1Stories, setD1Stories] = useState<(ArticleItem & { photoUrl?: string })[]>([]);
+  const [d1Stories, setD1Stories] = useState<CachedArticleItem[]>(
+    () => readCachedD1Articles() ?? []
+  );
 
   useEffect(() => {
     fetch('/api/articles')
       .then((r) => (r.ok ? r.json() : null))
-      .then(
-        (
-          data: {
-            ok?: boolean;
-            articles?: Array<{
-              slug: string;
-              category: CategorySlug;
-              kicker_en: string;
-              kicker_fil: string;
-              title_en: string;
-              title_fil: string;
-              deck_en: string;
-              deck_fil: string;
-              body_en: string;
-              body_fil: string;
-              author_name: string;
-              photo_url: string;
-              created_at: string;
-            }>;
-          } | null
-        ) => {
-          if (!data?.ok || !data.articles) return;
-          setD1Stories(
-            data.articles.map((a) => ({
-              slug: a.slug,
-              category: a.category,
-              kicker: { en: a.kicker_en, fil: a.kicker_fil || a.kicker_en },
-              title: { en: a.title_en, fil: a.title_fil || a.title_en },
-              deck: { en: a.deck_en, fil: a.deck_fil || a.deck_en },
-              author: { en: a.author_name, fil: a.author_name },
-              date: { en: a.created_at.slice(0, 10), fil: a.created_at.slice(0, 10) },
-              readTime: { en: '4 min read', fil: '4 minutong pagbabasa' },
-              photoLabel: { en: a.title_en, fil: a.title_fil || a.title_en },
-              body: {
-                en: a.body_en.split(/\n\n+/),
-                fil: (a.body_fil || a.body_en).split(/\n\n+/),
-              },
-              photoUrl: a.photo_url,
-            }))
-          );
-        }
-      )
+      .then((data: { ok?: boolean; articles?: D1ApiArticle[] } | null) => {
+        if (!data?.ok || !data.articles) return;
+        const mapped = data.articles.map(mapD1RowToArticle);
+        setD1Stories(mapped);
+        writeCachedD1Articles(mapped);
+      })
       .catch(() => {
         // fallback to static articles in local Vite dev
       });
   }, [category.slug]);
 
   const d1Slugs = new Set(d1Stories.map((s) => s.slug));
-  const allStories: (ArticleItem & { photoUrl?: string })[] = [
+  const allStories: CachedArticleItem[] = [
     ...d1Stories,
     ...ARTICLES.filter((a) => !d1Slugs.has(a.slug)),
   ];
