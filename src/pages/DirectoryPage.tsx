@@ -1,7 +1,7 @@
 import { useMemo, useState, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
-import { MobileAuthButton, MobileMenu } from '../components/MobileMenu';
-import { CATEGORIES, type CategorySlug } from '../data/articles';
+import { SiteHeader } from '../components/SiteHeader';
+import { type CategorySlug } from '../data/articles';
 import { DIRECTORY_ENTRIES } from '../data/directory';
 import { getLocalizedSummary } from '../data/directoryI18n';
 import {
@@ -40,19 +40,9 @@ export function DirectoryPage({
   const [sectorFilter, setSectorFilter] = useState<Sector | 'all'>('all');
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  const handleBackHome = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    onBackHome();
-  };
-
   const handleOpenSubmit = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onOpenSubmit();
-  };
-
-  const handleSwitchLang = (next: Lang) => (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    onLangChange(next);
   };
 
   const sectorCounts = useMemo(() => {
@@ -97,86 +87,13 @@ export function DirectoryPage({
 
   return (
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
-      {/* Compact header */}
-      <header style={{ borderBottom: '1px solid #E5E5E5' }}>
-        <div className="compact-header-inner">
-          <MobileMenu
-            lang={lang}
-            onLangChange={onLangChange}
-            onOpenCategory={onOpenCategory}
-            onSubscribe={onBackHome}
-            onBackHome={onBackHome}
-          />
-          <div className="compact-brand">
-            <a
-              href="/"
-              onClick={handleBackHome}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'baseline',
-                gap: 8,
-                fontFamily: 'Newsreader, Georgia, serif',
-                fontSize: 32,
-                fontWeight: 600,
-                letterSpacing: '-0.01em',
-              }}
-            >
-              <img
-                src="/logo.png"
-                alt="Civic Tech logo"
-                style={{ height: 28, width: 'auto', display: 'block', alignSelf: 'center' }}
-              />
-              Civic Tech
-            </a>
-            <span
-              style={{
-                fontSize: 11,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: '#555',
-              }}
-            >
-              {t.byPrefix}{' '}
-              <a
-                href="https://bettergov.ph"
-                target="_blank"
-                rel="noreferrer"
-                style={{ color: ACCENT, fontWeight: 600 }}
-              >
-                BetterGov.ph
-              </a>
-            </span>
-          </div>
-          <nav aria-label="Sections" className="compact-nav">
-            {CATEGORIES.map((cat) => (
-              <a
-                key={cat.slug}
-                href={`/category/${cat.slug}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  onOpenCategory(cat.slug);
-                }}
-                style={{ padding: '12px 0' }}
-              >
-                {cat.label[lang]}
-              </a>
-            ))}
-          </nav>
-          <div className="compact-actions" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <a
-              href="/civictools"
-              onClick={handleSwitchLang(lang === 'en' ? 'fil' : 'en')}
-              style={{ fontSize: 13, color: '#555', fontWeight: 500 }}
-            >
-              {lang === 'en' ? 'FIL' : 'EN'}
-            </a>
-            <a href="/" onClick={handleBackHome} className="compact-subscribe">
-              {t.subscribe}
-            </a>
-          </div>
-          <MobileAuthButton lang={lang} />
-        </div>
-      </header>
+      <SiteHeader
+        lang={lang}
+        onLangChange={onLangChange}
+        onBackHome={onBackHome}
+        onOpenCategory={onOpenCategory}
+        onOpenCivicTools={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      />
 
       <main style={{ maxWidth: 1240, margin: '0 auto', padding: '40px 24px 64px' }}>
         {/* Header block */}

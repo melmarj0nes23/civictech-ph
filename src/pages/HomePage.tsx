@@ -1,7 +1,7 @@
 import type { MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
-import { MobileAuthButton, MobileMenu } from '../components/MobileMenu';
-import { CATEGORIES, getArticlePhoto, type CategorySlug } from '../data/articles';
+import { SiteHeader } from '../components/SiteHeader';
+import { getArticlePhoto, type CategorySlug } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
 import type { InfoPageSlug } from '../data/infoPages';
 
@@ -33,144 +33,47 @@ export function HomePage({
     onOpenArticle(slug);
   };
 
-  const handleOpenCategory =
-    (slug: CategorySlug) => (e: MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
-      onOpenCategory(slug);
-    };
-
   const handleOpenCivicTools = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onOpenCivicTools();
-  };
-
-  const handleScrollNewsletter = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    document.getElementById('newsletter')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleStayHome = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
   };
 
-  const handleSwitchLang = (next: Lang) => (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    onLangChange(next);
-  };
-
   return (
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
-      {/* Utility bar */}
-      <div style={{ borderBottom: '1px solid #E5E5E5' }}>
-        <div className="utility-bar-inner">
-          <MobileMenu
-            lang={lang}
-            onLangChange={onLangChange}
-            onOpenCategory={onOpenCategory}
-            onSubscribe={() =>
-              document.getElementById('newsletter')?.scrollIntoView({ behavior: 'smooth' })
-            }
-            onOpenCivicTools={onOpenCivicTools}
-            onBackHome={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          />
-          <span className="utility-date">{t.dateLabel}</span>
-          <div className="utility-actions">
-            <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-              <a
-                href="/"
-                onClick={handleSwitchLang('en')}
-                aria-current={lang === 'en' ? 'true' : undefined}
-                style={{
-                  color: lang === 'en' ? '#111' : '#555',
-                  fontWeight: lang === 'en' ? 600 : 400,
-                }}
-              >
-                {t.english}
-              </a>
-              <a
-                href="/"
-                onClick={handleSwitchLang('fil')}
-                aria-current={lang === 'fil' ? 'true' : undefined}
-                style={{
-                  color: lang === 'fil' ? '#111' : '#555',
-                  fontWeight: lang === 'fil' ? 600 : 400,
-                }}
-              >
-                {t.filipino}
-              </a>
-              <a href="/" onClick={handleStayHome} style={{ color: '#555' }}>
-                {t.signIn}
-              </a>
-            </div>
-            <a
-              href="/newsletter"
-              onClick={handleScrollNewsletter}
-              style={{
-                background: '#0B3D91',
-                color: '#fff',
-                padding: '10px 16px',
-                fontWeight: 600,
-                fontSize: 13,
-                minHeight: 44,
-                boxSizing: 'border-box',
-                display: 'inline-flex',
-                alignItems: 'center',
-              }}
-            >
-              {t.subscribe}
-            </a>
-          </div>
-          <MobileAuthButton lang={lang} />
-        </div>
-      </div>
+      <SiteHeader
+        lang={lang}
+        onLangChange={onLangChange}
+        onBackHome={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onOpenCategory={onOpenCategory}
+        onOpenCivicTools={onOpenCivicTools}
+        onSubscribe={() =>
+          document.getElementById('newsletter')?.scrollIntoView({ behavior: 'smooth' })
+        }
+      />
 
-      {/* Masthead */}
-      <header
+      {/* Dateline & newsroom subtitle */}
+      <div
         style={{
           maxWidth: 1240,
           margin: '0 auto',
-          padding: '40px 24px 28px',
-          textAlign: 'center',
+          padding: '14px 24px 0',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: '6px 16px',
+          fontSize: 12,
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          color: '#555',
         }}
       >
-        <p className="masthead-date">{t.dateLabel}</p>
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 16,
-          }}
-        >
-          <img
-            src="/logo.png"
-            alt="Civic Tech logo"
-            className="masthead-logo"
-            style={{ height: 64, width: 'auto', display: 'block' }}
-          />
-          <h1
-            className="masthead-title"
-            style={{
-              margin: 0,
-              fontFamily: 'Newsreader, Georgia, serif',
-              fontWeight: 600,
-              fontSize: 84,
-              lineHeight: 1,
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Civic Tech
-          </h1>
-        </div>
-        <p
-          style={{
-            margin: '14px 0 0',
-            fontSize: 13,
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            color: '#555',
-          }}
-        >
+        <span>{t.dateLabel}</span>
+        <span>
           {t.byPrefix}{' '}
           <a
             href="https://bettergov.ph"
@@ -180,43 +83,11 @@ export function HomePage({
           >
             BetterGov.ph
           </a>{' '}
-          &nbsp;·&nbsp; {t.taglineSuffix}
-        </p>
-      </header>
+          · {t.taglineSuffix}
+        </span>
+      </div>
 
-      {/* Section nav */}
-      <nav
-        aria-label="Sections"
-        className="desktop-section-nav"
-        style={{ borderTop: '1px solid #111', borderBottom: '1px solid #E5E5E5' }}
-      >
-        <div
-          style={{
-            maxWidth: 1240,
-            margin: '0 auto',
-            padding: '0 24px',
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            gap: '4px 28px',
-            fontSize: 14,
-            fontWeight: 500,
-          }}
-        >
-          {CATEGORIES.map((cat) => (
-            <a
-              key={cat.slug}
-              href={`/category/${cat.slug}`}
-              onClick={handleOpenCategory(cat.slug)}
-              style={{ padding: '14px 0' }}
-            >
-              {cat.label[lang]}
-            </a>
-          ))}
-        </div>
-      </nav>
-
-      <main style={{ maxWidth: 1240, margin: '0 auto', padding: '36px 24px 0' }}>
+      <main style={{ maxWidth: 1240, margin: '0 auto', padding: '24px 24px 0' }}>
         {/* Lead + rail */}
         <section
           style={{

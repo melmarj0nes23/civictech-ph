@@ -1,7 +1,7 @@
 import { useMemo, useState, type FormEvent, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
-import { MobileAuthButton, MobileMenu } from '../components/MobileMenu';
-import { CATEGORIES, type CategorySlug } from '../data/articles';
+import { SiteHeader } from '../components/SiteHeader';
+import { type CategorySlug } from '../data/articles';
 import { DIRECTORY_ENTRIES } from '../data/directory';
 import { SECTOR_LABELS, TRANSLATIONS, type Lang } from '../data/i18n';
 import type { InfoPageSlug } from '../data/infoPages';
@@ -57,19 +57,9 @@ export function SubmitPage({
   const [updateTitle, setUpdateTitle] = useState('');
   const [updateBody, setUpdateBody] = useState('');
 
-  const handleBackHome = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    onBackHome();
-  };
-
   const handleBackDirectory = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onBackDirectory();
-  };
-
-  const handleSwitchLang = (next: Lang) => (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    onLangChange(next);
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -129,87 +119,13 @@ export function SubmitPage({
 
   return (
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
-      {/* Compact header */}
-      <header style={{ borderBottom: '1px solid #E5E5E5' }}>
-        <div className="compact-header-inner">
-          <MobileMenu
-            lang={lang}
-            onLangChange={onLangChange}
-            onOpenCategory={onOpenCategory}
-            onSubscribe={onBackHome}
-            onOpenCivicTools={onBackDirectory}
-            onBackHome={onBackHome}
-          />
-          <div className="compact-brand">
-            <a
-              href="/"
-              onClick={handleBackHome}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'baseline',
-                gap: 8,
-                fontFamily: 'Newsreader, Georgia, serif',
-                fontSize: 32,
-                fontWeight: 600,
-                letterSpacing: '-0.01em',
-              }}
-            >
-              <img
-                src="/logo.png"
-                alt="Civic Tech logo"
-                style={{ height: 28, width: 'auto', display: 'block', alignSelf: 'center' }}
-              />
-              Civic Tech
-            </a>
-            <span
-              style={{
-                fontSize: 11,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: '#555',
-              }}
-            >
-              {t.byPrefix}{' '}
-              <a
-                href="https://bettergov.ph"
-                target="_blank"
-                rel="noreferrer"
-                style={{ color: ACCENT, fontWeight: 600 }}
-              >
-                BetterGov.ph
-              </a>
-            </span>
-          </div>
-          <nav aria-label="Sections" className="compact-nav">
-            {CATEGORIES.map((cat) => (
-              <a
-                key={cat.slug}
-                href={`/category/${cat.slug}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  onOpenCategory(cat.slug);
-                }}
-                style={{ padding: '12px 0' }}
-              >
-                {cat.label[lang]}
-              </a>
-            ))}
-          </nav>
-          <div className="compact-actions" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <a
-              href="/civictools/submit"
-              onClick={handleSwitchLang(lang === 'en' ? 'fil' : 'en')}
-              style={{ fontSize: 13, color: '#555', fontWeight: 500 }}
-            >
-              {lang === 'en' ? 'FIL' : 'EN'}
-            </a>
-            <a href="/" onClick={handleBackHome} className="compact-subscribe">
-              {t.subscribe}
-            </a>
-          </div>
-          <MobileAuthButton lang={lang} />
-        </div>
-      </header>
+      <SiteHeader
+        lang={lang}
+        onLangChange={onLangChange}
+        onBackHome={onBackHome}
+        onOpenCategory={onOpenCategory}
+        onOpenCivicTools={onBackDirectory}
+      />
 
       <main style={{ maxWidth: 760, margin: '0 auto', padding: '40px 24px 72px' }}>
         <p style={{ margin: '0 0 20px', fontSize: 13 }}>

@@ -78,6 +78,99 @@ a:hover {
   letter-spacing: 0.02em;
 }
 
+/* Unified GovInsider-style desktop header + mobile burger layout */
+.site-header-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.site-brand {
+  display: flex;
+  align-items: center;
+  flex: none;
+}
+
+.site-brand-sub {
+  display: none;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.site-nav a {
+  padding: 8px 0;
+  white-space: nowrap;
+}
+
+.site-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: none;
+}
+
+.site-search-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111;
+  white-space: nowrap;
+}
+
+.site-lang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.site-lang-btn:hover {
+  color: #0B3D91;
+}
+
+.site-auth-btn {
+  background: #0B3D91;
+  color: #fff;
+  padding: 0 16px;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.site-auth-btn:hover {
+  color: #fff;
+}
+
 /* Compact header (Article & Civic Tools) */
 .compact-header-inner {
   max-width: 1240px;
@@ -255,6 +348,38 @@ a:hover {
     white-space: nowrap;
     flex: none;
     box-sizing: border-box;
+  }
+
+  .site-header-inner {
+    padding: 8px 16px;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .site-brand {
+    order: 1;
+    flex: 1 1 0;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .site-brand > a:first-child {
+    font-size: 24px !important;
+  }
+
+  .site-brand-sub {
+    display: inline;
+  }
+
+  .site-nav {
+    display: none;
+  }
+
+  .site-actions {
+    display: none;
   }
 
   .compact-header-inner {

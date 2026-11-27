@@ -1,8 +1,8 @@
 import type { MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
-import { MobileAuthButton, MobileMenu } from '../components/MobileMenu';
-import { CATEGORIES, type CategorySlug } from '../data/articles';
-import { TRANSLATIONS, type Lang } from '../data/i18n';
+import { SiteHeader } from '../components/SiteHeader';
+import { type CategorySlug } from '../data/articles';
+import { type Lang } from '../data/i18n';
 import { INFO_PAGES, type InfoPageSlug } from '../data/infoPages';
 
 const ACCENT = '#0B3D91';
@@ -28,24 +28,7 @@ export function InfoPage({
   onOpenCategory,
   onOpenInfo,
 }: InfoPageProps) {
-  const t = TRANSLATIONS[lang];
   const page = INFO_PAGES[slug];
-
-  const handleBackHome = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    onBackHome();
-  };
-
-  const handleCategoryClick =
-    (catSlug: CategorySlug) => (e: MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
-      onOpenCategory(catSlug);
-    };
-
-  const handleSwitchLang = (next: Lang) => (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    onLangChange(next);
-  };
 
   const handleCta = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -59,84 +42,13 @@ export function InfoPage({
 
   return (
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
-      {/* Compact header */}
-      <header style={{ borderBottom: '1px solid #E5E5E5' }}>
-        <div className="compact-header-inner">
-          <MobileMenu
-            lang={lang}
-            onLangChange={onLangChange}
-            onOpenCategory={onOpenCategory}
-            onSubscribe={onBackHome}
-            onOpenCivicTools={onOpenCivicTools}
-            onBackHome={onBackHome}
-          />
-          <div className="compact-brand">
-            <a
-              href="/"
-              onClick={handleBackHome}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'baseline',
-                gap: 8,
-                fontFamily: 'Newsreader, Georgia, serif',
-                fontSize: 32,
-                fontWeight: 600,
-                letterSpacing: '-0.01em',
-              }}
-            >
-              <img
-                src="/logo.png"
-                alt="Civic Tech logo"
-                style={{ height: 28, width: 'auto', display: 'block', alignSelf: 'center' }}
-              />
-              Civic Tech
-            </a>
-            <span
-              style={{
-                fontSize: 11,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: '#555',
-              }}
-            >
-              {t.byPrefix}{' '}
-              <a
-                href="https://bettergov.ph"
-                target="_blank"
-                rel="noreferrer"
-                style={{ color: ACCENT, fontWeight: 600 }}
-              >
-                BetterGov.ph
-              </a>
-            </span>
-          </div>
-          <nav aria-label="Sections" className="compact-nav">
-            {CATEGORIES.map((cat) => (
-              <a
-                key={cat.slug}
-                href={`/category/${cat.slug}`}
-                onClick={handleCategoryClick(cat.slug)}
-                style={{ padding: '12px 0' }}
-              >
-                {cat.label[lang]}
-              </a>
-            ))}
-          </nav>
-          <div className="compact-actions" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <a
-              href={`/${page.slug}`}
-              onClick={handleSwitchLang(lang === 'en' ? 'fil' : 'en')}
-              style={{ fontSize: 13, color: '#555', fontWeight: 500 }}
-            >
-              {lang === 'en' ? 'FIL' : 'EN'}
-            </a>
-            <a href="/" onClick={handleBackHome} className="compact-subscribe">
-              {t.subscribe}
-            </a>
-          </div>
-          <MobileAuthButton lang={lang} />
-        </div>
-      </header>
+      <SiteHeader
+        lang={lang}
+        onLangChange={onLangChange}
+        onBackHome={onBackHome}
+        onOpenCategory={onOpenCategory}
+        onOpenCivicTools={onOpenCivicTools}
+      />
 
       <main className="info-main" style={{ maxWidth: 740, margin: '0 auto', padding: '48px 24px 72px' }}>
         <p

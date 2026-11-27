@@ -1,9 +1,8 @@
 import type { MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
-import { MobileAuthButton, MobileMenu } from '../components/MobileMenu';
+import { SiteHeader } from '../components/SiteHeader';
 import {
   ARTICLES,
-  CATEGORIES,
   getArticleBySlug,
   getArticlePhoto,
   type CategorySlug,
@@ -44,30 +43,14 @@ export function ArticlePage({
   ).slice(0, 3);
   const moreStories = ARTICLES.filter((a) => a.slug !== article.slug).slice(3, 6);
 
-  const handleBackHome = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    onBackHome();
-  };
-
   const handleOpenCivicTools = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onOpenCivicTools();
   };
 
-  const handleCategoryClick =
-    (slug: CategorySlug) => (e: MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
-      onOpenCategory(slug);
-    };
-
   const handleArticleClick = (slug: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onOpenArticle(slug);
-  };
-
-  const handleSwitchLang = (next: Lang) => (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    onLangChange(next);
   };
 
   const firstPara = article.body[lang][0] ?? '';
@@ -76,84 +59,13 @@ export function ArticlePage({
 
   return (
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
-      {/* Compact header */}
-      <header style={{ borderBottom: '1px solid #E5E5E5' }}>
-        <div className="compact-header-inner">
-          <MobileMenu
-            lang={lang}
-            onLangChange={onLangChange}
-            onOpenCategory={onOpenCategory}
-            onSubscribe={onBackHome}
-            onOpenCivicTools={onOpenCivicTools}
-            onBackHome={onBackHome}
-          />
-          <div className="compact-brand">
-            <a
-              href="/"
-              onClick={handleBackHome}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'baseline',
-                gap: 8,
-                fontFamily: 'Newsreader, Georgia, serif',
-                fontSize: 32,
-                fontWeight: 600,
-                letterSpacing: '-0.01em',
-              }}
-            >
-              <img
-                src="/logo.png"
-                alt="Civic Tech logo"
-                style={{ height: 28, width: 'auto', display: 'block', alignSelf: 'center' }}
-              />
-              Civic Tech
-            </a>
-            <span
-              style={{
-                fontSize: 11,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: '#555',
-              }}
-            >
-              {t.byPrefix}{' '}
-              <a
-                href="https://bettergov.ph"
-                target="_blank"
-                rel="noreferrer"
-                style={{ color: ACCENT, fontWeight: 600 }}
-              >
-                BetterGov.ph
-              </a>
-            </span>
-          </div>
-          <nav aria-label="Sections" className="compact-nav">
-            {CATEGORIES.map((cat) => (
-              <a
-                key={cat.slug}
-                href={`/category/${cat.slug}`}
-                onClick={handleCategoryClick(cat.slug)}
-                style={{ padding: '12px 0' }}
-              >
-                {cat.label[lang]}
-              </a>
-            ))}
-          </nav>
-          <div className="compact-actions" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <a
-              href={isLead ? '/article' : `/article/${article.slug}`}
-              onClick={handleSwitchLang(lang === 'en' ? 'fil' : 'en')}
-              style={{ fontSize: 13, color: '#555', fontWeight: 500 }}
-            >
-              {lang === 'en' ? 'FIL' : 'EN'}
-            </a>
-            <a href="/" onClick={handleBackHome} className="compact-subscribe">
-              {t.subscribe}
-            </a>
-          </div>
-          <MobileAuthButton lang={lang} />
-        </div>
-      </header>
+      <SiteHeader
+        lang={lang}
+        onLangChange={onLangChange}
+        onBackHome={onBackHome}
+        onOpenCategory={onOpenCategory}
+        onOpenCivicTools={onOpenCivicTools}
+      />
 
       <article>
         {/* Headline block */}
