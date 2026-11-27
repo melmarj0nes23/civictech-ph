@@ -254,6 +254,10 @@ a:hover .ph--photo img {
   display: none;
 }
 
+.mobile-user-btn {
+  display: none;
+}
+
 @media (max-width: 768px) {
   html,
   body {
@@ -367,6 +371,13 @@ a:hover .ph--photo img {
     white-space: nowrap;
     flex: none;
     box-sizing: border-box;
+  }
+
+  .mobile-user-btn {
+    order: 2;
+    display: inline-flex;
+    align-items: center;
+    flex: none;
   }
 
   .site-header-inner {

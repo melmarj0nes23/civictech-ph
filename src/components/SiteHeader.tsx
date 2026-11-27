@@ -1,3 +1,4 @@
+import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react';
 import { useState, type MouseEvent } from 'react';
 import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
@@ -5,6 +6,7 @@ import { MobileAuthButton, MobileMenu } from './MobileMenu';
 import { SearchModal } from './SearchModal';
 
 const ACCENT = '#0B3D91';
+const HAS_CLERK = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
 
 interface SiteHeaderProps {
   lang: Lang;
@@ -186,19 +188,52 @@ export function SiteHeader({
             </span>
           </button>
 
-          <a
-            href="/login"
-            onClick={(e) => {
-              e.preventDefault();
-              handleOpenAuthPage();
-            }}
-            className="site-auth-btn"
-          >
-            {lang === 'en' ? 'Login / Sign up' : 'Mag-login'}
-          </a>
+          {HAS_CLERK ? (
+            <>
+              <SignedOut>
+                <a
+                  href="/login"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleOpenAuthPage();
+                  }}
+                  className="site-auth-btn"
+                >
+                  {lang === 'en' ? 'Login / Sign up' : 'Mag-login'}
+                </a>
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </>
+          ) : (
+            <a
+              href="/login"
+              onClick={(e) => {
+                e.preventDefault();
+                handleOpenAuthPage();
+              }}
+              className="site-auth-btn"
+            >
+              {lang === 'en' ? 'Login / Sign up' : 'Mag-login'}
+            </a>
+          )}
         </div>
 
-        <MobileAuthButton lang={lang} onClick={handleOpenAuthPage} />
+        {HAS_CLERK ? (
+          <>
+            <SignedOut>
+              <MobileAuthButton lang={lang} onClick={handleOpenAuthPage} />
+            </SignedOut>
+            <SignedIn>
+              <div className="mobile-user-btn">
+                <UserButton />
+              </div>
+            </SignedIn>
+          </>
+        ) : (
+          <MobileAuthButton lang={lang} onClick={handleOpenAuthPage} />
+        )}
       </div>
     </header>
 

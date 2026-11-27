@@ -1,3 +1,4 @@
+import { SignIn, SignUp } from '@clerk/clerk-react';
 import { useState, type FormEvent, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
 import { SiteHeader } from '../components/SiteHeader';
@@ -6,6 +7,7 @@ import type { Lang } from '../data/i18n';
 import type { InfoPageSlug } from '../data/infoPages';
 
 const ACCENT = '#0B3D91';
+const HAS_CLERK = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
 
 interface AuthPageProps {
   mode: 'login' | 'signup';
@@ -95,6 +97,40 @@ export function AuthPage({
           padding: '64px 24px 88px',
         }}
       >
+        {HAS_CLERK ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {isLogin ? (
+              <SignIn
+                routing="path"
+                path="/login"
+                signUpUrl="/signup"
+                fallbackRedirectUrl="/"
+                appearance={{
+                  variables: {
+                    colorPrimary: ACCENT,
+                    fontFamily: 'Inter, system-ui, sans-serif',
+                    borderRadius: '0px',
+                  },
+                }}
+              />
+            ) : (
+              <SignUp
+                routing="path"
+                path="/signup"
+                signInUrl="/login"
+                fallbackRedirectUrl="/"
+                appearance={{
+                  variables: {
+                    colorPrimary: ACCENT,
+                    fontFamily: 'Inter, system-ui, sans-serif',
+                    borderRadius: '0px',
+                  },
+                }}
+              />
+            )}
+          </div>
+        ) : (
+          <>
         <h1
           style={{
             margin: '0 0 28px',
@@ -445,6 +481,8 @@ export function AuthPage({
             {isLogin ? (isEn ? 'Sign up' : 'Mag-sign up') : isEn ? 'Login' : 'Mag-login'}
           </a>
         </p>
+          </>
+        )}
       </main>
 
       <Footer
