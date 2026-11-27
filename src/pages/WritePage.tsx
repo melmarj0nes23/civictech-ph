@@ -1,0 +1,697 @@
+import { useAuth, useUser } from '@clerk/react';
+import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { Footer } from '../components/Footer';
+import { SiteHeader } from '../components/SiteHeader';
+import { CATEGORIES, type CategorySlug } from '../data/articles';
+import type { Lang } from '../data/i18n';
+import type { InfoPageSlug } from '../data/infoPages';
+
+const ACCENT = '#0B3D91';
+const HAS_CLERK = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
+
+interface D1ArticleRow {
+  slug: string;
+  category: CategorySlug;
+  kicker_en: string;
+  title_en: string;
+  deck_en: string;
+  body_en: string;
+  author_name: string;
+  photo_url: string;
+  status: 'published' | 'draft';
+  created_at: string;
+}
+
+const PHOTO_OPTIONS = [
+  { label: 'Congress Session', value: '/images/congress-session.jpg' },
+  { label: 'Election Observers', value: '/images/election-observers.jpg' },
+  { label: 'Manila City Hall', value: '/images/manila-city-hall.jpg' },
+  { label: 'Digital Services', value: '/images/digital-services.jpg' },
+  { label: 'Manila Transit', value: '/images/manila-transit.jpg' },
+];
+
+interface WritePageProps {
+  lang: Lang;
+  onLangChange: (lang: Lang) => void;
+  onBackHome: () => void;
+  onOpenCivicTools: () => void;
+  onOpenSubmit: (hash?: string) => void;
+  onOpenCategory: (slug: CategorySlug) => void;
+  onOpenInfo: (slug: InfoPageSlug) => void;
+  onOpenArticle: (slug: string) => void;
+  onOpenLogin: () => void;
+}
+
+function WriteStudio({
+  lang,
+  onOpenArticle,
+  onOpenLogin,
+}: Pick<WritePageProps, 'lang' | 'onOpenArticle' | 'onOpenLogin'>) {
+  const { isLoaded, isSignedIn, user } = useUser();
+  const { getToken } = useAuth();
+
+  const [articles, setArticles] = useState<D1ArticleRow[]>([]);
+  const [loadingList, setLoadingList] = useState(false);
+
+  const [editingSlug, setEditingSlug] = useState<string | null>(null);
+  const [category, setCategory] = useState<CategorySlug>('open-data');
+  const [kicker, setKicker] = useState('Open Data · Report');
+  const [title, setTitle] = useState('');
+  const [deck, setDeck] = useState('');
+  const [content, setContent] = useState('');
+  const [photoUrl, setPhotoUrl] = useState('/images/congress-session.jpg');
+  const [status, setStatus] = useState<'published' | 'draft'>('published');
+  const [saving, setSaving] = useState(false);
+  const [notice, setNotice] = useState<{ text: string; isError: boolean } | null>(null);
+
+  const isEn = lang === 'en';
+  const role = String((user?.publicMetadata as { role?: string } | undefined)?.role || '').toLowerCase();
+  const isAllowed = role === 'admin' || role === 'editor';
+
+  const loadArticles = useCallback(async () => {
+    if (!isSignedIn || !isAllowed) return;
+    setLoadingList(true);
+    try {
+      const token = await getToken();
+      const res = await fetch('/api/articles?all=1', {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (res.ok) {
+        const data = (await res.json()) as { articles?: D1ArticleRow[] };
+        setArticles(data.articles ?? []);
+      }
+    } catch {
+      // ignore on plain Vite dev
+    } finally {
+      setLoadingList(false);
+    }
+  }, [getToken, isAllowed, isSignedIn]);
+
+  useEffect(() => {
+    loadArticles();
+  }, [loadArticles]);
+
+  const resetForm = () => {
+    setEditingSlug(null);
+    setCategory('open-data');
+    setKicker('Open Data · Report');
+    setTitle('');
+    setDeck('');
+    setContent('');
+    setPhotoUrl('/images/congress-session.jpg');
+    setStatus('published');
+    setNotice(null);
+  };
+
+  const handleSelectArticle = (art: D1ArticleRow) => {
+    setEditingSlug(art.slug);
+    setCategory(art.category);
+    setKicker(art.kicker_en);
+    setTitle(art.title_en);
+    setDeck(art.deck_en);
+    setContent(art.body_en);
+    setPhotoUrl(art.photo_url || '/images/congress-session.jpg');
+    setStatus(art.status === 'draft' ? 'draft' : 'published');
+    setNotice(null);
+  };
+
+  const handleSave = async (e: FormEvent) => {
+    e.preventDefault();
+    setNotice(null);
+    setSaving(true);
+    try {
+      const token = await getToken();
+      const authorName =
+        [user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
+        user?.primaryEmailAddress?.emailAddress ||
+        'Civic Tech Newsroom';
+
+      const method = editingSlug ? 'PATCH' : 'POST';
+      const res = await fetch('/api/articles', {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          slug: editingSlug ?? undefined,
+          category,
+          kicker,
+          title,
+          deck,
+          content,
+          authorName,
+          photoUrl,
+          status,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        slug?: string;
+        error?: string;
+      };
+      if (!res.ok || !data.ok) {
+        setNotice({
+          text:
+            data.error ||
+            (isEn ? 'Could not save article.' : 'Hindi ma-save ang artikulo.'),
+          isError: true,
+        });
+        return;
+      }
+
+      setNotice({
+        text: editingSlug
+          ? isEn
+            ? 'Article updated in D1.'
+            : 'Na-update ang artikulo sa D1.'
+          : isEn
+            ? 'Article published to D1!'
+            : 'Nai-publish ang artikulo sa D1!',
+        isError: false,
+      });
+      await loadArticles();
+      if (!editingSlug) {
+        resetForm();
+      }
+    } catch {
+      setNotice({
+        text: isEn ? 'Network error saving article.' : 'May error sa pag-save ng artikulo.',
+        isError: true,
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (slug: string) => {
+    setNotice(null);
+    try {
+      const token = await getToken();
+      const res = await fetch(`/api/articles?slug=${encodeURIComponent(slug)}`, {
+        method: 'DELETE',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !data.ok) {
+        setNotice({
+          text: data.error || (isEn ? 'Could not delete article.' : 'Hindi matanggal ang artikulo.'),
+          isError: true,
+        });
+        return;
+      }
+      if (editingSlug === slug) resetForm();
+      await loadArticles();
+    } catch {
+      setNotice({
+        text: isEn ? 'Network error deleting article.' : 'May error sa pagtanggal.',
+        isError: true,
+      });
+    }
+  };
+
+  if (!isLoaded) {
+    return (
+      <p style={{ textAlign: 'center', fontSize: 15, color: '#555', padding: '40px 0' }}>
+        {isEn ? 'Loading studio…' : 'Nilo-load ang studio…'}
+      </p>
+    );
+  }
+
+  if (!isSignedIn) {
+    return (
+      <div style={{ maxWidth: 460, margin: '0 auto', textAlign: 'center', padding: '24px 0' }}>
+        <h1 style={{ fontFamily: 'Newsreader, Georgia, serif', fontSize: 36, fontWeight: 500 }}>
+          {isEn ? 'Sign in to access Newsroom Studio' : 'Mag-sign in para sa Newsroom Studio'}
+        </h1>
+        <button
+          type="button"
+          onClick={onOpenLogin}
+          style={{
+            minHeight: 44,
+            padding: '0 22px',
+            border: 'none',
+            background: ACCENT,
+            color: '#fff',
+            fontWeight: 600,
+            fontSize: 14,
+            cursor: 'pointer',
+          }}
+        >
+          {isEn ? 'Login / Sign up' : 'Mag-login'}
+        </button>
+      </div>
+    );
+  }
+
+  if (!isAllowed) {
+    return (
+      <div style={{ maxWidth: 520, margin: '0 auto', textAlign: 'center', padding: '24px 0' }}>
+        <p
+          style={{
+            margin: '0 0 8px',
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            color: '#C62828',
+          }}
+        >
+          {isEn ? 'Access restricted' : 'Limitado ang access'}
+        </p>
+        <h1 style={{ margin: '0 0 12px', fontFamily: 'Newsreader, Georgia, serif', fontSize: 34, fontWeight: 500 }}>
+          {isEn ? 'Editor or Admin role required' : 'Kailangan ng Editor o Admin role'}
+        </h1>
+        <p style={{ margin: 0, fontSize: 15, lineHeight: 1.55, color: '#555' }}>
+          {isEn
+            ? 'Ask a BetterGov.ph administrator to set { "role": "editor" } or { "role": "admin" } on your Clerk account.'
+            : 'Magtanong sa BetterGov.ph admin upang mabigyan ka ng editor o admin role.'}
+        </p>
+      </div>
+    );
+  }
+
+  const labelStyle = {
+    display: 'block',
+    marginBottom: 6,
+    fontSize: 12,
+    fontWeight: 600,
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase' as const,
+    color: '#222',
+  };
+
+  const inputStyle = {
+    width: '100%',
+    minHeight: 44,
+    padding: '10px 12px',
+    border: '1px solid #D4D4D4',
+    fontFamily: 'inherit',
+    fontSize: 15,
+    color: '#111',
+    background: '#fff',
+    boxSizing: 'border-box' as const,
+  };
+
+  return (
+    <div>
+      <div
+        style={{
+          paddingBottom: 24,
+          borderBottom: '1px solid #E5E5E5',
+          marginBottom: 28,
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+          gap: 16,
+        }}
+      >
+        <div>
+          <p
+            style={{
+              margin: '0 0 8px',
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: ACCENT,
+            }}
+          >
+            Newsroom Studio · Role: {role}
+          </p>
+          <h1
+            className="directory-title"
+            style={{
+              margin: 0,
+              fontFamily: 'Newsreader, Georgia, serif',
+              fontSize: 42,
+              fontWeight: 500,
+              lineHeight: 1.08,
+            }}
+          >
+            {editingSlug
+              ? isEn
+                ? 'Edit article'
+                : 'I-edit ang artikulo'
+              : isEn
+                ? 'Write an article'
+                : 'Sumulat ng artikulo'}
+          </h1>
+        </div>
+
+        {editingSlug && (
+          <button
+            type="button"
+            onClick={resetForm}
+            style={{
+              minHeight: 40,
+              padding: '0 16px',
+              border: '1px solid #111',
+              background: '#fff',
+              color: '#111',
+              fontWeight: 600,
+              fontSize: 13,
+              cursor: 'pointer',
+            }}
+          >
+            + {isEn ? 'New article' : 'Bagong artikulo'}
+          </button>
+        )}
+      </div>
+
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 40, alignItems: 'flex-start' }}>
+        {/* Form */}
+        <form
+          onSubmit={handleSave}
+          style={{ flex: '2 1 480px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 18 }}
+        >
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))',
+              gap: 16,
+            }}
+          >
+            <div>
+              <label htmlFor="write-category" style={labelStyle}>
+                {isEn ? 'Category' : 'Kategorya'}
+              </label>
+              <select
+                id="write-category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value as CategorySlug)}
+                style={inputStyle}
+              >
+                {CATEGORIES.map((c) => (
+                  <option key={c.slug} value={c.slug}>
+                    {c.label[lang]}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="write-status" style={labelStyle}>
+                {isEn ? 'Status' : 'Katayuan'}
+              </label>
+              <select
+                id="write-status"
+                value={status}
+                onChange={(e) => setStatus(e.target.value as 'published' | 'draft')}
+                style={inputStyle}
+              >
+                <option value="published">{isEn ? 'Published' : 'Nai-publish'}</option>
+                <option value="draft">{isEn ? 'Draft' : 'Draft'}</option>
+              </select>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))',
+              gap: 16,
+            }}
+          >
+            <div>
+              <label htmlFor="write-kicker" style={labelStyle}>
+                {isEn ? 'Kicker / Label' : 'Kicker / Label'}
+              </label>
+              <input
+                id="write-kicker"
+                type="text"
+                value={kicker}
+                onChange={(e) => setKicker(e.target.value)}
+                placeholder="Open Data · Feature"
+                style={inputStyle}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="write-photo" style={labelStyle}>
+                {isEn ? 'Cover photo' : 'Pangunahing larawan'}
+              </label>
+              <select
+                id="write-photo"
+                value={photoUrl}
+                onChange={(e) => setPhotoUrl(e.target.value)}
+                style={inputStyle}
+              >
+                {PHOTO_OPTIONS.map((p) => (
+                  <option key={p.value} value={p.value}>
+                    {p.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="write-title" style={labelStyle}>
+              {isEn ? 'Headline *' : 'Pamagat *'}
+            </label>
+            <input
+              id="write-title"
+              type="text"
+              required
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder={isEn ? 'Enter article headline…' : 'Ilagay ang pamagat…'}
+              style={inputStyle}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="write-deck" style={labelStyle}>
+              {isEn ? 'Deck / Summary *' : 'Buod *'}
+            </label>
+            <textarea
+              id="write-deck"
+              required
+              rows={2}
+              value={deck}
+              onChange={(e) => setDeck(e.target.value)}
+              placeholder={isEn ? 'One or two sentences summarizing the story…' : 'Maikling buod ng artikulo…'}
+              style={{ ...inputStyle, minHeight: 72, resize: 'vertical' }}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="write-body" style={labelStyle}>
+              {isEn ? 'Body (separate paragraphs with blank lines) *' : 'Nilalaman *'}
+            </label>
+            <textarea
+              id="write-body"
+              required
+              rows={10}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder={isEn ? 'Write your story here…' : 'Isulat ang artikulo rito…'}
+              style={{ ...inputStyle, minHeight: 220, resize: 'vertical', lineHeight: 1.6 }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+            <button
+              type="submit"
+              disabled={saving}
+              style={{
+                minHeight: 46,
+                padding: '0 24px',
+                border: 'none',
+                background: ACCENT,
+                color: '#fff',
+                fontWeight: 600,
+                fontSize: 14,
+                cursor: saving ? 'wait' : 'pointer',
+                opacity: saving ? 0.7 : 1,
+              }}
+            >
+              {saving
+                ? isEn
+                  ? 'Saving…'
+                  : 'Sine-save…'
+                : editingSlug
+                  ? isEn
+                    ? 'Update article'
+                    : 'I-update ang artikulo'
+                  : isEn
+                    ? 'Publish article'
+                    : 'I-publish ang artikulo'}
+            </button>
+            {notice && (
+              <span
+                role="status"
+                style={{
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: notice.isError ? '#C62828' : ACCENT,
+                }}
+              >
+                {notice.text}
+              </span>
+            )}
+          </div>
+        </form>
+
+        {/* Published / Draft D1 articles list */}
+        <aside style={{ flex: '1 1 280px', minWidth: 0 }}>
+          <h2
+            style={{
+              margin: '0 0 12px',
+              fontSize: 12,
+              fontWeight: 600,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              borderBottom: '2px solid #111',
+              paddingBottom: 10,
+            }}
+          >
+            {isEn ? `D1 Articles (${articles.length})` : `Mga Artikulo sa D1 (${articles.length})`}
+          </h2>
+          {loadingList ? (
+            <p style={{ fontSize: 13, color: '#666' }}>{isEn ? 'Loading…' : 'Nilo-load…'}</p>
+          ) : articles.length === 0 ? (
+            <p style={{ fontSize: 13, color: '#666', lineHeight: 1.5 }}>
+              {isEn
+                ? 'No articles in D1 yet. Publish your first story on the left!'
+                : 'Wala pang artikulo sa D1. Mag-publish gamit ang form sa kaliwa!'}
+            </p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {articles.map((art) => (
+                <div
+                  key={art.slug}
+                  style={{
+                    padding: '12px 14px',
+                    border: editingSlug === art.slug ? `1px solid ${ACCENT}` : '1px solid #E5E5E5',
+                    background: editingSlug === art.slug ? '#F4F6FA' : '#fff',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginBottom: 4 }}>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: ACCENT, textTransform: 'uppercase' }}>
+                      {art.status}
+                    </span>
+                    <span style={{ fontSize: 11, color: '#666' }}>{art.category}</span>
+                  </div>
+                  <p
+                    style={{
+                      margin: '0 0 10px',
+                      fontFamily: 'Newsreader, Georgia, serif',
+                      fontSize: 17,
+                      fontWeight: 500,
+                      lineHeight: 1.25,
+                    }}
+                  >
+                    {art.title_en}
+                  </p>
+                  <div style={{ display: 'flex', gap: 12, fontSize: 12, fontWeight: 600 }}>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectArticle(art)}
+                      style={{
+                        padding: 0,
+                        border: 'none',
+                        background: 'transparent',
+                        color: ACCENT,
+                        cursor: 'pointer',
+                        fontWeight: 600,
+                        fontSize: 12,
+                      }}
+                    >
+                      {isEn ? 'Edit' : 'I-edit'}
+                    </button>
+                    {art.status === 'published' && (
+                      <button
+                        type="button"
+                        onClick={() => onOpenArticle(art.slug)}
+                        style={{
+                          padding: 0,
+                          border: 'none',
+                          background: 'transparent',
+                          color: '#111',
+                          cursor: 'pointer',
+                          fontWeight: 600,
+                          fontSize: 12,
+                        }}
+                      >
+                        {isEn ? 'View →' : 'Tingnan →'}
+                      </button>
+                    )}
+                    {role === 'admin' && (
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(art.slug)}
+                        style={{
+                          padding: 0,
+                          border: 'none',
+                          background: 'transparent',
+                          color: '#C62828',
+                          cursor: 'pointer',
+                          fontWeight: 600,
+                          fontSize: 12,
+                          marginLeft: 'auto',
+                        }}
+                      >
+                        {isEn ? 'Delete' : 'Tanggalin'}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+export function WritePage({
+  lang,
+  onLangChange,
+  onBackHome,
+  onOpenCivicTools,
+  onOpenSubmit,
+  onOpenCategory,
+  onOpenInfo,
+  onOpenArticle,
+  onOpenLogin,
+}: WritePageProps) {
+  return (
+    <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
+      <SiteHeader
+        lang={lang}
+        onLangChange={onLangChange}
+        onBackHome={onBackHome}
+        onOpenCategory={onOpenCategory}
+        onOpenCivicTools={onOpenCivicTools}
+      />
+
+      <main style={{ maxWidth: 1120, margin: '0 auto', padding: '40px 24px 72px' }}>
+        {HAS_CLERK ? (
+          <WriteStudio
+            lang={lang}
+            onOpenArticle={onOpenArticle}
+            onOpenLogin={onOpenLogin}
+          />
+        ) : (
+          <p style={{ textAlign: 'center', fontSize: 14, color: '#555' }}>
+            {lang === 'en'
+              ? 'Authentication is not configured in this environment.'
+              : 'Hindi pa naka-configure ang authentication sa environment na ito.'}
+          </p>
+        )}
+      </main>
+
+      <Footer
+        lang={lang}
+        onBackHome={onBackHome}
+        onOpenCivicTools={onOpenCivicTools}
+        onOpenSubmit={onOpenSubmit}
+        onOpenInfo={onOpenInfo}
+      />
+    </div>
+  );
+}

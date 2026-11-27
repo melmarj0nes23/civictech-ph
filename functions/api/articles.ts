@@ -1,6 +1,9 @@
+import { verifyClerkRequest } from '../_lib/clerkAuth';
+
 interface D1PreparedStatement {
   bind(...values: unknown[]): D1PreparedStatement;
   all<T = unknown>(): Promise<{ results: T[] }>;
+  first<T = unknown>(): Promise<T | null>;
   run(): Promise<{ success: boolean }>;
 }
 
@@ -10,6 +13,7 @@ interface D1Database {
 
 interface Env {
   DB?: D1Database;
+  CLERK_ISSUER?: string;
 }
 
 interface PagesContext {
@@ -33,6 +37,10 @@ function slugify(text: string): string {
     .slice(0, 72);
 }
 
+function canEdit(role: string): boolean {
+  return role === 'admin' || role === 'editor';
+}
+
 export async function onRequestGet({ request, env }: PagesContext) {
   if (!env.DB) {
     return json({ ok: true, articles: [] });
@@ -40,11 +48,40 @@ export async function onRequestGet({ request, env }: PagesContext) {
 
   const url = new URL(request.url);
   const category = (url.searchParams.get('category') || '').trim();
+  const slug = (url.searchParams.get('slug') || '').trim();
+  const includeDrafts = url.searchParams.get('all') === '1';
+
+  if (slug) {
+    const row = await env.DB.prepare(
+      `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
+              body_en, body_fil, author_name, photo_url, status, created_at, updated_at
+       FROM articles
+       WHERE slug = ?`
+    )
+      .bind(slug)
+      .first();
+    return json({ ok: true, article: row ?? null });
+  }
+
+  if (includeDrafts) {
+    const user = await verifyClerkRequest(request, env.CLERK_ISSUER);
+    if (!user || !canEdit(user.role)) {
+      return json({ ok: false, error: 'Editor or admin role required.' }, 403);
+    }
+    const { results } = await env.DB.prepare(
+      `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
+              body_en, body_fil, author_name, photo_url, status, created_at, updated_at
+       FROM articles
+       ORDER BY created_at DESC
+       LIMIT 100`
+    ).all();
+    return json({ ok: true, articles: results });
+  }
 
   const stmt = category
     ? env.DB.prepare(
         `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
-                body_en, body_fil, author_name, photo_url, created_at
+                body_en, body_fil, author_name, photo_url, status, created_at
          FROM articles
          WHERE status = 'published' AND category = ?
          ORDER BY created_at DESC
@@ -52,7 +89,7 @@ export async function onRequestGet({ request, env }: PagesContext) {
       ).bind(category)
     : env.DB.prepare(
         `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
-                body_en, body_fil, author_name, photo_url, created_at
+                body_en, body_fil, author_name, photo_url, status, created_at
          FROM articles
          WHERE status = 'published'
          ORDER BY created_at DESC
@@ -68,9 +105,15 @@ export async function onRequestPost({ request, env }: PagesContext) {
     return json({ ok: false, error: 'D1 database binding (DB) is not configured.' }, 503);
   }
 
-  const authHeader = request.headers.get('Authorization') || '';
-  if (!authHeader.startsWith('Bearer ') || authHeader.length < 20) {
-    return json({ ok: false, error: 'Authentication required to publish.' }, 401);
+  const user = await verifyClerkRequest(request, env.CLERK_ISSUER);
+  if (!user) {
+    return json({ ok: false, error: 'Authentication required.' }, 401);
+  }
+  if (!canEdit(user.role)) {
+    return json(
+      { ok: false, error: 'Only admin or editor accounts can publish articles.' },
+      403
+    );
   }
 
   let body: {
@@ -80,8 +123,8 @@ export async function onRequestPost({ request, env }: PagesContext) {
     kicker?: string;
     content?: string;
     authorName?: string;
-    authorEmail?: string;
     photoUrl?: string;
+    status?: 'published' | 'draft';
   };
   try {
     body = (await request.json()) as typeof body;
@@ -93,9 +136,9 @@ export async function onRequestPost({ request, env }: PagesContext) {
   const deck = (body.deck || '').trim();
   const category = (body.category || 'open-data').trim();
   const content = (body.content || '').trim();
-  const authorName = (body.authorName || 'Civic Tech Contributor').trim();
-  const authorEmail = (body.authorEmail || '').trim();
+  const authorName = (body.authorName || 'Civic Tech Newsroom').trim();
   const photoUrl = (body.photoUrl || '/images/congress-session.jpg').trim();
+  const status = body.status === 'draft' ? 'draft' : 'published';
 
   if (!title || !deck || !content) {
     return json({ ok: false, error: 'Title, deck, and article body are required.' }, 400);
@@ -109,7 +152,7 @@ export async function onRequestPost({ request, env }: PagesContext) {
     `INSERT INTO articles (
        slug, category, kicker_en, kicker_fil, title_en, title_fil,
        deck_en, deck_fil, body_en, body_fil, author_name, author_email, photo_url, status
-     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'published')`
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   )
     .bind(
       slug,
@@ -123,10 +166,102 @@ export async function onRequestPost({ request, env }: PagesContext) {
       content,
       content,
       authorName,
-      authorEmail,
-      photoUrl
+      user.email || user.userId,
+      photoUrl,
+      status
     )
     .run();
 
-  return json({ ok: true, slug }, 201);
+  return json({ ok: true, slug, status }, 201);
+}
+
+export async function onRequestPatch({ request, env }: PagesContext) {
+  if (!env.DB) {
+    return json({ ok: false, error: 'D1 database binding (DB) is not configured.' }, 503);
+  }
+
+  const user = await verifyClerkRequest(request, env.CLERK_ISSUER);
+  if (!user) {
+    return json({ ok: false, error: 'Authentication required.' }, 401);
+  }
+  if (!canEdit(user.role)) {
+    return json({ ok: false, error: 'Only admin or editor accounts can edit articles.' }, 403);
+  }
+
+  let body: {
+    slug?: string;
+    title?: string;
+    deck?: string;
+    category?: string;
+    kicker?: string;
+    content?: string;
+    photoUrl?: string;
+    status?: 'published' | 'draft';
+  };
+  try {
+    body = (await request.json()) as typeof body;
+  } catch {
+    return json({ ok: false, error: 'Invalid JSON body.' }, 400);
+  }
+
+  const slug = (body.slug || '').trim();
+  const title = (body.title || '').trim();
+  const deck = (body.deck || '').trim();
+  const category = (body.category || 'open-data').trim();
+  const content = (body.content || '').trim();
+  const photoUrl = (body.photoUrl || '/images/congress-session.jpg').trim();
+  const status = body.status === 'draft' ? 'draft' : 'published';
+  const kicker = (body.kicker || category.replace(/-/g, ' ')).trim();
+
+  if (!slug || !title || !deck || !content) {
+    return json({ ok: false, error: 'Slug, title, deck, and body are required.' }, 400);
+  }
+
+  await env.DB.prepare(
+    `UPDATE articles
+     SET category = ?, kicker_en = ?, kicker_fil = ?, title_en = ?, title_fil = ?,
+         deck_en = ?, deck_fil = ?, body_en = ?, body_fil = ?, photo_url = ?,
+         status = ?, updated_at = datetime('now')
+     WHERE slug = ?`
+  )
+    .bind(
+      category,
+      kicker,
+      kicker,
+      title,
+      title,
+      deck,
+      deck,
+      content,
+      content,
+      photoUrl,
+      status,
+      slug
+    )
+    .run();
+
+  return json({ ok: true, slug, status });
+}
+
+export async function onRequestDelete({ request, env }: PagesContext) {
+  if (!env.DB) {
+    return json({ ok: false, error: 'D1 database binding (DB) is not configured.' }, 503);
+  }
+
+  const user = await verifyClerkRequest(request, env.CLERK_ISSUER);
+  if (!user) {
+    return json({ ok: false, error: 'Authentication required.' }, 401);
+  }
+  if (user.role !== 'admin') {
+    return json({ ok: false, error: 'Only admin accounts can delete articles.' }, 403);
+  }
+
+  const url = new URL(request.url);
+  const slug = (url.searchParams.get('slug') || '').trim();
+  if (!slug) {
+    return json({ ok: false, error: 'Missing slug parameter.' }, 400);
+  }
+
+  await env.DB.prepare('DELETE FROM articles WHERE slug = ?').bind(slug).run();
+  return json({ ok: true, deleted: slug });
 }

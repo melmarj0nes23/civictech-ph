@@ -5,6 +5,7 @@ import {
   ARTICLES,
   getArticleBySlug,
   getArticlePhoto,
+  type ArticleItem,
   type CategorySlug,
 } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
@@ -36,9 +37,64 @@ export function ArticlePage({
   onOpenInfo,
 }: ArticlePageProps) {
   const t = TRANSLATIONS[lang];
-  const article = getArticleBySlug(articleSlug);
+  const staticArticle = getArticleBySlug(articleSlug);
+  const [d1Article, setD1Article] = useState<(ArticleItem & { photoUrl?: string }) | null>(null);
   const [readProgress, setReadProgress] = useState(0);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    setD1Article(null);
+    const isStatic = ARTICLES.some((a) => a.slug === articleSlug);
+    if (isStatic) return;
+    fetch(`/api/articles?slug=${encodeURIComponent(articleSlug)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then(
+        (
+          data: {
+            ok?: boolean;
+            article?: {
+              slug: string;
+              category: CategorySlug;
+              kicker_en: string;
+              kicker_fil: string;
+              title_en: string;
+              title_fil: string;
+              deck_en: string;
+              deck_fil: string;
+              body_en: string;
+              body_fil: string;
+              author_name: string;
+              photo_url: string;
+              created_at: string;
+            } | null;
+          } | null
+        ) => {
+          const a = data?.article;
+          if (!a) return;
+          setD1Article({
+            slug: a.slug,
+            category: a.category,
+            kicker: { en: a.kicker_en, fil: a.kicker_fil || a.kicker_en },
+            title: { en: a.title_en, fil: a.title_fil || a.title_en },
+            deck: { en: a.deck_en, fil: a.deck_fil || a.deck_en },
+            author: { en: a.author_name, fil: a.author_name },
+            date: { en: a.created_at.slice(0, 10), fil: a.created_at.slice(0, 10) },
+            readTime: { en: '4 min read', fil: '4 minutong pagbabasa' },
+            photoLabel: { en: a.title_en, fil: a.title_fil || a.title_en },
+            body: {
+              en: a.body_en.split(/\n\n+/),
+              fil: (a.body_fil || a.body_en).split(/\n\n+/),
+            },
+            photoUrl: a.photo_url,
+          });
+        }
+      )
+      .catch(() => {
+        // ignore in local Vite dev
+      });
+  }, [articleSlug]);
+
+  const article: ArticleItem & { photoUrl?: string } = d1Article ?? staticArticle;
 
   useEffect(() => {
     const onScroll = () => {
@@ -187,7 +243,7 @@ export function ArticlePage({
             className="ph ph--photo"
             style={{ aspectRatio: '16 / 8', width: '100%' }}
           >
-            <img src={getArticlePhoto(article.slug)} alt={article.photoLabel[lang]} />
+            <img src={article.photoUrl || getArticlePhoto(article.slug)} alt={article.photoLabel[lang]} />
           </div>
           <figcaption style={{ marginTop: 10, fontSize: 13, lineHeight: 1.5, color: '#555' }}>
             {t.article.heroCaption}{' '}

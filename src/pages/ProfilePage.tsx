@@ -18,13 +18,15 @@ interface ProfilePageProps {
   onOpenCategory: (slug: CategorySlug) => void;
   onOpenInfo: (slug: InfoPageSlug) => void;
   onOpenLogin: () => void;
+  onOpenWrite?: () => void;
 }
 
 function ClerkProfileContent({
   lang,
   onBackHome,
   onOpenLogin,
-}: Pick<ProfilePageProps, 'lang' | 'onBackHome' | 'onOpenLogin'>) {
+  onOpenWrite,
+}: Pick<ProfilePageProps, 'lang' | 'onBackHome' | 'onOpenLogin' | 'onOpenWrite'>) {
   const { isLoaded, isSignedIn, user } = useUser();
   const { signOut, openUserProfile } = useClerk();
   const [firstName, setFirstName] = useState('');
@@ -173,6 +175,10 @@ function ClerkProfileContent({
 
   const primaryEmail =
     user.primaryEmailAddress?.emailAddress ?? user.emailAddresses[0]?.emailAddress ?? '';
+  const role = String(
+    (user.publicMetadata as { role?: string } | undefined)?.role || ''
+  ).toLowerCase();
+  const canPublish = role === 'admin' || role === 'editor';
   const displayName =
     [user.firstName, user.lastName].filter(Boolean).join(' ') || primaryEmail || 'Reader';
   const joinedDate = user.createdAt
@@ -507,6 +513,46 @@ function ClerkProfileContent({
         </button>
       </section>
 
+      {/* Newsroom Studio (admin / editor only) */}
+      {canPublish && onOpenWrite && (
+        <section style={{ padding: '32px 0', borderBottom: '1px solid #E5E5E5' }}>
+          <h2
+            style={{
+              margin: '0 0 10px',
+              fontFamily: 'Newsreader, Georgia, serif',
+              fontSize: 24,
+              fontWeight: 500,
+            }}
+          >
+            {isEn ? 'Newsroom Studio' : 'Newsroom Studio'}
+          </h2>
+          <p style={{ margin: '0 0 16px', fontSize: 14, lineHeight: 1.55, color: '#555' }}>
+            {isEn
+              ? `Signed in as ${role}. Create, edit, and publish Civic Tech articles directly to Cloudflare D1.`
+              : `Naka-sign in bilang ${role}. Sumulat, mag-edit, at mag-publish ng mga artikulo sa Cloudflare D1.`}
+          </p>
+          <a
+            href="/write"
+            onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+              e.preventDefault();
+              onOpenWrite();
+            }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              minHeight: 42,
+              padding: '0 18px',
+              background: ACCENT,
+              color: '#fff',
+              fontSize: 13,
+              fontWeight: 600,
+            }}
+          >
+            {isEn ? 'Write & manage articles →' : 'Sumulat at pamahalaan ang artikulo →'}
+          </a>
+        </section>
+      )}
+
       {/* Security */}
       <section style={{ padding: '32px 0 0' }}>
         <h2
@@ -555,6 +601,7 @@ export function ProfilePage({
   onOpenCategory,
   onOpenInfo,
   onOpenLogin,
+  onOpenWrite,
 }: ProfilePageProps) {
   return (
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
@@ -572,6 +619,7 @@ export function ProfilePage({
             lang={lang}
             onBackHome={onBackHome}
             onOpenLogin={onOpenLogin}
+            onOpenWrite={onOpenWrite}
           />
         ) : (
           <p style={{ textAlign: 'center', fontSize: 14, color: '#555' }}>

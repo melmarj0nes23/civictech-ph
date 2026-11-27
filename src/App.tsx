@@ -17,6 +17,7 @@ import { HomePage } from './pages/HomePage';
 import { InfoPage } from './pages/InfoPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SubmitPage } from './pages/SubmitPage';
+import { WritePage } from './pages/WritePage';
 
 type RouteState =
   | { kind: 'home' }
@@ -24,6 +25,7 @@ type RouteState =
   | { kind: 'submit' }
   | { kind: 'auth'; mode: 'login' | 'signup' }
   | { kind: 'profile' }
+  | { kind: 'write' }
   | { kind: 'sso-callback' }
   | { kind: 'category'; slug: CategorySlug }
   | { kind: 'article'; slug: string }
@@ -33,6 +35,7 @@ function getRouteFromPath(): RouteState {
   const path = window.location.pathname.replace(/\/+$/, '') || '/';
   if (path === '/sso-callback') return { kind: 'sso-callback' };
   if (path === '/profile') return { kind: 'profile' };
+  if (path === '/write') return { kind: 'write' };
   if (path === '/login') return { kind: 'auth', mode: 'login' };
   if (path === '/signup') return { kind: 'auth', mode: 'signup' };
   if (path === '/civictools/submit') return { kind: 'submit' };
@@ -124,6 +127,24 @@ export function App() {
       );
       return;
     }
+    if (route.kind === 'write') {
+      applyDocumentSeo(
+        {
+          path: '/write',
+          title: {
+            en: 'Newsroom Studio — Civic Tech by BetterGov.ph',
+            fil: 'Newsroom Studio — Civic Tech ng BetterGov.ph',
+          },
+          description: {
+            en: 'Publish and manage Civic Tech by BetterGov.ph articles.',
+            fil: 'Mag-publish at pamahalaan ang mga artikulo sa Civic Tech.',
+          },
+          type: 'website',
+        },
+        lang
+      );
+      return;
+    }
     if (route.kind === 'profile') {
       applyDocumentSeo(
         {
@@ -190,6 +211,7 @@ export function App() {
     else if (next.kind === 'submit') targetPath = '/civictools/submit';
     else if (next.kind === 'sso-callback') targetPath = '/sso-callback';
     else if (next.kind === 'profile') targetPath = '/profile';
+    else if (next.kind === 'write') targetPath = '/write';
     else if (next.kind === 'auth') targetPath = next.mode === 'login' ? '/login' : '/signup';
     else if (next.kind === 'info') targetPath = `/${next.slug}`;
     else if (next.kind === 'category') targetPath = `/category/${next.slug}`;
@@ -232,6 +254,22 @@ export function App() {
     );
   }
 
+  if (route.kind === 'write') {
+    return (
+      <WritePage
+        lang={lang}
+        onLangChange={handleLangChange}
+        onBackHome={() => navigate({ kind: 'home' })}
+        onOpenCivicTools={() => navigate({ kind: 'civictools' })}
+        onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
+        onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
+        onOpenInfo={(slug) => navigate({ kind: 'info', slug })}
+        onOpenArticle={(slug) => navigate({ kind: 'article', slug })}
+        onOpenLogin={() => navigate({ kind: 'auth', mode: 'login' })}
+      />
+    );
+  }
+
   if (route.kind === 'profile') {
     return (
       <ProfilePage
@@ -243,6 +281,7 @@ export function App() {
         onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
         onOpenInfo={(slug) => navigate({ kind: 'info', slug })}
         onOpenLogin={() => navigate({ kind: 'auth', mode: 'login' })}
+        onOpenWrite={() => navigate({ kind: 'write' })}
       />
     );
   }
