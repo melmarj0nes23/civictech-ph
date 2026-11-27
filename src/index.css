@@ -273,6 +273,10 @@ a:hover {
     font-size: 22px !important;
   }
 
+  .article-related {
+    flex: 1 1 100% !important;
+  }
+
   .directory-title {
     font-size: 34px !important;
   }

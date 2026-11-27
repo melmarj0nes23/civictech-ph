@@ -487,7 +487,7 @@ export function ArticlePage({
             </div>
           </div>
 
-          <aside aria-labelledby="related" style={{ flex: '0 1 300px', minWidth: 0 }}>
+          <aside aria-labelledby="related" className="article-related" style={{ flex: '0 1 300px', minWidth: 0 }}>
             <h2
               id="related"
               style={{
