@@ -29,6 +29,15 @@ function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: JSON_HEADERS });
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export async function onRequestGet({ request, env }: PagesContext) {
   if (!env.DB) {
     return json({ ok: false, error: 'D1 database binding (DB) is not configured.' }, 503);
@@ -58,12 +67,13 @@ export async function onRequestPost({ request, env }: PagesContext) {
     return json({ ok: false, error: 'D1 database binding (DB) is not configured.' }, 503);
   }
 
-  let body: { email?: string; lang?: string; action?: 'subscribe' | 'unsubscribe' };
+  let body: { email?: string; lang?: string; action?: 'subscribe' | 'unsubscribe'; firstName?: string };
   try {
     body = (await request.json()) as {
       email?: string;
       lang?: string;
       action?: 'subscribe' | 'unsubscribe';
+      firstName?: string;
     };
   } catch {
     return json({ ok: false, error: 'Invalid JSON body.' }, 400);
@@ -74,6 +84,8 @@ export async function onRequestPost({ request, env }: PagesContext) {
     return json({ ok: false, error: 'Please enter a valid email address.' }, 400);
   }
 
+  const firstName = (body.firstName || '').trim().slice(0, 60);
+  const safeFirstName = firstName ? escapeHtml(firstName) : '';
   const lang = body.lang === 'fil' ? 'fil' : 'en';
   const status = body.action === 'unsubscribe' ? 'unsubscribed' : 'active';
 
@@ -97,28 +109,102 @@ export async function onRequestPost({ request, env }: PagesContext) {
       try {
         const subject =
           lang === 'fil'
-            ? 'Salamat sa pag-subscribe sa Civic Tech PH'
-            : 'Welcome to Civic Tech PH by BetterGov.ph';
+            ? 'Kumpirmasyon ng Subscription — Civic Tech PH ng BetterGov.ph'
+            : 'Subscription Confirmed — Civic Tech PH by BetterGov.ph';
         const html =
           lang === 'fil'
-            ? `<div style="font-family:Inter,system-ui,sans-serif;max-width:560px;margin:0 auto;color:#111;line-height:1.6;">
-                <h2 style="font-family:Georgia,serif;color:#0B3D91;margin-bottom:12px;">Civic Tech by BetterGov.ph</h2>
-                <p>Salamat sa pag-subscribe sa aming lingguhang buod ng civic technology, bukas na datos, at digital na pamamahala sa Pilipinas.</p>
-                <p><a href="${siteUrl}" style="color:#0B3D91;font-weight:600;">Bisitahin ang civictech.ph →</a></p>
-                <hr style="border:none;border-top:1px solid #E5E5E5;margin:24px 0;" />
-                <p style="font-size:12px;color:#666;">Maaari kang mag-unsubscribe anumang oras sa iyong <a href="${siteUrl}/profile" style="color:#0B3D91;">profile</a>.</p>
+            ? `<div style="background:#F7F8FA;padding:32px 16px;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#111111;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#FFFFFF;border:1px solid #E5E5E5;border-top:4px solid #0B3D91;">
+                  <tr>
+                    <td style="padding:28px 32px 20px;border-bottom:1px solid #E5E5E5;">
+                      <p style="margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#0B3D91;">
+                        Kumpirmasyon ng Newsletter
+                      </p>
+                      <h1 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:28px;font-weight:600;line-height:1.2;color:#111111;">
+                        Civic Tech <span style="font-weight:400;color:#555555;">ng BetterGov.ph</span>
+                      </h1>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:28px 32px;font-size:15px;line-height:1.65;color:#222222;">
+                      <p style="margin:0 0 16px;">${safeFirstName ? `Magandang araw, ${safeFirstName},` : 'Magandang araw,'}</p>
+                      <p style="margin:0 0 16px;">
+                        Nakumpirma na ang iyong subscription sa lingguhang newsletter ng <strong>Civic Tech PH</strong>—isang independiyenteng publikasyon at direktoryo ng BetterGov.ph.
+                      </p>
+                      <p style="margin:0 0 24px;">
+                        Matatanggap mo ang aming mga bagong ulat, pagsusuri sa pambansang badyet at bukas na datos, mga gabay sa serbisyong digital, at mga tampok na proyektong civic technology sa Pilipinas.
+                      </p>
+                      <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+                        <tr>
+                          <td style="background:#0B3D91;">
+                            <a href="${siteUrl}" style="display:inline-block;padding:12px 22px;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:600;letter-spacing:0.02em;">
+                              Basahin ang Pinakabagong Ulat →
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                      <p style="margin:0;font-size:13px;color:#555555;">
+                        Lubos na gumagalang,<br />
+                        <strong style="color:#111111;">Ang Patnugutan ng Civic Tech PH</strong>
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:18px 32px;background:#F7F8FA;border-top:1px solid #E5E5E5;font-size:12px;line-height:1.55;color:#666666;">
+                      Natanggap mo ang mensaheng ito dahil nag-subscribe ka sa <a href="${siteUrl}" style="color:#0B3D91;text-decoration:underline;">civictech.ph</a>.
+                      Maaari mong pamahalaan o ihinto ang iyong subscription anumang oras sa iyong <a href="${siteUrl}/profile" style="color:#0B3D91;text-decoration:underline;">Account Profile</a>.
+                    </td>
+                  </tr>
+                </table>
               </div>`
-            : `<div style="font-family:Inter,system-ui,sans-serif;max-width:560px;margin:0 auto;color:#111;line-height:1.6;">
-                <h2 style="font-family:Georgia,serif;color:#0B3D91;margin-bottom:12px;">Civic Tech by BetterGov.ph</h2>
-                <p>Thanks for subscribing to our weekly digest on Philippine civic technology, open data, public budgets, and digital government.</p>
-                <p><a href="${siteUrl}" style="color:#0B3D91;font-weight:600;">Read the latest at civictech.ph →</a></p>
-                <hr style="border:none;border-top:1px solid #E5E5E5;margin:24px 0;" />
-                <p style="font-size:12px;color:#666;">You can update your subscription anytime in your <a href="${siteUrl}/profile" style="color:#0B3D91;">profile</a>.</p>
+            : `<div style="background:#F7F8FA;padding:32px 16px;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#111111;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#FFFFFF;border:1px solid #E5E5E5;border-top:4px solid #0B3D91;">
+                  <tr>
+                    <td style="padding:28px 32px 20px;border-bottom:1px solid #E5E5E5;">
+                      <p style="margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#0B3D91;">
+                        Newsletter Confirmation
+                      </p>
+                      <h1 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:28px;font-weight:600;line-height:1.2;color:#111111;">
+                        Civic Tech <span style="font-weight:400;color:#555555;">by BetterGov.ph</span>
+                      </h1>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:28px 32px;font-size:15px;line-height:1.65;color:#222222;">
+                      <p style="margin:0 0 16px;">Dear ${safeFirstName || 'Reader'},</p>
+                      <p style="margin:0 0 16px;">
+                        Thank you for subscribing to the <strong>Civic Tech PH</strong> briefing, an independent newsroom and public-interest directory by BetterGov.ph.
+                      </p>
+                      <p style="margin:0 0 24px;">
+                        Each edition brings original reporting and analysis on Philippine open data, public budgets, elections, digital government services, and civic technology initiatives across the country.
+                      </p>
+                      <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+                        <tr>
+                          <td style="background:#0B3D91;">
+                            <a href="${siteUrl}" style="display:inline-block;padding:12px 22px;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:600;letter-spacing:0.02em;">
+                              Visit Civic Tech PH →
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                      <p style="margin:0;font-size:13px;color:#555555;">
+                        Sincerely,<br />
+                        <strong style="color:#111111;">The Civic Tech PH Editorial Team</strong>
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:18px 32px;background:#F7F8FA;border-top:1px solid #E5E5E5;font-size:12px;line-height:1.55;color:#666666;">
+                      You are receiving this email because you subscribed at <a href="${siteUrl}" style="color:#0B3D91;text-decoration:underline;">civictech.ph</a>.
+                      You may update or cancel your subscription at any time from your <a href="${siteUrl}/profile" style="color:#0B3D91;text-decoration:underline;">Account Profile</a>.
+                    </td>
+                  </tr>
+                </table>
               </div>`;
         const text =
           lang === 'fil'
-            ? `Salamat sa pag-subscribe sa Civic Tech by BetterGov.ph (${siteUrl}).`
-            : `Thanks for subscribing to Civic Tech by BetterGov.ph (${siteUrl}).`;
+            ? `Nakumpirma na ang iyong subscription sa Civic Tech PH ng BetterGov.ph. Bisitahin ang ${siteUrl} para sa pinakabagong ulat.`
+            : `Your subscription to Civic Tech PH by BetterGov.ph is confirmed. Visit ${siteUrl} to read our latest reporting.`;
 
         const res = await fetch('https://api.resend.com/emails', {
           method: 'POST',

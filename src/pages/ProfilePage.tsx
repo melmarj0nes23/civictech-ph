@@ -225,7 +225,12 @@ function ClerkProfileContent({
       const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: primaryEmail, lang, action: nextAction }),
+        body: JSON.stringify({
+          email: primaryEmail,
+          lang,
+          action: nextAction,
+          firstName: user.firstName || undefined,
+        }),
       });
       if (res.ok) {
         setNlActive(nextAction === 'subscribe');

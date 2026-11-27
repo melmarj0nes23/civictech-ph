@@ -1,13 +1,15 @@
+import { useUser } from '@clerk/react';
 import { useState, type FormEvent } from 'react';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
 
 const ACCENT = '#0B3D91';
+const HAS_CLERK = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
 
 interface NewsletterBandProps {
   lang: Lang;
 }
 
-export function NewsletterBand({ lang }: NewsletterBandProps) {
+function NewsletterBandInner({ lang, firstName }: NewsletterBandProps & { firstName?: string }) {
   const t = TRANSLATIONS[lang];
   const [nlEmail, setNlEmail] = useState('');
   const [nlSubmitting, setNlSubmitting] = useState(false);
@@ -22,7 +24,7 @@ export function NewsletterBand({ lang }: NewsletterBandProps) {
       const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: clean, lang }),
+        body: JSON.stringify({ email: clean, lang, firstName: firstName || undefined }),
       });
       if (res.ok) {
         setNlSubscribed(clean);
@@ -182,4 +184,16 @@ export function NewsletterBand({ lang }: NewsletterBandProps) {
       )}
     </section>
   );
+}
+
+function NewsletterBandWithClerk({ lang }: NewsletterBandProps) {
+  const { user } = useUser();
+  return <NewsletterBandInner lang={lang} firstName={user?.firstName || undefined} />;
+}
+
+export function NewsletterBand({ lang }: NewsletterBandProps) {
+  if (HAS_CLERK) {
+    return <NewsletterBandWithClerk lang={lang} />;
+  }
+  return <NewsletterBandInner lang={lang} />;
 }
