@@ -14,11 +14,6 @@ interface SearchModalProps {
   onOpenCivicTools: () => void;
 }
 
-const QUICK_TERMS: Record<Lang, string[]> = {
-  en: ['Budget', 'Elections', 'Open Data', 'FOI', 'Barangay'],
-  fil: ['Badyet', 'Halalan', 'Bukas na Datos', 'FOI', 'Barangay'],
-};
-
 export function SearchModal({
   open,
   lang,
@@ -190,43 +185,6 @@ export function SearchModal({
             ×
           </button>
         </div>
-
-        {/* Quick suggestions */}
-        {!trimmed && (
-          <div
-            style={{
-              padding: '10px 16px',
-              borderBottom: '1px solid #F0F0F0',
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              gap: 8,
-              background: '#FAFAFA',
-            }}
-          >
-            <span style={{ fontSize: 11, fontWeight: 600, color: '#666', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              {lang === 'en' ? 'Popular:' : 'Sikat:'}
-            </span>
-            {QUICK_TERMS[lang].map((term) => (
-              <button
-                key={term}
-                type="button"
-                onClick={() => setQuery(term)}
-                style={{
-                  padding: '4px 10px',
-                  border: '1px solid #D4D4D4',
-                  background: '#fff',
-                  color: '#222',
-                  fontSize: 12,
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                }}
-              >
-                {term}
-              </button>
-            ))}
-          </div>
-        )}
 
         {/* Results */}
         <div style={{ overflowY: 'auto', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 20 }}>

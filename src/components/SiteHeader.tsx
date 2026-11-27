@@ -1,6 +1,7 @@
 import { useState, type MouseEvent } from 'react';
 import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
+import { AuthModal } from './AuthModal';
 import { MobileAuthButton, MobileMenu } from './MobileMenu';
 import { SearchModal } from './SearchModal';
 
@@ -26,6 +27,7 @@ export function SiteHeader({
   activeCategory,
 }: SiteHeaderProps) {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
   const t = TRANSLATIONS[lang];
 
   const handleOpenArticle = (slug: string) => {
@@ -184,6 +186,7 @@ export function SiteHeader({
             href="/"
             onClick={(e) => {
               e.preventDefault();
+              setAuthOpen(true);
             }}
             className="site-auth-btn"
           >
@@ -191,7 +194,7 @@ export function SiteHeader({
           </a>
         </div>
 
-        <MobileAuthButton lang={lang} />
+        <MobileAuthButton lang={lang} onClick={() => setAuthOpen(true)} />
       </div>
     </header>
 
@@ -202,6 +205,8 @@ export function SiteHeader({
       onOpenArticle={handleOpenArticle}
       onOpenCivicTools={onOpenCivicTools}
     />
+
+    <AuthModal open={authOpen} lang={lang} onClose={() => setAuthOpen(false)} />
   </>
   );
 }

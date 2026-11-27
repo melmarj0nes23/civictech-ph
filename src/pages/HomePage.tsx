@@ -1,4 +1,4 @@
-import type { MouseEvent } from 'react';
+import { useState, type FormEvent, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
 import { SiteHeader } from '../components/SiteHeader';
 import { getArticlePhoto, type CategorySlug } from '../data/articles';
@@ -27,6 +27,15 @@ export function HomePage({
   onOpenInfo,
 }: HomePageProps) {
   const t = TRANSLATIONS[lang];
+  const [nlEmail, setNlEmail] = useState('');
+  const [nlSubscribed, setNlSubscribed] = useState<string | null>(null);
+
+  const handleNlSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const clean = nlEmail.trim();
+    if (!clean) return;
+    setNlSubscribed(clean);
+  };
 
   const handleOpenArticle = (slug: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -794,62 +803,111 @@ export function HomePage({
           >
             {t.home.nlDesc}
           </p>
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="newsletter-form"
-            style={{
-              margin: '24px auto 0',
-              maxWidth: 520,
-              display: 'flex',
-              flexWrap: 'nowrap',
-              gap: 8,
-              textAlign: 'left',
-            }}
-          >
-            <label
-              htmlFor="nl-email"
+          {nlSubscribed ? (
+            <div
+              role="status"
               style={{
-                position: 'absolute',
-                width: 1,
-                height: 1,
-                overflow: 'hidden',
-                clip: 'rect(0 0 0 0)',
+                margin: '24px auto 0',
+                maxWidth: 520,
+                padding: '14px 16px',
+                background: '#F4F6FA',
+                borderLeft: `3px solid ${ACCENT}`,
+                textAlign: 'left',
+                fontSize: 14,
+                lineHeight: 1.5,
+                color: '#1A1A1A',
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 8,
               }}
             >
-              {t.home.nlEmailLabel}
-            </label>
-            <input
-              id="nl-email"
-              type="email"
-              placeholder={t.home.nlPlaceholder}
+              <span>
+                {lang === 'en'
+                  ? `Subscribed (${nlSubscribed}) — preview confirmation.`
+                  : `Naka-subscribe na (${nlSubscribed}) — preview confirmation.`}
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setNlSubscribed(null);
+                  setNlEmail('');
+                }}
+                style={{
+                  border: 'none',
+                  background: 'transparent',
+                  color: ACCENT,
+                  fontWeight: 600,
+                  fontSize: 13,
+                  cursor: 'pointer',
+                  padding: 0,
+                }}
+              >
+                {lang === 'en' ? 'Change email' : 'Palitan ang email'}
+              </button>
+            </div>
+          ) : (
+            <form
+              onSubmit={handleNlSubmit}
+              className="newsletter-form"
               style={{
-                flex: '1 1 0',
-                minWidth: 0,
-                minHeight: 48,
-                padding: '0 16px',
-                border: '1px solid #111',
-                font: '400 16px Inter, sans-serif',
-                boxSizing: 'border-box',
-              }}
-            />
-            <button
-              type="submit"
-              className="newsletter-submit"
-              style={{
-                flex: 'none',
-                minHeight: 48,
-                padding: '0 24px',
-                border: 0,
-                background: ACCENT,
-                color: '#fff',
-                font: '600 15px Inter, sans-serif',
-                whiteSpace: 'nowrap',
-                cursor: 'pointer',
+                margin: '24px auto 0',
+                maxWidth: 520,
+                display: 'flex',
+                flexWrap: 'nowrap',
+                gap: 8,
+                textAlign: 'left',
               }}
             >
-              {t.home.nlSignUp}
-            </button>
-          </form>
+              <label
+                htmlFor="nl-email"
+                style={{
+                  position: 'absolute',
+                  width: 1,
+                  height: 1,
+                  overflow: 'hidden',
+                  clip: 'rect(0 0 0 0)',
+                }}
+              >
+                {t.home.nlEmailLabel}
+              </label>
+              <input
+                id="nl-email"
+                type="email"
+                required
+                value={nlEmail}
+                onChange={(e) => setNlEmail(e.target.value)}
+                placeholder={t.home.nlPlaceholder}
+                style={{
+                  flex: '1 1 0',
+                  minWidth: 0,
+                  minHeight: 48,
+                  padding: '0 16px',
+                  border: '1px solid #111',
+                  font: '400 16px Inter, sans-serif',
+                  boxSizing: 'border-box',
+                }}
+              />
+              <button
+                type="submit"
+                className="newsletter-submit"
+                style={{
+                  flex: 'none',
+                  minHeight: 48,
+                  padding: '0 24px',
+                  border: 0,
+                  background: ACCENT,
+                  color: '#fff',
+                  font: '600 15px Inter, sans-serif',
+                  whiteSpace: 'nowrap',
+                  cursor: 'pointer',
+                }}
+              >
+                {t.home.nlSignUp}
+              </button>
+            </form>
+          )}
         </section>
       </main>
 
