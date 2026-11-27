@@ -31,6 +31,8 @@ function ClerkProfileContent({
   const [lastName, setLastName] = useState('');
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState<{ text: string; isError: boolean } | null>(null);
+  const [nlActive, setNlActive] = useState<boolean | null>(null);
+  const [nlBusy, setNlBusy] = useState(false);
 
   const isEn = lang === 'en';
 
@@ -38,6 +40,18 @@ function ClerkProfileContent({
     if (user) {
       setFirstName(user.firstName ?? '');
       setLastName(user.lastName ?? '');
+      const email =
+        user.primaryEmailAddress?.emailAddress ?? user.emailAddresses[0]?.emailAddress;
+      if (email) {
+        fetch(`/api/newsletter?email=${encodeURIComponent(email)}`)
+          .then((r) => (r.ok ? r.json() : null))
+          .then((data: { ok?: boolean; subscribed?: boolean } | null) => {
+            if (data?.ok) setNlActive(Boolean(data.subscribed));
+          })
+          .catch(() => {
+            // D1 endpoint unavailable in plain Vite dev
+          });
+      }
     }
   }, [user]);
 
@@ -135,6 +149,26 @@ function ClerkProfileContent({
   const handleSignOut = async () => {
     await signOut();
     onBackHome();
+  };
+
+  const handleToggleNewsletter = async () => {
+    if (!primaryEmail) return;
+    setNlBusy(true);
+    const nextAction = nlActive ? 'unsubscribe' : 'subscribe';
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: primaryEmail, lang, action: nextAction }),
+      });
+      if (res.ok) {
+        setNlActive(nextAction === 'subscribe');
+      }
+    } catch {
+      // ignore if D1 not bound yet
+    } finally {
+      setNlBusy(false);
+    }
   };
 
   const primaryEmail =
@@ -420,6 +454,57 @@ function ClerkProfileContent({
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Newsletter (Cloudflare D1) */}
+      <section style={{ padding: '32px 0', borderBottom: '1px solid #E5E5E5' }}>
+        <h2
+          style={{
+            margin: '0 0 10px',
+            fontFamily: 'Newsreader, Georgia, serif',
+            fontSize: 24,
+            fontWeight: 500,
+          }}
+        >
+          {isEn ? 'The Civic Tech Weekly' : 'Ang Civic Tech Weekly'}
+        </h2>
+        <p style={{ margin: '0 0 16px', fontSize: 14, lineHeight: 1.55, color: '#555' }}>
+          {nlActive
+            ? isEn
+              ? `Subscribed with ${primaryEmail}.`
+              : `Naka-subscribe gamit ang ${primaryEmail}.`
+            : isEn
+              ? "Our editors' picks on data, digital government and public tools. Every Friday."
+              : 'Mga piling ulat ng patnugot tungkol sa datos, digital na gobyerno at mga tool.'}
+        </p>
+        <button
+          type="button"
+          disabled={nlBusy}
+          onClick={handleToggleNewsletter}
+          style={{
+            minHeight: 42,
+            padding: '0 18px',
+            border: nlActive ? '1px solid #D4D4D4' : 'none',
+            background: nlActive ? '#fff' : ACCENT,
+            color: nlActive ? '#111' : '#fff',
+            fontFamily: 'inherit',
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: nlBusy ? 'wait' : 'pointer',
+          }}
+        >
+          {nlBusy
+            ? isEn
+              ? 'Updating…'
+              : 'Ina-update…'
+            : nlActive
+              ? isEn
+                ? 'Unsubscribe'
+                : 'Mag-unsubscribe'
+              : isEn
+                ? 'Subscribe to newsletter'
+                : 'Mag-subscribe sa newsletter'}
+        </button>
       </section>
 
       {/* Security */}

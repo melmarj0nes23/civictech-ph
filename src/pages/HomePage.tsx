@@ -36,16 +36,33 @@ export function HomePage({
 }: HomePageProps) {
   const t = TRANSLATIONS[lang];
   const [nlEmail, setNlEmail] = useState('');
+  const [nlSubmitting, setNlSubmitting] = useState(false);
   const [nlSubscribed, setNlSubscribed] = useState<string | null>(null);
   const featuredTools = [
     ...DIRECTORY_ENTRIES.filter((e) => e.kind === 'project' && e.website).slice(0, 3),
     ...DIRECTORY_ENTRIES.filter((e) => e.kind === 'cso' && e.website).slice(0, 1),
   ];
 
-  const handleNlSubmit = (e: FormEvent) => {
+  const handleNlSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const clean = nlEmail.trim();
     if (!clean) return;
+    setNlSubmitting(true);
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: clean, lang }),
+      });
+      if (res.ok) {
+        setNlSubscribed(clean);
+        return;
+      }
+    } catch {
+      // Fallback when running plain Vite dev server without Pages Functions
+    } finally {
+      setNlSubmitting(false);
+    }
     setNlSubscribed(clean);
   };
 
@@ -932,6 +949,7 @@ export function HomePage({
               />
               <button
                 type="submit"
+                disabled={nlSubmitting}
                 className="newsletter-submit"
                 style={{
                   flex: 'none',
@@ -942,10 +960,11 @@ export function HomePage({
                   color: '#fff',
                   font: '600 15px Inter, sans-serif',
                   whiteSpace: 'nowrap',
-                  cursor: 'pointer',
+                  cursor: nlSubmitting ? 'wait' : 'pointer',
+                  opacity: nlSubmitting ? 0.7 : 1,
                 }}
               >
-                {t.home.nlSignUp}
+                {nlSubmitting ? (lang === 'en' ? 'Saving…' : 'Sine-save…') : t.home.nlSignUp}
               </button>
             </form>
           )}
