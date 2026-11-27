@@ -57,6 +57,7 @@ export function HomePage({
 
       {/* Dateline & newsroom subtitle */}
       <div
+        className="home-dateline"
         style={{
           maxWidth: 1240,
           margin: '0 auto',
