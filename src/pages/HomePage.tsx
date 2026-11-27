@@ -4,10 +4,10 @@ import { NewsletterBand } from '../components/NewsletterBand';
 import { SiteHeader } from '../components/SiteHeader';
 import {
   ARTICLES,
-  getArticlePhoto,
   getCategoryBySlug,
   type CategorySlug,
 } from '../data/articles';
+import { resolveArticleImage } from '../data/videoEmbed';
 import {
   mapD1RowToArticle,
   readCachedD1Articles,
@@ -299,7 +299,7 @@ export function HomePage({
                     }}
                   >
                     <img
-                      src={leadStory.photoUrl || getArticlePhoto(leadStory.slug)}
+                      src={resolveArticleImage(leadStory.photoUrl, leadStory.slug)}
                       alt={leadStory.title[lang]}
                     />
                   </div>
@@ -425,7 +425,7 @@ export function HomePage({
                 </div>
                 <div className="ph ph--photo top-story-thumb">
                   <img
-                    src={story.photoUrl || getArticlePhoto(story.slug)}
+                    src={resolveArticleImage(story.photoUrl, story.slug)}
                     alt={story.title[lang]}
                     loading="lazy"
                   />
@@ -485,7 +485,7 @@ export function HomePage({
                 >
                   <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
                     <img
-                      src={story.photoUrl || getArticlePhoto(story.slug)}
+                      src={resolveArticleImage(story.photoUrl, story.slug)}
                       alt={story.title[lang]}
                       loading="lazy"
                     />
@@ -537,7 +537,7 @@ export function HomePage({
             style={{ flex: '999 1 520px', minWidth: 0, aspectRatio: '21 / 9', display: 'block' }}
           >
             <img
-              src={longReadStory.photoUrl || getArticlePhoto(longReadStory.slug)}
+              src={resolveArticleImage(longReadStory.photoUrl, longReadStory.slug)}
               alt={longReadStory.title[lang]}
               loading="lazy"
             />

@@ -4,10 +4,10 @@ import { SiteHeader } from '../components/SiteHeader';
 import {
   ARTICLES,
   CATEGORIES,
-  getArticlePhoto,
   getCategoryBySlug,
   type CategorySlug,
 } from '../data/articles';
+import { resolveArticleImage } from '../data/videoEmbed';
 import {
   mapD1RowToArticle,
   readCachedD1Articles,
@@ -204,7 +204,7 @@ export function CategoryPage({
                       style={{ flex: '1 1 240px', maxWidth: 320, aspectRatio: '3 / 2' }}
                     >
                       <img
-                        src={story.photoUrl || getArticlePhoto(story.slug)}
+                        src={resolveArticleImage(story.photoUrl, story.slug)}
                         alt={story.photoLabel[lang]}
                         loading="lazy"
                       />
@@ -338,7 +338,7 @@ export function CategoryPage({
                       </div>
                       <div className="ph ph--photo" style={{ width: 96, height: 64, flex: 'none' }}>
                         <img
-                          src={story.photoUrl || getArticlePhoto(story.slug)}
+                          src={resolveArticleImage(story.photoUrl, story.slug)}
                           alt={story.title[lang]}
                           loading="lazy"
                         />

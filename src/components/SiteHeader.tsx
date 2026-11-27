@@ -1,6 +1,11 @@
-import { Show, UserButton } from '@clerk/react';
-import { useState, type MouseEvent } from 'react';
-import { CATEGORIES, type CategorySlug } from '../data/articles';
+import { Show, UserButton, useUser } from '@clerk/react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import {
+  ARTICLE_SUBCATEGORIES,
+  getCategoryBySlug,
+  TOP_NAV_CATEGORIES,
+  type CategorySlug,
+} from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
 import { MobileAuthButton, MobileMenu } from './MobileMenu';
 import { SearchModal } from './SearchModal';
@@ -62,6 +67,104 @@ const USER_PROFILE_PROPS = {
   },
 } as const;
 
+function AdminUserButton({ lang }: { lang: Lang }) {
+  const { user } = useUser();
+  const role = String(
+    (user?.publicMetadata as { role?: string } | undefined)?.role || ''
+  ).toLowerCase();
+  const canPublish = role === 'admin' || role === 'editor';
+  const isAdmin = role === 'admin';
+
+  const navigateTo = (path: string) => {
+    window.history.pushState(null, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    window.scrollTo({ top: 0 });
+  };
+
+  return (
+    <UserButton
+      appearance={CLERK_THEME}
+      userProfileProps={USER_PROFILE_PROPS}
+      userProfileMode="navigation"
+      userProfileUrl="/profile"
+    >
+      {(canPublish || isAdmin) && (
+        <UserButton.MenuItems>
+          {canPublish && (
+            <UserButton.Action
+              label="Newsroom"
+              labelIcon={
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                </svg>
+              }
+              onClick={() => navigateTo('/write')}
+            />
+          )}
+          {isAdmin && (
+            <UserButton.Action
+              label={lang === 'en' ? 'Team Roles' : 'Mga Papel ng Team'}
+              labelIcon={
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+              }
+              onClick={() => navigateTo('/profile?panel=team')}
+            />
+          )}
+          {isAdmin && (
+            <UserButton.Action
+              label={lang === 'en' ? 'Manage Banner' : 'Pamahalaan ang Banner'}
+              labelIcon={
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                  <circle cx="9" cy="9" r="2" />
+                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                </svg>
+              }
+              onClick={() => navigateTo('/profile?panel=banners')}
+            />
+          )}
+        </UserButton.MenuItems>
+      )}
+    </UserButton>
+  );
+}
+
 interface SiteHeaderProps {
   lang: Lang;
   onLangChange: (lang: Lang) => void;
@@ -82,7 +185,34 @@ export function SiteHeader({
   activeCategory,
 }: SiteHeaderProps) {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [articlesOpen, setArticlesOpen] = useState(false);
+  const articlesMenuRef = useRef<HTMLDivElement>(null);
   const t = TRANSLATIONS[lang];
+
+  const isArticleSubActive = Boolean(
+    activeCategory && ARTICLE_SUBCATEGORIES.includes(activeCategory)
+  );
+
+  useEffect(() => {
+    if (!articlesOpen) return;
+    const onPointerDown = (e: globalThis.MouseEvent) => {
+      if (
+        articlesMenuRef.current &&
+        !articlesMenuRef.current.contains(e.target as Node)
+      ) {
+        setArticlesOpen(false);
+      }
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setArticlesOpen(false);
+    };
+    document.addEventListener('mousedown', onPointerDown);
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [articlesOpen]);
 
   const handleOpenAuthPage = () => {
     window.history.pushState(null, '', '/login');
@@ -104,7 +234,16 @@ export function SiteHeader({
 
   const handleCategory = (slug: CategorySlug) => (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
+    setArticlesOpen(false);
     onOpenCategory(slug);
+  };
+
+  const handleAllArticles = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setArticlesOpen(false);
+    window.history.pushState(null, '', '/category');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    window.scrollTo({ top: 0 });
   };
 
   const handleSwitchLang = (next: Lang) => (e: MouseEvent<HTMLButtonElement>) => {
@@ -171,9 +310,72 @@ export function SiteHeader({
           </span>
         </div>
 
-        {/* Desktop Categories */}
+        {/* Desktop Categories: Articles ▾ Budget Videos Events Tools Opinion */}
         <nav aria-label="Sections" className="site-nav">
-          {CATEGORIES.map((cat) => {
+          <div
+            ref={articlesMenuRef}
+            className="site-nav-dropdown"
+            onMouseEnter={() => setArticlesOpen(true)}
+            onMouseLeave={() => setArticlesOpen(false)}
+          >
+            <button
+              type="button"
+              className="site-nav-dropdown-btn"
+              aria-expanded={articlesOpen}
+              aria-haspopup="menu"
+              onClick={() => setArticlesOpen((prev) => !prev)}
+              style={{
+                color: isArticleSubActive ? ACCENT : undefined,
+                fontWeight: isArticleSubActive ? 600 : undefined,
+                borderBottom: isArticleSubActive
+                  ? `2px solid ${ACCENT}`
+                  : '2px solid transparent',
+              }}
+            >
+              <span>{lang === 'en' ? 'Articles' : 'Mga Artikulo'}</span>
+              <span aria-hidden="true" style={{ fontSize: 10, color: '#666' }}>
+                ▾
+              </span>
+            </button>
+
+            {articlesOpen && (
+              <div className="site-nav-dropdown-menu" role="menu">
+                {ARTICLE_SUBCATEGORIES.map((slug) => {
+                  const cat = getCategoryBySlug(slug);
+                  if (!cat) return null;
+                  const isActive = activeCategory === cat.slug;
+                  return (
+                    <a
+                      key={cat.slug}
+                      href={`/category/${cat.slug}`}
+                      role="menuitem"
+                      onClick={handleCategory(cat.slug)}
+                      aria-current={isActive ? 'page' : undefined}
+                      style={{
+                        color: isActive ? ACCENT : undefined,
+                        fontWeight: isActive ? 600 : undefined,
+                        background: isActive ? '#F4F6FA' : undefined,
+                      }}
+                    >
+                      {cat.label[lang]}
+                    </a>
+                  );
+                })}
+                <a
+                  href="/category"
+                  role="menuitem"
+                  onClick={handleAllArticles}
+                  className="site-nav-dropdown-all"
+                >
+                  {lang === 'en' ? 'All Articles →' : 'Lahat ng Artikulo →'}
+                </a>
+              </div>
+            )}
+          </div>
+
+          {TOP_NAV_CATEGORIES.map((slug) => {
+            const cat = getCategoryBySlug(slug);
+            if (!cat) return null;
             const isActive = activeCategory === cat.slug;
             return (
               <a
@@ -265,12 +467,7 @@ export function SiteHeader({
                 </a>
               </Show>
               <Show when="signed-in">
-                <UserButton
-                  appearance={CLERK_THEME}
-                  userProfileProps={USER_PROFILE_PROPS}
-                  userProfileMode="navigation"
-                  userProfileUrl="/profile"
-                />
+                <AdminUserButton lang={lang} />
               </Show>
             </>
           ) : (
@@ -294,12 +491,7 @@ export function SiteHeader({
             </Show>
             <Show when="signed-in">
               <div className="mobile-user-btn">
-                <UserButton
-                  appearance={CLERK_THEME}
-                  userProfileProps={USER_PROFILE_PROPS}
-                  userProfileMode="navigation"
-                  userProfileUrl="/profile"
-                />
+                <AdminUserButton lang={lang} />
               </div>
             </Show>
           </>

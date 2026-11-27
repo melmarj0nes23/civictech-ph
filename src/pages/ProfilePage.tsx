@@ -74,6 +74,30 @@ function ClerkProfileContent({
     }
   }, [user]);
 
+  useEffect(() => {
+    if (!user) return;
+    const roleVal = String(
+      (user.publicMetadata as { role?: string } | undefined)?.role || ''
+    ).toLowerCase();
+    if (roleVal !== 'admin') return;
+
+    const syncPanelFromUrl = () => {
+      const panel = new URLSearchParams(window.location.search).get('panel');
+      if (panel === 'team') {
+        setShowTeam(true);
+        setShowBanners(false);
+        loadTeamUsers();
+      } else if (panel === 'banners') {
+        setShowBanners(true);
+        setShowTeam(false);
+        loadBanners();
+      }
+    };
+    syncPanelFromUrl();
+    window.addEventListener('popstate', syncPanelFromUrl);
+    return () => window.removeEventListener('popstate', syncPanelFromUrl);
+  }, [user]);
+
   if (!isLoaded) {
     return (
       <p style={{ textAlign: 'center', fontSize: 15, color: '#555', padding: '40px 0' }}>

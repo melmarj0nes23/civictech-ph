@@ -8,7 +8,25 @@ export type CategorySlug =
   | 'digital-services'
   | 'tools'
   | 'opinion'
-  | 'community';
+  | 'community'
+  | 'videos'
+  | 'events';
+
+export const ARTICLE_SUBCATEGORIES: CategorySlug[] = [
+  'policy',
+  'digital-services',
+  'community',
+];
+
+export const TOP_NAV_CATEGORIES: CategorySlug[] = [
+  'open-data',
+  'budget',
+  'elections',
+  'videos',
+  'events',
+  'tools',
+  'opinion',
+];
 
 export interface CategoryMeta {
   slug: CategorySlug;
@@ -79,6 +97,22 @@ export const CATEGORIES: CategoryMeta[] = [
     description: {
       en: 'Stories from barangays, volunteer hackathons, and grassroots transparency movements.',
       fil: 'Mga kuwento mula sa barangay, hackathon ng mga boluntaryo, at kilusang pangkomunidad.',
+    },
+  },
+  {
+    slug: 'videos',
+    label: { en: 'Videos', fil: 'Mga Video' },
+    description: {
+      en: 'Explainers, interviews, civic tech demos, and recorded public forums.',
+      fil: 'Mga paliwanag, panayam, demo ng civic tech, at mga nakarekord na pampublikong talakayan.',
+    },
+  },
+  {
+    slug: 'events',
+    label: { en: 'Events', fil: 'Mga Kaganapan' },
+    description: {
+      en: 'Upcoming civic hackathons, open-data workshops, and public-interest community gatherings.',
+      fil: 'Mga nalalapit na civic hackathon, workshop sa bukas na datos, at pagtitipon ng komunidad.',
     },
   },
 ];

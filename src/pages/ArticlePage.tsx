@@ -1,6 +1,7 @@
 import { useEffect, useState, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
 import { NewsletterBand } from '../components/NewsletterBand';
+import { RichBody } from '../components/RichBody';
 import { SiteHeader } from '../components/SiteHeader';
 import {
   ARTICLES,
@@ -8,6 +9,7 @@ import {
   getArticlePhoto,
   type CategorySlug,
 } from '../data/articles';
+import { parseVideoEmbed, resolveArticleImage } from '../data/videoEmbed';
 import {
   mapD1RowToArticle,
   readCachedD1Articles,
@@ -125,10 +127,6 @@ export function ArticlePage({
     e.preventDefault();
     onOpenArticle(slug);
   };
-
-  const firstPara = article.body[lang][0] ?? '';
-  const dropCap = firstPara.charAt(0);
-  const firstParaRest = firstPara.slice(1);
 
   return (
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
@@ -345,10 +343,40 @@ export function ArticlePage({
             {article.deck[lang]}
           </p>
 
-          {/* 16:9 Hero photo */}
+          {/* 16:9 Hero media (video embed or photo) */}
           <figure style={{ margin: '28px 0 0' }}>
             <div className="ph ph--photo" style={{ aspectRatio: '16 / 9', width: '100%' }}>
-              <img src={article.photoUrl || getArticlePhoto(article.slug)} alt={article.photoLabel[lang]} />
+              {(() => {
+                const video = parseVideoEmbed(article.photoUrl);
+                if (video?.provider === 'direct') {
+                  return (
+                    <video
+                      controls
+                      playsInline
+                      preload="metadata"
+                      src={video.embedUrl}
+                      style={{ width: '100%', height: '100%', display: 'block', background: '#000' }}
+                    />
+                  );
+                }
+                if (video) {
+                  return (
+                    <iframe
+                      src={video.embedUrl}
+                      title={article.title[lang]}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      style={{ width: '100%', height: '100%', border: 0, display: 'block' }}
+                    />
+                  );
+                }
+                return (
+                  <img
+                    src={resolveArticleImage(article.photoUrl, article.slug)}
+                    alt={article.photoLabel[lang]}
+                  />
+                );
+              })()}
             </div>
             {(isLead || article.photoLabel[lang]) && (
               <figcaption
@@ -379,25 +407,7 @@ export function ArticlePage({
               color: '#1A1A1A',
             }}
           >
-            <p>
-              <span
-                className="article-dropcap"
-                style={{
-                  float: 'left',
-                  fontSize: 76,
-                  lineHeight: 0.85,
-                  fontWeight: 600,
-                  padding: '8px 10px 0 0',
-                  color: ACCENT,
-                }}
-              >
-                {dropCap}
-              </span>
-              {firstParaRest}
-            </p>
-            {article.body[lang].slice(1).map((para, i) => (
-              <p key={i}>{para}</p>
-            ))}
+            <RichBody blocks={article.body[lang]} dropCap />
 
             {article.quote && (
               <blockquote

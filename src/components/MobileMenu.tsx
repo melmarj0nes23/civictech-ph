@@ -1,6 +1,11 @@
 import { useEffect, useState, type MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
-import { CATEGORIES, type CategorySlug } from '../data/articles';
+import {
+  ARTICLE_SUBCATEGORIES,
+  getCategoryBySlug,
+  TOP_NAV_CATEGORIES,
+  type CategorySlug,
+} from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
 
 const ACCENT = '#0B3D91';
@@ -46,6 +51,7 @@ export function MobileMenu({
 }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [articlesOpen, setArticlesOpen] = useState(false);
   const t = TRANSLATIONS[lang];
 
   useEffect(() => {
@@ -400,22 +406,97 @@ export function MobileMenu({
                 {lang === 'en' ? 'Categories' : 'Mga Kategorya'}
               </p>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {CATEGORIES.map((cat) => (
-                  <a
-                    key={cat.slug}
-                    href={`/category/${cat.slug}`}
-                    onClick={handleCategory(cat.slug)}
+                <button
+                  type="button"
+                  onClick={() => setArticlesOpen((prev) => !prev)}
+                  aria-expanded={articlesOpen}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    padding: '11px 0',
+                    border: 'none',
+                    borderBottom: '1px solid #F0F0F0',
+                    background: 'transparent',
+                    fontFamily: 'inherit',
+                    fontSize: 15,
+                    fontWeight: 500,
+                    color: '#111',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                  }}
+                >
+                  <span>{lang === 'en' ? 'Articles' : 'Mga Artikulo'}</span>
+                  <span aria-hidden="true" style={{ fontSize: 11, color: '#666' }}>
+                    {articlesOpen ? '▴' : '▾'}
+                  </span>
+                </button>
+                {articlesOpen && (
+                  <div
                     style={{
-                      padding: '11px 0',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      paddingLeft: 14,
+                      background: '#FAFAFA',
                       borderBottom: '1px solid #F0F0F0',
-                      fontSize: 15,
-                      fontWeight: 500,
-                      color: '#111',
                     }}
                   >
-                    {cat.label[lang]}
-                  </a>
-                ))}
+                    {ARTICLE_SUBCATEGORIES.map((slug) => {
+                      const cat = getCategoryBySlug(slug);
+                      if (!cat) return null;
+                      return (
+                        <a
+                          key={cat.slug}
+                          href={`/category/${cat.slug}`}
+                          onClick={handleCategory(cat.slug)}
+                          style={{
+                            padding: '9px 0',
+                            borderBottom: '1px solid #EFEFEF',
+                            fontSize: 14,
+                            fontWeight: 500,
+                            color: '#222',
+                          }}
+                        >
+                          {cat.label[lang]}
+                        </a>
+                      );
+                    })}
+                    <a
+                      href="/category"
+                      onClick={handleNavigatePath('/category')}
+                      style={{
+                        padding: '9px 0',
+                        fontSize: 14,
+                        fontWeight: 600,
+                        color: ACCENT,
+                      }}
+                    >
+                      {lang === 'en' ? 'All Articles →' : 'Lahat ng Artikulo →'}
+                    </a>
+                  </div>
+                )}
+
+                {TOP_NAV_CATEGORIES.map((slug) => {
+                  const cat = getCategoryBySlug(slug);
+                  if (!cat) return null;
+                  return (
+                    <a
+                      key={cat.slug}
+                      href={`/category/${cat.slug}`}
+                      onClick={handleCategory(cat.slug)}
+                      style={{
+                        padding: '11px 0',
+                        borderBottom: '1px solid #F0F0F0',
+                        fontSize: 15,
+                        fontWeight: 500,
+                        color: '#111',
+                      }}
+                    >
+                      {cat.label[lang]}
+                    </a>
+                  );
+                })}
               </div>
             </nav>
 

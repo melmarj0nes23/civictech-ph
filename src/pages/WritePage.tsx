@@ -1,6 +1,7 @@
 import { useAuth, useUser } from '@clerk/react';
-import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Footer } from '../components/Footer';
+import { RichBody } from '../components/RichBody';
 import { SiteHeader } from '../components/SiteHeader';
 import { ARTICLES, CATEGORIES, getArticlePhoto, type CategorySlug } from '../data/articles';
 import { clearCachedD1Articles } from '../data/articlesCache';
@@ -62,7 +63,27 @@ function WriteStudio({
   const [saving, setSaving] = useState(false);
   const [importing, setImporting] = useState(false);
   const [mobileTab, setMobileTab] = useState<'add' | 'edit'>('add');
+  const [bodyTab, setBodyTab] = useState<'write' | 'preview'>('write');
+  const bodyRef = useRef<HTMLTextAreaElement>(null);
   const [notice, setNotice] = useState<{ text: string; isError: boolean } | null>(null);
+
+  const insertFormat = (before: string, after = '', placeholder = '') => {
+    const el = bodyRef.current;
+    if (!el) {
+      setContent((prev) => `${prev}${before}${placeholder}${after}`);
+      return;
+    }
+    const start = el.selectionStart ?? content.length;
+    const end = el.selectionEnd ?? content.length;
+    const selected = content.slice(start, end) || placeholder;
+    const next = content.slice(0, start) + before + selected + after + content.slice(end);
+    setContent(next);
+    window.requestAnimationFrame(() => {
+      el.focus();
+      const cursor = start + before.length + selected.length;
+      el.setSelectionRange(cursor, cursor);
+    });
+  };
 
   const isEn = lang === 'en';
   const role = String((user?.publicMetadata as { role?: string } | undefined)?.role || '').toLowerCase();
@@ -551,14 +572,24 @@ function WriteStudio({
 
             <div>
               <label htmlFor="write-photo" style={labelStyle}>
-                {isEn ? 'Cover photo URL' : 'URL ng larawan'}
+                {category === 'videos'
+                  ? isEn
+                    ? 'Direct video URL'
+                    : 'Direktang URL ng video'
+                  : isEn
+                    ? 'Cover photo URL'
+                    : 'URL ng larawan'}
               </label>
               <input
                 id="write-photo"
                 type="url"
                 value={photoUrl}
                 onChange={(e) => setPhotoUrl(e.target.value)}
-                placeholder="https://example.com/photo.jpg"
+                placeholder={
+                  category === 'videos'
+                    ? 'https://youtube.com/watch?v=... or https://example.com/video.mp4'
+                    : 'https://example.com/photo.jpg'
+                }
                 style={inputStyle}
               />
             </div>
@@ -595,18 +626,135 @@ function WriteStudio({
           </div>
 
           <div>
-            <label htmlFor="write-body" style={labelStyle}>
-              {isEn ? 'Body (separate paragraphs with blank lines) *' : 'Nilalaman *'}
-            </label>
-            <textarea
-              id="write-body"
-              required
-              rows={10}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder={isEn ? 'Write your story here…' : 'Isulat ang artikulo rito…'}
-              style={{ ...inputStyle, minHeight: 220, resize: 'vertical', lineHeight: 1.6 }}
-            />
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 8,
+                marginBottom: 6,
+              }}
+            >
+              <label htmlFor="write-body" style={{ ...labelStyle, marginBottom: 0 }}>
+                {isEn ? 'Body (Markdown supported) *' : 'Nilalaman (May Markdown) *'}
+              </label>
+              <div style={{ display: 'inline-flex', border: '1px solid #D4D4D4' }}>
+                <button
+                  type="button"
+                  onClick={() => setBodyTab('write')}
+                  style={{
+                    padding: '4px 10px',
+                    border: 'none',
+                    background: bodyTab === 'write' ? ACCENT : '#fff',
+                    color: bodyTab === 'write' ? '#fff' : '#333',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {isEn ? 'Write' : 'Isulat'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setBodyTab('preview')}
+                  style={{
+                    padding: '4px 10px',
+                    border: 'none',
+                    borderLeft: '1px solid #D4D4D4',
+                    background: bodyTab === 'preview' ? ACCENT : '#fff',
+                    color: bodyTab === 'preview' ? '#fff' : '#333',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {isEn ? 'Preview' : 'Silipin'}
+                </button>
+              </div>
+            </div>
+
+            {bodyTab === 'write' && (
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 4,
+                  padding: '6px 8px',
+                  background: '#F7F8FA',
+                  border: '1px solid #DADADA',
+                  borderBottom: 'none',
+                }}
+              >
+                {[
+                  { label: 'H2', action: () => insertFormat('\n\n## ', '', 'Section heading') },
+                  { label: 'H3', action: () => insertFormat('\n\n### ', '', 'Subheading') },
+                  { label: 'B', action: () => insertFormat('**', '**', 'bold text'), bold: true },
+                  { label: 'I', action: () => insertFormat('*', '*', 'italic text'), italic: true },
+                  { label: 'Link', action: () => insertFormat('[', '](https://)', 'link text') },
+                  { label: 'Quote', action: () => insertFormat('\n\n> ', '', 'Key takeaway or quote') },
+                  { label: '• List', action: () => insertFormat('\n\n- ', '', 'List item') },
+                  { label: '1. List', action: () => insertFormat('\n\n1. ', '', 'List item') },
+                ].map((btn) => (
+                  <button
+                    key={btn.label}
+                    type="button"
+                    onClick={btn.action}
+                    style={{
+                      padding: '4px 9px',
+                      border: '1px solid #D4D8E0',
+                      background: '#fff',
+                      color: '#111',
+                      fontSize: 12,
+                      fontWeight: btn.bold ? 700 : 600,
+                      fontStyle: btn.italic ? 'italic' : 'normal',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {btn.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {bodyTab === 'write' ? (
+              <textarea
+                ref={bodyRef}
+                id="write-body"
+                required
+                rows={12}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder={
+                  isEn
+                    ? 'Write your story here… Use ## for subheadings, **bold**, [links](https://...), > quotes, and - bullet lists.'
+                    : 'Isulat ang artikulo rito…'
+                }
+                style={{ ...inputStyle, minHeight: 240, resize: 'vertical', lineHeight: 1.6 }}
+              />
+            ) : (
+              <div
+                className="body"
+                style={{
+                  minHeight: 240,
+                  padding: '20px 22px',
+                  border: '1px solid #DADADA',
+                  background: '#fff',
+                  fontFamily: 'Newsreader, Georgia, serif',
+                  fontSize: 18,
+                  lineHeight: 1.65,
+                  color: '#1A1A1A',
+                }}
+              >
+                {content.trim() ? (
+                  <RichBody blocks={content.split(/\n\n+/)} dropCap />
+                ) : (
+                  <p style={{ color: '#777', fontFamily: 'Inter, sans-serif', fontSize: 14, margin: 0 }}>
+                    {isEn ? 'Nothing to preview yet.' : 'Wala pang masisilip.'}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>

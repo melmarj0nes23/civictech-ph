@@ -48,6 +48,8 @@ const ROUTES = [
     ['tools', 'Tools'],
     ['opinion', 'Opinion'],
     ['community', 'Community'],
+    ['videos', 'Videos'],
+    ['events', 'Events'],
   ].map(([slug, label]) => ({
     path: `/category/${slug}`,
     title: `${label} — Civic Tech by BetterGov.ph`,
