@@ -8,6 +8,60 @@ import { SearchModal } from './SearchModal';
 const ACCENT = '#0B3D91';
 const HAS_CLERK = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
 
+const CLERK_THEME = {
+  variables: {
+    colorPrimary: ACCENT,
+    colorText: '#111111',
+    colorTextSecondary: '#555555',
+    fontFamily: 'Inter, system-ui, sans-serif',
+    fontSize: '14px',
+    borderRadius: '0px',
+  },
+  elements: {
+    userButtonPopoverCard: {
+      borderRadius: '0px',
+      border: '1px solid #E5E5E5',
+      boxShadow: '0 12px 32px rgba(0, 0, 0, 0.12)',
+    },
+    userButtonPopoverActionButton: {
+      borderRadius: '0px',
+      fontSize: '14px',
+    },
+  },
+} as const;
+
+const USER_PROFILE_PROPS = {
+  appearance: {
+    variables: {
+      colorPrimary: ACCENT,
+      colorText: '#111111',
+      colorTextSecondary: '#555555',
+      fontFamily: 'Inter, system-ui, sans-serif',
+      fontSize: '14px',
+      borderRadius: '0px',
+    },
+    elements: {
+      cardBox: {
+        borderRadius: '0px',
+        border: '1px solid #E5E5E5',
+        boxShadow: '0 16px 48px rgba(0, 0, 0, 0.16)',
+      },
+      headerTitle: {
+        fontFamily: 'Newsreader, Georgia, serif',
+        fontWeight: 600,
+      },
+      navbarButton: {
+        borderRadius: '0px',
+        fontSize: '14px',
+      },
+      formButtonPrimary: {
+        borderRadius: '0px',
+        fontSize: '14px',
+      },
+    },
+  },
+} as const;
+
 interface SiteHeaderProps {
   lang: Lang;
   onLangChange: (lang: Lang) => void;
@@ -203,7 +257,7 @@ export function SiteHeader({
                 </a>
               </Show>
               <Show when="signed-in">
-                <UserButton />
+                <UserButton appearance={CLERK_THEME} userProfileProps={USER_PROFILE_PROPS} />
               </Show>
             </>
           ) : (
@@ -227,7 +281,7 @@ export function SiteHeader({
             </Show>
             <Show when="signed-in">
               <div className="mobile-user-btn">
-                <UserButton />
+                <UserButton appearance={CLERK_THEME} userProfileProps={USER_PROFILE_PROPS} />
               </div>
             </Show>
           </>
