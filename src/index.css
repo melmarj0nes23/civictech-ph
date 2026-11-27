@@ -6,10 +6,20 @@ body {
 a {
   color: #111;
   text-decoration: none;
+  transition: color 150ms ease;
 }
 
 a:hover {
   color: #0B3D91;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #0B3D91;
+  outline-offset: 2px;
 }
 
 .ph {
@@ -35,6 +45,11 @@ a:hover {
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 280ms ease;
+}
+
+a:hover .ph--photo img {
+  transform: scale(1.025);
 }
 
 .ph svg {
