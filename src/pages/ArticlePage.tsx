@@ -1,4 +1,4 @@
-import type { MouseEvent } from 'react';
+import { useEffect, useState, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
 import { SiteHeader } from '../components/SiteHeader';
 import {
@@ -37,6 +37,41 @@ export function ArticlePage({
 }: ArticlePageProps) {
   const t = TRANSLATIONS[lang];
   const article = getArticleBySlug(articleSlug);
+  const [readProgress, setReadProgress] = useState(0);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const doc = document.documentElement;
+      const scrollTop = window.scrollY || doc.scrollTop;
+      const total = doc.scrollHeight - window.innerHeight;
+      if (total <= 0) {
+        setReadProgress(0);
+        return;
+      }
+      setReadProgress(Math.min(100, Math.max(0, (scrollTop / total) * 100)));
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [articleSlug]);
+
+  const handleCopyLink = () => {
+    navigator.clipboard?.writeText(window.location.href);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleShareFb = () => {
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleShareX = () => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(article.title[lang]);
+    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'noopener,noreferrer');
+  };
   const isLead = article.slug === 'volunteers-national-budget';
   const relatedStories = ARTICLES.filter(
     (a) => a.slug !== article.slug && a.slug !== 'volunteers-national-budget'
@@ -59,6 +94,20 @@ export function ArticlePage({
 
   return (
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: `${readProgress}%`,
+          height: 3,
+          background: ACCENT,
+          zIndex: 1050,
+          transition: 'width 80ms linear',
+          pointerEvents: 'none',
+        }}
+      />
       <SiteHeader
         lang={lang}
         onLangChange={onLangChange}
@@ -164,6 +213,7 @@ export function ArticlePage({
             <button
               type="button"
               aria-label={t.article.shareFb}
+              onClick={handleShareFb}
               style={{
                 width: 44,
                 height: 44,
@@ -191,6 +241,7 @@ export function ArticlePage({
             <button
               type="button"
               aria-label={t.article.shareX}
+              onClick={handleShareX}
               style={{
                 width: 44,
                 height: 44,
@@ -218,32 +269,62 @@ export function ArticlePage({
             <button
               type="button"
               aria-label={t.article.shareCopy}
-              onClick={() => navigator.clipboard?.writeText(window.location.href)}
+              onClick={handleCopyLink}
+              title={copied ? (lang === 'en' ? 'Link copied' : 'Nakopya ang link') : t.article.shareCopy}
               style={{
                 width: 44,
                 height: 44,
-                border: '1px solid #DADADA',
-                background: '#fff',
+                border: `1px solid ${copied ? ACCENT : '#DADADA'}`,
+                background: copied ? '#F4F6FA' : '#fff',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                color: '#111',
+                color: copied ? ACCENT : '#111',
               }}
             >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                aria-hidden="true"
-              >
-                <path d="M10 14a4 4 0 0 0 5.6 0l3-3a4 4 0 0 0-5.6-5.6l-1 1" />
-                <path d="M14 10a4 4 0 0 0-5.6 0l-3 3a4 4 0 0 0 5.6 5.6l1-1" />
-              </svg>
+              {copied ? (
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              ) : (
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  aria-hidden="true"
+                >
+                  <path d="M10 14a4 4 0 0 0 5.6 0l3-3a4 4 0 0 0-5.6-5.6l-1 1" />
+                  <path d="M14 10a4 4 0 0 0-5.6 0l-3 3a4 4 0 0 0 5.6 5.6l1-1" />
+                </svg>
+              )}
             </button>
+            {copied && (
+              <span
+                role="status"
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: ACCENT,
+                  textAlign: 'center',
+                }}
+              >
+                {lang === 'en' ? 'Copied' : 'Nakopya'}
+              </span>
+            )}
           </aside>
 
           <div

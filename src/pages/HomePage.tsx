@@ -2,7 +2,9 @@ import { useState, type FormEvent, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
 import { SiteHeader } from '../components/SiteHeader';
 import { getArticlePhoto, type CategorySlug } from '../data/articles';
-import { TRANSLATIONS, type Lang } from '../data/i18n';
+import { DIRECTORY_ENTRIES } from '../data/directory';
+import { getLocalizedSummary } from '../data/directoryI18n';
+import { SECTOR_LABELS, STATUS_LABELS, TRANSLATIONS, type Lang } from '../data/i18n';
 import type { InfoPageSlug } from '../data/infoPages';
 
 const ACCENT = '#0B3D91';
@@ -29,6 +31,10 @@ export function HomePage({
   const t = TRANSLATIONS[lang];
   const [nlEmail, setNlEmail] = useState('');
   const [nlSubscribed, setNlSubscribed] = useState<string | null>(null);
+  const featuredTools = [
+    ...DIRECTORY_ENTRIES.filter((e) => e.kind === 'project' && e.website).slice(0, 3),
+    ...DIRECTORY_ENTRIES.filter((e) => e.kind === 'cso' && e.website).slice(0, 1),
+  ];
 
   const handleNlSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -688,72 +694,100 @@ export function HomePage({
             </div>
           </div>
           <aside aria-labelledby="tools" style={{ flex: '1 1 320px', minWidth: 0 }}>
-            <h2
-              id="tools"
+            <div
               style={{
-                margin: '0 0 8px',
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
                 borderBottom: '2px solid #111',
                 paddingBottom: 10,
+                marginBottom: 4,
               }}
             >
-              {t.home.civicTools}
-            </h2>
+              <h2
+                id="tools"
+                style={{
+                  margin: 0,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {t.home.civicTools}
+              </h2>
+              <a
+                href="/civictools"
+                onClick={handleOpenCivicTools}
+                style={{ fontSize: 12, fontWeight: 600, color: ACCENT }}
+              >
+                {DIRECTORY_ENTRIES.length} {lang === 'en' ? 'entries →' : 'nakalista →'}
+              </a>
+            </div>
             <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-              <li style={{ borderBottom: '1px solid #E5E5E5' }}>
-                <a
-                  href="https://data.bettergov.ph"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    gap: 12,
-                    padding: '14px 0',
-                    fontSize: 15,
-                    fontWeight: 500,
-                  }}
-                >
-                  {t.home.tool1} <span aria-hidden="true" style={{ color: ACCENT }}>→</span>
-                </a>
-              </li>
-              <li style={{ borderBottom: '1px solid #E5E5E5' }}>
-                <a
-                  href="https://budget.bettergov.ph"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    gap: 12,
-                    padding: '14px 0',
-                    fontSize: 15,
-                    fontWeight: 500,
-                  }}
-                >
-                  {t.home.tool2} <span aria-hidden="true" style={{ color: ACCENT }}>→</span>
-                </a>
-              </li>
-              <li style={{ borderBottom: '1px solid #E5E5E5' }}>
-                <a
-                  href="https://scamcheck.ph"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    gap: 12,
-                    padding: '14px 0',
-                    fontSize: 15,
-                    fontWeight: 500,
-                  }}
-                >
-                  {t.home.tool3} <span aria-hidden="true" style={{ color: ACCENT }}>→</span>
-                </a>
-              </li>
+              {featuredTools.map((entry) => (
+                <li key={entry.slug} style={{ borderBottom: '1px solid #E5E5E5' }}>
+                  <a
+                    href={entry.website || '/civictools'}
+                    target={entry.website ? '_blank' : undefined}
+                    rel={entry.website ? 'noreferrer' : undefined}
+                    style={{
+                      display: 'block',
+                      padding: '14px 0',
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: 8,
+                        marginBottom: 4,
+                      }}
+                    >
+                      <span style={{ fontSize: 15, fontWeight: 600, color: '#111' }}>
+                        {entry.title}
+                      </span>
+                      <span
+                        style={{
+                          flex: 'none',
+                          fontSize: 11,
+                          fontWeight: 600,
+                          padding: '2px 7px',
+                          background: '#F4F6FA',
+                          color: ACCENT,
+                        }}
+                      >
+                        {STATUS_LABELS[entry.status]?.[lang] ?? entry.status}
+                      </span>
+                    </div>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: 13,
+                        lineHeight: 1.45,
+                        color: '#555',
+                      }}
+                    >
+                      {getLocalizedSummary(entry.slug, entry.summary, lang, entry.summaryFil)}
+                    </p>
+                    {entry.sectors[0] && (
+                      <p
+                        style={{
+                          margin: '6px 0 0',
+                          fontSize: 11,
+                          fontWeight: 600,
+                          letterSpacing: '0.06em',
+                          textTransform: 'uppercase',
+                          color: '#666',
+                        }}
+                      >
+                        {SECTOR_LABELS[entry.sectors[0]]?.[lang] ?? entry.sectors[0]}
+                      </p>
+                    )}
+                  </a>
+                </li>
+              ))}
               <li>
                 <a
                   href="/civictools"
@@ -763,11 +797,12 @@ export function HomePage({
                     justifyContent: 'space-between',
                     gap: 12,
                     padding: '14px 0',
-                    fontSize: 15,
-                    fontWeight: 500,
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: ACCENT,
                   }}
                 >
-                  {t.home.tool4} <span aria-hidden="true" style={{ color: ACCENT }}>→</span>
+                  {t.home.tool4} <span aria-hidden="true">→</span>
                 </a>
               </li>
             </ul>
