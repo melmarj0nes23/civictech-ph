@@ -796,11 +796,12 @@ export function HomePage({
           </p>
           <form
             onSubmit={(e) => e.preventDefault()}
+            className="newsletter-form"
             style={{
               margin: '24px auto 0',
               maxWidth: 520,
               display: 'flex',
-              flexWrap: 'wrap',
+              flexWrap: 'nowrap',
               gap: 8,
               textAlign: 'left',
             }}
@@ -822,7 +823,8 @@ export function HomePage({
               type="email"
               placeholder={t.home.nlPlaceholder}
               style={{
-                flex: '1 1 260px',
+                flex: '1 1 0',
+                minWidth: 0,
                 minHeight: 48,
                 padding: '0 16px',
                 border: '1px solid #111',
@@ -832,13 +834,16 @@ export function HomePage({
             />
             <button
               type="submit"
+              className="newsletter-submit"
               style={{
+                flex: 'none',
                 minHeight: 48,
                 padding: '0 24px',
                 border: 0,
                 background: ACCENT,
                 color: '#fff',
                 font: '600 15px Inter, sans-serif',
+                whiteSpace: 'nowrap',
                 cursor: 'pointer',
               }}
             >

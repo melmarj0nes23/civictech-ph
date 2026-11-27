@@ -441,6 +441,10 @@ a:hover {
     display: none;
   }
 
+  .newsletter-submit {
+    padding: 0 16px !important;
+  }
+
   .directory-search {
     width: 100% !important;
     max-width: none !important;
