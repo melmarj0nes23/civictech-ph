@@ -312,7 +312,7 @@
     "kind": "project",
     "title": "BetterLGU: Alcala, Pangasinan",
     "summary": "Independent civic portal for Alcala, Pangasinan public services, municipal budgets, ordinances, and verified barangay data.",
-    "status": "beta",
+    "status": "stable",
     "sectors": [
       "Disaster & Recovery"
     ],
@@ -322,8 +322,10 @@
     "tags": [],
     "maintainers": [],
     "dateAdded": "2026-11-26",
+    "lastUpdated": "2026-11-26",
     "owner": "melmarj0nes23",
-    "website": "https://github.com/melmarj0nes23/betteralcala"
+    "website": "https://github.com/melmarj0nes23/betteralcala",
+    "body": "## Update (2026-11-26): Change status from Beta to Stable\n\nChange status from Beta to Stable"
   },
   {
     "slug": "betterlgu-allen-northern-samar",

@@ -74,6 +74,8 @@ const ROUTES = [
     type: 'article',
   })),
   ...[
+    ['login', 'Login', 'Sign in to your Civic Tech by BetterGov.ph account.'],
+    ['signup', 'Sign up', 'Create a Civic Tech by BetterGov.ph account.'],
     ['mission', 'Our mission', 'An open, volunteer-run hub connecting Filipinos with civic technology, civil society organizations, and independent reporting on public data.'],
     ['editorial-standards', 'Editorial standards', 'How we report, verify data, separate opinion from reporting, and maintain independence across Civic Tech.'],
     ['corrections', 'Corrections', 'When we get a fact, link, or directory detail wrong, we fix it promptly and note the change openly.'],

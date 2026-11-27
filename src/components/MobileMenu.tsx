@@ -22,7 +22,7 @@ interface MobileAuthButtonProps {
 export function MobileAuthButton({ lang, onClick }: MobileAuthButtonProps) {
   return (
     <a
-      href="/"
+      href="/login"
       className="mobile-auth-btn"
       onClick={(e) => {
         e.preventDefault();

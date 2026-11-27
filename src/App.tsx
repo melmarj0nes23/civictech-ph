@@ -9,6 +9,7 @@ import type { Lang } from './data/i18n';
 import { INFO_PAGES, type InfoPageSlug } from './data/infoPages';
 import { applyDocumentSeo, ROUTE_SEO } from './data/seo';
 import { ArticlePage } from './pages/ArticlePage';
+import { AuthPage } from './pages/AuthPage';
 import { CategoryPage } from './pages/CategoryPage';
 import { DirectoryPage } from './pages/DirectoryPage';
 import { HomePage } from './pages/HomePage';
@@ -19,12 +20,15 @@ type RouteState =
   | { kind: 'home' }
   | { kind: 'civictools' }
   | { kind: 'submit' }
+  | { kind: 'auth'; mode: 'login' | 'signup' }
   | { kind: 'category'; slug: CategorySlug }
   | { kind: 'article'; slug: string }
   | { kind: 'info'; slug: InfoPageSlug };
 
 function getRouteFromPath(): RouteState {
   const path = window.location.pathname.replace(/\/+$/, '') || '/';
+  if (path === '/login') return { kind: 'auth', mode: 'login' };
+  if (path === '/signup') return { kind: 'auth', mode: 'signup' };
   if (path === '/civictools/submit') return { kind: 'submit' };
   if (path === '/civictools') return { kind: 'civictools' };
   if (
@@ -113,6 +117,30 @@ export function App() {
       );
       return;
     }
+    if (route.kind === 'auth') {
+      applyDocumentSeo(
+        {
+          path: route.mode === 'login' ? '/login' : '/signup',
+          title: {
+            en:
+              route.mode === 'login'
+                ? 'Login — Civic Tech by BetterGov.ph'
+                : 'Sign up — Civic Tech by BetterGov.ph',
+            fil:
+              route.mode === 'login'
+                ? 'Mag-login — Civic Tech ng BetterGov.ph'
+                : 'Mag-sign up — Civic Tech ng BetterGov.ph',
+          },
+          description: {
+            en: 'Sign in or create a Civic Tech by BetterGov.ph reader account.',
+            fil: 'Mag-sign in o gumawa ng Civic Tech ng BetterGov.ph account.',
+          },
+          type: 'website',
+        },
+        lang
+      );
+      return;
+    }
     applyDocumentSeo(ROUTE_SEO[route.kind], lang);
   }, [route, lang]);
 
@@ -135,6 +163,7 @@ export function App() {
     let targetPath = '/';
     if (next.kind === 'civictools') targetPath = '/civictools';
     else if (next.kind === 'submit') targetPath = '/civictools/submit';
+    else if (next.kind === 'auth') targetPath = next.mode === 'login' ? '/login' : '/signup';
     else if (next.kind === 'info') targetPath = `/${next.slug}`;
     else if (next.kind === 'category') targetPath = `/category/${next.slug}`;
     else if (next.kind === 'article') {
@@ -157,6 +186,22 @@ export function App() {
       window.scrollTo({ top: 0 });
     }
   };
+
+  if (route.kind === 'auth') {
+    return (
+      <AuthPage
+        mode={route.mode}
+        lang={lang}
+        onLangChange={handleLangChange}
+        onBackHome={() => navigate({ kind: 'home' })}
+        onOpenCivicTools={() => navigate({ kind: 'civictools' })}
+        onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
+        onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
+        onOpenInfo={(slug) => navigate({ kind: 'info', slug })}
+        onSwitchMode={(mode) => navigate({ kind: 'auth', mode })}
+      />
+    );
+  }
 
   if (route.kind === 'info') {
     return (

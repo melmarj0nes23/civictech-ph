@@ -1,7 +1,6 @@
 import { useState, type MouseEvent } from 'react';
 import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
-import { AuthModal } from './AuthModal';
 import { MobileAuthButton, MobileMenu } from './MobileMenu';
 import { SearchModal } from './SearchModal';
 
@@ -27,8 +26,13 @@ export function SiteHeader({
   activeCategory,
 }: SiteHeaderProps) {
   const [searchOpen, setSearchOpen] = useState(false);
-  const [authOpen, setAuthOpen] = useState(false);
   const t = TRANSLATIONS[lang];
+
+  const handleOpenAuthPage = () => {
+    window.history.pushState(null, '', '/login');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    window.scrollTo({ top: 0 });
+  };
 
   const handleOpenArticle = (slug: string) => {
     const path = slug === 'volunteers-national-budget' ? '/article' : `/article/${slug}`;
@@ -183,10 +187,10 @@ export function SiteHeader({
           </button>
 
           <a
-            href="/"
+            href="/login"
             onClick={(e) => {
               e.preventDefault();
-              setAuthOpen(true);
+              handleOpenAuthPage();
             }}
             className="site-auth-btn"
           >
@@ -194,7 +198,7 @@ export function SiteHeader({
           </a>
         </div>
 
-        <MobileAuthButton lang={lang} onClick={() => setAuthOpen(true)} />
+        <MobileAuthButton lang={lang} onClick={handleOpenAuthPage} />
       </div>
     </header>
 
@@ -205,8 +209,6 @@ export function SiteHeader({
       onOpenArticle={handleOpenArticle}
       onOpenCivicTools={onOpenCivicTools}
     />
-
-    <AuthModal open={authOpen} lang={lang} onClose={() => setAuthOpen(false)} />
   </>
   );
 }
