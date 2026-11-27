@@ -27,7 +27,7 @@ type RouteState =
   | { kind: 'profile' }
   | { kind: 'write' }
   | { kind: 'sso-callback' }
-  | { kind: 'category'; slug: CategorySlug }
+  | { kind: 'category'; slug: CategorySlug | 'all' }
   | { kind: 'article'; slug: string }
   | { kind: 'info'; slug: InfoPageSlug };
 
@@ -52,6 +52,7 @@ function getRouteFromPath(): RouteState {
   if (path.startsWith('/article/')) {
     return { kind: 'article', slug: path.slice('/article/'.length) };
   }
+  if (path === '/category') return { kind: 'category', slug: 'all' };
   if (path.startsWith('/category/')) {
     const slug = path.slice('/category/'.length);
     const cat = getCategoryBySlug(slug);
@@ -93,6 +94,24 @@ export function App() {
       return;
     }
     if (route.kind === 'category') {
+      if (route.slug === 'all') {
+        applyDocumentSeo(
+          {
+            path: '/category',
+            title: {
+              en: 'All Articles — Civic Tech by BetterGov.ph',
+              fil: 'Lahat ng Artikulo — Civic Tech ng BetterGov.ph',
+            },
+            description: {
+              en: 'All published reporting, explainers, and analysis across every Civic Tech PH section.',
+              fil: 'Lahat ng nailathalang ulat, paliwanag, at pagsusuri sa bawat seksyon ng Civic Tech PH.',
+            },
+            type: 'website',
+          },
+          lang
+        );
+        return;
+      }
       const cat = getCategoryBySlug(route.slug) ?? CATEGORIES[0];
       applyDocumentSeo(
         {
@@ -214,7 +233,9 @@ export function App() {
     else if (next.kind === 'write') targetPath = '/write';
     else if (next.kind === 'auth') targetPath = next.mode === 'login' ? '/login' : '/signup';
     else if (next.kind === 'info') targetPath = `/${next.slug}`;
-    else if (next.kind === 'category') targetPath = `/category/${next.slug}`;
+    else if (next.kind === 'category') {
+      targetPath = next.slug === 'all' ? '/category' : `/category/${next.slug}`;
+    }
     else if (next.kind === 'article') {
       targetPath =
         next.slug === 'volunteers-national-budget'
@@ -382,6 +403,7 @@ export function App() {
       onLangChange={handleLangChange}
       onOpenArticle={(slug) => navigate({ kind: 'article', slug })}
       onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
+      onOpenAllArticles={() => navigate({ kind: 'category', slug: 'all' })}
       onOpenCivicTools={() => navigate({ kind: 'civictools' })}
       onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
       onOpenInfo={(slug) => navigate({ kind: 'info', slug })}

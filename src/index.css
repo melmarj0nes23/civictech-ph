@@ -527,6 +527,69 @@ a:hover .ph--photo img {
   .civic-tool-mobile-only {
     display: list-item;
   }
+
+  .category-tools-rail {
+    display: none;
+  }
+
+  .category-main {
+    padding: 20px 16px 40px !important;
+  }
+
+  .category-header {
+    padding-bottom: 16px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .category-title {
+    font-size: 28px !important;
+  }
+
+  .category-desc {
+    font-size: 14px !important;
+    margin-top: 8px !important;
+  }
+
+  .category-story {
+    padding: 16px 0 !important;
+  }
+
+  .category-story-link {
+    flex-wrap: nowrap !important;
+    gap: 14px !important;
+    align-items: flex-start !important;
+  }
+
+  .category-story-thumb {
+    flex: 0 0 108px !important;
+    max-width: 108px !important;
+    aspect-ratio: 4 / 3 !important;
+    order: 2;
+  }
+
+  .category-story-body {
+    flex: 1 1 0 !important;
+    order: 1;
+  }
+
+  .category-story-title {
+    font-size: 19px !important;
+    line-height: 1.22 !important;
+  }
+
+  .category-story-deck {
+    font-size: 13px !important;
+    margin-top: 6px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .category-story-meta {
+    font-size: 12px !important;
+    margin-top: 8px !important;
+  }
 }
 
 .site-brand-logo {

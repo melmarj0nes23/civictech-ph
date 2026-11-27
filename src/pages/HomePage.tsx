@@ -33,6 +33,7 @@ interface HomePageProps {
   onLangChange: (lang: Lang) => void;
   onOpenArticle: (slug: string) => void;
   onOpenCategory: (slug: CategorySlug) => void;
+  onOpenAllArticles?: () => void;
   onOpenCivicTools: () => void;
   onOpenSubmit: (hash?: string) => void;
   onOpenInfo: (slug: InfoPageSlug) => void;
@@ -43,6 +44,7 @@ export function HomePage({
   onLangChange,
   onOpenArticle,
   onOpenCategory,
+  onOpenAllArticles,
   onOpenCivicTools,
   onOpenSubmit,
   onOpenInfo,
@@ -104,8 +106,9 @@ export function HomePage({
     onOpenCivicTools();
   };
 
-  const handleStayHome = (e: MouseEvent<HTMLAnchorElement>) => {
+  const handleOpenAll = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
+    onOpenAllArticles?.();
   };
 
   return (
@@ -329,7 +332,7 @@ export function HomePage({
             >
               {t.home.latest}
             </h2>
-            <a href="/" onClick={handleStayHome} style={{ fontSize: 13, color: '#555' }}>
+            <a href="/category" onClick={handleOpenAll} style={{ fontSize: 13, fontWeight: 600, color: ACCENT }}>
               {t.home.viewAll}
             </a>
           </div>
