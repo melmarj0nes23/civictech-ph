@@ -44,8 +44,6 @@ export function ArticlePage({
 
   useEffect(() => {
     setD1Article(null);
-    const isStatic = ARTICLES.some((a) => a.slug === articleSlug);
-    if (isStatic) return;
     fetch(`/api/articles?slug=${encodeURIComponent(articleSlug)}`)
       .then((r) => (r.ok ? r.json() : null))
       .then(

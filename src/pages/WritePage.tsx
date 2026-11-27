@@ -2,7 +2,7 @@ import { useAuth, useUser } from '@clerk/react';
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { Footer } from '../components/Footer';
 import { SiteHeader } from '../components/SiteHeader';
-import { CATEGORIES, type CategorySlug } from '../data/articles';
+import { ARTICLES, CATEGORIES, getArticlePhoto, type CategorySlug } from '../data/articles';
 import type { Lang } from '../data/i18n';
 import type { InfoPageSlug } from '../data/infoPages';
 
@@ -62,6 +62,7 @@ function WriteStudio({
   const [photoUrl, setPhotoUrl] = useState('/images/congress-session.jpg');
   const [status, setStatus] = useState<'published' | 'draft'>('published');
   const [saving, setSaving] = useState(false);
+  const [importing, setImporting] = useState(false);
   const [notice, setNotice] = useState<{ text: string; isError: boolean } | null>(null);
 
   const isEn = lang === 'en';
@@ -207,6 +208,62 @@ function WriteStudio({
         text: isEn ? 'Network error deleting article.' : 'May error sa pagtanggal.',
         isError: true,
       });
+    }
+  };
+
+  const handleImportStarter = async () => {
+    setNotice(null);
+    setImporting(true);
+    try {
+      const token = await getToken();
+      const seedArticles = ARTICLES.map((a) => ({
+        slug: a.slug,
+        category: a.category,
+        kicker_en: a.kicker.en,
+        kicker_fil: a.kicker.fil,
+        title_en: a.title.en,
+        title_fil: a.title.fil,
+        deck_en: a.deck.en,
+        deck_fil: a.deck.fil,
+        body_en: a.body.en.join('\n\n'),
+        body_fil: a.body.fil.join('\n\n'),
+        author_name: a.author.en,
+        photo_url: getArticlePhoto(a.slug),
+      }));
+      const res = await fetch('/api/articles', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ seedArticles }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        imported?: number;
+        error?: string;
+      };
+      if (!res.ok || !data.ok) {
+        setNotice({
+          text: data.error || (isEn ? 'Could not import starter articles.' : 'Hindi ma-import ang mga artikulo.'),
+          isError: true,
+        });
+        return;
+      }
+      setNotice({
+        text: isEn
+          ? `Imported ${data.imported ?? seedArticles.length} starter articles into D1!`
+          : `Na-import ang ${data.imported ?? seedArticles.length} na artikulo sa D1!`,
+        isError: false,
+      });
+      await loadArticles();
+    } catch {
+      setNotice({
+        text: isEn ? 'Network error importing starter articles.' : 'May error sa pag-import.',
+        isError: true,
+      });
+    } finally {
+      setImporting(false);
     }
   };
 
@@ -550,6 +607,33 @@ function WriteStudio({
           >
             {isEn ? `D1 Articles (${articles.length})` : `Mga Artikulo sa D1 (${articles.length})`}
           </h2>
+          {role === 'admin' && (
+            <button
+              type="button"
+              disabled={importing}
+              onClick={handleImportStarter}
+              style={{
+                width: '100%',
+                minHeight: 38,
+                marginBottom: 14,
+                padding: '0 12px',
+                border: '1px solid #111',
+                background: '#fff',
+                color: '#111',
+                fontSize: 12,
+                fontWeight: 600,
+                cursor: importing ? 'wait' : 'pointer',
+              }}
+            >
+              {importing
+                ? isEn
+                  ? 'Importing…'
+                  : 'Ini-import…'
+                : isEn
+                  ? `Import ${ARTICLES.length} starter articles`
+                  : `I-import ang ${ARTICLES.length} starter articles`}
+            </button>
+          )}
           {loadingList ? (
             <p style={{ fontSize: 13, color: '#666' }}>{isEn ? 'Loading…' : 'Nilo-load…'}</p>
           ) : articles.length === 0 ? (

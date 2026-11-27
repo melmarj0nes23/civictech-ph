@@ -90,9 +90,10 @@ export function CategoryPage({
       });
   }, [category.slug]);
 
+  const d1Slugs = new Set(d1Stories.map((s) => s.slug));
   const stories: (ArticleItem & { photoUrl?: string })[] = [
     ...d1Stories,
-    ...ARTICLES.filter((a) => a.category === category.slug),
+    ...ARTICLES.filter((a) => a.category === category.slug && !d1Slugs.has(a.slug)),
   ];
 
   const handleArticleClick = (slug: string) => (e: MouseEvent<HTMLAnchorElement>) => {

@@ -7,8 +7,24 @@ interface D1PreparedStatement {
   run(): Promise<{ success: boolean }>;
 }
 
+interface SeedArticleInput {
+  slug: string;
+  category: string;
+  kicker_en: string;
+  kicker_fil: string;
+  title_en: string;
+  title_fil: string;
+  deck_en: string;
+  deck_fil: string;
+  body_en: string;
+  body_fil: string;
+  author_name: string;
+  photo_url: string;
+}
+
 interface D1Database {
   prepare(query: string): D1PreparedStatement;
+  batch?(statements: D1PreparedStatement[]): Promise<unknown[]>;
 }
 
 interface Env {
@@ -117,6 +133,7 @@ export async function onRequestPost({ request, env }: PagesContext) {
   }
 
   let body: {
+    seedArticles?: SeedArticleInput[];
     title?: string;
     deck?: string;
     category?: string;
@@ -130,6 +147,40 @@ export async function onRequestPost({ request, env }: PagesContext) {
     body = (await request.json()) as typeof body;
   } catch {
     return json({ ok: false, error: 'Invalid JSON body.' }, 400);
+  }
+
+  if (Array.isArray(body.seedArticles)) {
+    if (user.role !== 'admin') {
+      return json({ ok: false, error: 'Only admin accounts can import starter articles.' }, 403);
+    }
+    const stmts = body.seedArticles.map((a) =>
+      env.DB!.prepare(
+        `INSERT OR IGNORE INTO articles (
+           slug, category, kicker_en, kicker_fil, title_en, title_fil,
+           deck_en, deck_fil, body_en, body_fil, author_name, author_email, photo_url, status
+         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'published')`
+      ).bind(
+        a.slug,
+        a.category,
+        a.kicker_en,
+        a.kicker_fil,
+        a.title_en,
+        a.title_fil,
+        a.deck_en,
+        a.deck_fil,
+        a.body_en,
+        a.body_fil,
+        a.author_name,
+        user.email || user.userId,
+        a.photo_url
+      )
+    );
+    if (env.DB.batch && stmts.length > 0) {
+      await env.DB.batch(stmts);
+    } else {
+      for (const s of stmts) await s.run();
+    }
+    return json({ ok: true, imported: stmts.length }, 201);
   }
 
   const title = (body.title || '').trim();
