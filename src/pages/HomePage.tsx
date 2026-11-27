@@ -1,5 +1,6 @@
 import type { MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
+import { MobileMenu } from '../components/MobileMenu';
 import { CATEGORIES, getArticlePhoto, type CategorySlug } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
 import type { InfoPageSlug } from '../data/infoPages';
@@ -62,6 +63,16 @@ export function HomePage({
       {/* Utility bar */}
       <div style={{ borderBottom: '1px solid #E5E5E5' }}>
         <div className="utility-bar-inner">
+          <MobileMenu
+            lang={lang}
+            onLangChange={onLangChange}
+            onOpenCategory={onOpenCategory}
+            onSubscribe={() =>
+              document.getElementById('newsletter')?.scrollIntoView({ behavior: 'smooth' })
+            }
+            onOpenCivicTools={onOpenCivicTools}
+            onBackHome={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          />
           <span className="utility-date">{t.dateLabel}</span>
           <div className="utility-actions">
             <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
@@ -175,6 +186,7 @@ export function HomePage({
       {/* Section nav */}
       <nav
         aria-label="Sections"
+        className="desktop-section-nav"
         style={{ borderTop: '1px solid #111', borderBottom: '1px solid #E5E5E5' }}
       >
         <div

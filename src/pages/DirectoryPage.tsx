@@ -1,5 +1,6 @@
 import { useMemo, useState, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
+import { MobileMenu } from '../components/MobileMenu';
 import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { DIRECTORY_ENTRIES } from '../data/directory';
 import { getLocalizedSummary } from '../data/directoryI18n';
@@ -99,6 +100,13 @@ export function DirectoryPage({
       {/* Compact header */}
       <header style={{ borderBottom: '1px solid #E5E5E5' }}>
         <div className="compact-header-inner">
+          <MobileMenu
+            lang={lang}
+            onLangChange={onLangChange}
+            onOpenCategory={onOpenCategory}
+            onSubscribe={onBackHome}
+            onBackHome={onBackHome}
+          />
           <div className="compact-brand">
             <a
               href="/"

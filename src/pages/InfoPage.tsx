@@ -1,5 +1,6 @@
 import type { MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
+import { MobileMenu } from '../components/MobileMenu';
 import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
 import { INFO_PAGES, type InfoPageSlug } from '../data/infoPages';
@@ -61,6 +62,14 @@ export function InfoPage({
       {/* Compact header */}
       <header style={{ borderBottom: '1px solid #E5E5E5' }}>
         <div className="compact-header-inner">
+          <MobileMenu
+            lang={lang}
+            onLangChange={onLangChange}
+            onOpenCategory={onOpenCategory}
+            onSubscribe={onBackHome}
+            onOpenCivicTools={onOpenCivicTools}
+            onBackHome={onBackHome}
+          />
           <div className="compact-brand">
             <a
               href="/"

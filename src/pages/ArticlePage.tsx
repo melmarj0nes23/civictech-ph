@@ -1,5 +1,6 @@
 import type { MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
+import { MobileMenu } from '../components/MobileMenu';
 import {
   ARTICLES,
   CATEGORIES,
@@ -78,6 +79,14 @@ export function ArticlePage({
       {/* Compact header */}
       <header style={{ borderBottom: '1px solid #E5E5E5' }}>
         <div className="compact-header-inner">
+          <MobileMenu
+            lang={lang}
+            onLangChange={onLangChange}
+            onOpenCategory={onOpenCategory}
+            onSubscribe={onBackHome}
+            onOpenCivicTools={onOpenCivicTools}
+            onBackHome={onBackHome}
+          />
           <div className="compact-brand">
             <a
               href="/"

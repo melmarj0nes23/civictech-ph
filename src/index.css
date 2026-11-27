@@ -138,6 +138,10 @@ a:hover {
   display: inline;
 }
 
+.mobile-burger-btn {
+  display: none;
+}
+
 @media (max-width: 768px) {
   html,
   body {
@@ -197,7 +201,8 @@ a:hover {
   }
 
   .utility-bar-inner {
-    padding: 10px 16px;
+    padding: 4px 16px;
+    justify-content: flex-start;
   }
 
   .utility-date {
@@ -209,14 +214,33 @@ a:hover {
   }
 
   .utility-actions {
-    width: 100%;
-    justify-content: space-between;
-    gap: 8px 12px;
+    display: none;
+  }
+
+  .desktop-section-nav {
+    display: none;
+  }
+
+  .mobile-burger-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    margin-left: -10px;
+    background: transparent;
+    border: none;
+    color: #111;
+    cursor: pointer;
+    flex: none;
   }
 
   .compact-header-inner {
-    padding: 12px 16px;
-    gap: 10px 12px;
+    padding: 8px 16px;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 8px;
   }
 
   .compact-brand {
@@ -233,12 +257,7 @@ a:hover {
   }
 
   .compact-actions {
-    order: 2;
-    flex: 0 0 auto;
-    align-self: flex-start;
-    display: flex;
-    align-items: center;
-    gap: 10px !important;
+    display: none !important;
   }
 
   .compact-subscribe {
@@ -247,24 +266,7 @@ a:hover {
   }
 
   .compact-nav {
-    order: 3;
-    width: 100%;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    gap: 0 18px;
-    padding-top: 8px;
-    border-top: 1px solid #E5E5E5;
-  }
-
-  .compact-nav::-webkit-scrollbar {
     display: none;
-  }
-
-  .compact-nav a {
-    white-space: nowrap;
-    padding: 6px 0 !important;
   }
 
   .share-rail {
