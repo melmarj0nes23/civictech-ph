@@ -346,109 +346,111 @@ export function CategoryPage({
               </>
             )}
 
-            <div className="category-tools-rail" style={{ marginTop: !isAll && moreStories.length > 0 ? 28 : 0 }}>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'baseline',
-                  borderBottom: '2px solid #111',
-                  paddingBottom: 10,
-                  marginBottom: 4,
-                }}
-              >
-                <p
+            {isAll && (
+              <div className="category-tools-rail" style={{ marginTop: 0 }}>
+                <div
                   style={{
-                    margin: 0,
-                    fontSize: 12,
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'baseline',
+                    borderBottom: '2px solid #111',
+                    paddingBottom: 10,
+                    marginBottom: 4,
                   }}
                 >
-                  {t.home.civicTools}
-                </p>
-                <a
-                  href="/civictools"
-                  onClick={handleOpenCivicToolsClick}
-                  style={{ fontSize: 12, fontWeight: 600, color: ACCENT }}
-                >
-                  {DIRECTORY_ENTRIES.length} {lang === 'en' ? 'entries →' : 'nakalista →'}
-                </a>
-              </div>
-              <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-                {randomTools.map((entry) => (
-                  <li key={entry.slug} style={{ borderBottom: '1px solid #E5E5E5' }}>
-                    <a
-                      href={entry.website || '/civictools'}
-                      target={entry.website ? '_blank' : undefined}
-                      rel={entry.website ? 'noreferrer' : undefined}
-                      style={{ display: 'block', padding: '14px 0' }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          gap: 8,
-                          marginBottom: 4,
-                        }}
-                      >
-                        <span style={{ fontSize: 15, fontWeight: 600, color: '#111' }}>
-                          {entry.title}
-                        </span>
-                        <span
-                          style={{
-                            flex: 'none',
-                            fontSize: 11,
-                            fontWeight: 600,
-                            padding: '2px 7px',
-                            background: '#F4F6FA',
-                            color: ACCENT,
-                          }}
-                        >
-                          {STATUS_LABELS[entry.status]?.[lang] ?? entry.status}
-                        </span>
-                      </div>
-                      <p style={{ margin: 0, fontSize: 13, lineHeight: 1.45, color: '#555' }}>
-                        {getLocalizedSummary(entry.slug, entry.summary, lang, entry.summaryFil)}
-                      </p>
-                      {entry.sectors[0] && (
-                        <p
-                          style={{
-                            margin: '6px 0 0',
-                            fontSize: 11,
-                            fontWeight: 600,
-                            letterSpacing: '0.06em',
-                            textTransform: 'uppercase',
-                            color: '#666',
-                          }}
-                        >
-                          {SECTOR_LABELS[entry.sectors[0]]?.[lang] ?? entry.sectors[0]}
-                        </p>
-                      )}
-                    </a>
-                  </li>
-                ))}
-                <li>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: 12,
+                      fontWeight: 600,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {t.home.civicTools}
+                  </p>
                   <a
                     href="/civictools"
                     onClick={handleOpenCivicToolsClick}
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      gap: 12,
-                      padding: '14px 0',
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: ACCENT,
-                    }}
+                    style={{ fontSize: 12, fontWeight: 600, color: ACCENT }}
                   >
-                    {t.home.tool4} <span aria-hidden="true">→</span>
+                    {DIRECTORY_ENTRIES.length} {lang === 'en' ? 'entries →' : 'nakalista →'}
                   </a>
-                </li>
-              </ul>
-            </div>
+                </div>
+                <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                  {randomTools.map((entry) => (
+                    <li key={entry.slug} style={{ borderBottom: '1px solid #E5E5E5' }}>
+                      <a
+                        href={entry.website || '/civictools'}
+                        target={entry.website ? '_blank' : undefined}
+                        rel={entry.website ? 'noreferrer' : undefined}
+                        style={{ display: 'block', padding: '14px 0' }}
+                      >
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            gap: 8,
+                            marginBottom: 4,
+                          }}
+                        >
+                          <span style={{ fontSize: 15, fontWeight: 600, color: '#111' }}>
+                            {entry.title}
+                          </span>
+                          <span
+                            style={{
+                              flex: 'none',
+                              fontSize: 11,
+                              fontWeight: 600,
+                              padding: '2px 7px',
+                              background: '#F4F6FA',
+                              color: ACCENT,
+                            }}
+                          >
+                            {STATUS_LABELS[entry.status]?.[lang] ?? entry.status}
+                          </span>
+                        </div>
+                        <p style={{ margin: 0, fontSize: 13, lineHeight: 1.45, color: '#555' }}>
+                          {getLocalizedSummary(entry.slug, entry.summary, lang, entry.summaryFil)}
+                        </p>
+                        {entry.sectors[0] && (
+                          <p
+                            style={{
+                              margin: '6px 0 0',
+                              fontSize: 11,
+                              fontWeight: 600,
+                              letterSpacing: '0.06em',
+                              textTransform: 'uppercase',
+                              color: '#666',
+                            }}
+                          >
+                            {SECTOR_LABELS[entry.sectors[0]]?.[lang] ?? entry.sectors[0]}
+                          </p>
+                        )}
+                      </a>
+                    </li>
+                  ))}
+                  <li>
+                    <a
+                      href="/civictools"
+                      onClick={handleOpenCivicToolsClick}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        gap: 12,
+                        padding: '14px 0',
+                        fontSize: 14,
+                        fontWeight: 600,
+                        color: ACCENT,
+                      }}
+                    >
+                      {t.home.tool4} <span aria-hidden="true">→</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            )}
           </aside>
         </div>
       </main>
