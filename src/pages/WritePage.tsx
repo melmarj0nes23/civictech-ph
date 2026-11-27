@@ -19,16 +19,10 @@ interface D1ArticleRow {
   author_name: string;
   photo_url: string;
   status: 'published' | 'draft';
+  is_featured?: number;
+  is_long_read?: number;
   created_at: string;
 }
-
-const PHOTO_OPTIONS = [
-  { label: 'Congress Session', value: '/images/congress-session.jpg' },
-  { label: 'Election Observers', value: '/images/election-observers.jpg' },
-  { label: 'Manila City Hall', value: '/images/manila-city-hall.jpg' },
-  { label: 'Digital Services', value: '/images/digital-services.jpg' },
-  { label: 'Manila Transit', value: '/images/manila-transit.jpg' },
-];
 
 interface WritePageProps {
   lang: Lang;
@@ -44,9 +38,10 @@ interface WritePageProps {
 
 function WriteStudio({
   lang,
+  onBackHome,
   onOpenArticle,
   onOpenLogin,
-}: Pick<WritePageProps, 'lang' | 'onOpenArticle' | 'onOpenLogin'>) {
+}: Pick<WritePageProps, 'lang' | 'onBackHome' | 'onOpenArticle' | 'onOpenLogin'>) {
   const { isLoaded, isSignedIn, user } = useUser();
   const { getToken } = useAuth();
 
@@ -59,8 +54,10 @@ function WriteStudio({
   const [title, setTitle] = useState('');
   const [deck, setDeck] = useState('');
   const [content, setContent] = useState('');
-  const [photoUrl, setPhotoUrl] = useState('/images/congress-session.jpg');
+  const [photoUrl, setPhotoUrl] = useState('');
   const [status, setStatus] = useState<'published' | 'draft'>('published');
+  const [isFeatured, setIsFeatured] = useState(false);
+  const [isLongRead, setIsLongRead] = useState(false);
   const [saving, setSaving] = useState(false);
   const [importing, setImporting] = useState(false);
   const [mobileTab, setMobileTab] = useState<'add' | 'edit'>('add');
@@ -100,8 +97,10 @@ function WriteStudio({
     setTitle('');
     setDeck('');
     setContent('');
-    setPhotoUrl('/images/congress-session.jpg');
+    setPhotoUrl('');
     setStatus('published');
+    setIsFeatured(false);
+    setIsLongRead(false);
     setNotice(null);
     setMobileTab('add');
   };
@@ -113,8 +112,10 @@ function WriteStudio({
     setTitle(art.title_en);
     setDeck(art.deck_en);
     setContent(art.body_en);
-    setPhotoUrl(art.photo_url || '/images/congress-session.jpg');
+    setPhotoUrl(art.photo_url || '');
     setStatus(art.status === 'draft' ? 'draft' : 'published');
+    setIsFeatured(Boolean(art.is_featured));
+    setIsLongRead(Boolean(art.is_long_read));
     setNotice(null);
     setMobileTab('add');
   };
@@ -147,6 +148,8 @@ function WriteStudio({
           authorName,
           photoUrl,
           status,
+          isFeatured,
+          isLongRead,
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {
@@ -540,20 +543,16 @@ function WriteStudio({
 
             <div>
               <label htmlFor="write-photo" style={labelStyle}>
-                {isEn ? 'Cover photo' : 'Pangunahing larawan'}
+                {isEn ? 'Cover photo URL' : 'URL ng larawan'}
               </label>
-              <select
+              <input
                 id="write-photo"
+                type="url"
                 value={photoUrl}
                 onChange={(e) => setPhotoUrl(e.target.value)}
+                placeholder="https://example.com/photo.jpg"
                 style={inputStyle}
-              >
-                {PHOTO_OPTIONS.map((p) => (
-                  <option key={p.value} value={p.value}>
-                    {p.label}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
           </div>
 
@@ -602,6 +601,52 @@ function WriteStudio({
             />
           </div>
 
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
+            <label
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                fontSize: 13,
+                fontWeight: 600,
+                color: '#222',
+                cursor: 'pointer',
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={isFeatured}
+                onChange={(e) => setIsFeatured(e.target.checked)}
+                style={{ width: 16, height: 16, accentColor: ACCENT, cursor: 'pointer' }}
+              />
+              <span>
+                {isEn ? 'Pin as Lead story' : 'I-pin bilang Lead story'}
+              </span>
+            </label>
+
+            <label
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                fontSize: 13,
+                fontWeight: 600,
+                color: '#222',
+                cursor: 'pointer',
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={isLongRead}
+                onChange={(e) => setIsLongRead(e.target.checked)}
+                style={{ width: 16, height: 16, accentColor: ACCENT, cursor: 'pointer' }}
+              />
+              <span>
+                {isEn ? 'Pin as Long Read' : 'I-pin bilang Long Read'}
+              </span>
+            </label>
+          </div>
+
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
             <button
               type="submit"
@@ -629,6 +674,23 @@ function WriteStudio({
                   : isEn
                     ? 'Publish article'
                     : 'I-publish ang artikulo'}
+            </button>
+            <button
+              type="button"
+              disabled={saving}
+              onClick={() => (editingSlug ? resetForm() : onBackHome())}
+              style={{
+                minHeight: 46,
+                padding: '0 20px',
+                border: '1px solid #D4D4D4',
+                background: '#fff',
+                color: '#111',
+                fontWeight: 600,
+                fontSize: 14,
+                cursor: 'pointer',
+              }}
+            >
+              {isEn ? 'Cancel' : 'Kanselahin'}
             </button>
             {notice && (
               <span
@@ -718,6 +780,16 @@ function WriteStudio({
                     <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginBottom: 4 }}>
                       <span style={{ fontSize: 11, fontWeight: 600, color: ACCENT, textTransform: 'uppercase' }}>
                         {art.status}
+                        {Boolean(art.is_featured) && (
+                          <span style={{ marginLeft: 8, color: '#111', background: '#E8EEF8', padding: '1px 5px' }}>
+                            LEAD
+                          </span>
+                        )}
+                        {Boolean(art.is_long_read) && (
+                          <span style={{ marginLeft: 6, color: '#111', background: '#F0F0F0', padding: '1px 5px' }}>
+                            LONG READ
+                          </span>
+                        )}
                       </span>
                       <span style={{ fontSize: 11, color: '#666' }}>{art.category}</span>
                     </div>
@@ -820,6 +892,7 @@ export function WritePage({
         {HAS_CLERK ? (
           <WriteStudio
             lang={lang}
+            onBackHome={onBackHome}
             onOpenArticle={onOpenArticle}
             onOpenLogin={onOpenLogin}
           />

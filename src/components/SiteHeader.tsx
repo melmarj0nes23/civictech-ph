@@ -114,7 +114,15 @@ export function SiteHeader({
 
   return (
     <>
-      <header style={{ borderBottom: '1px solid #E5E5E5', background: '#fff' }}>
+      <header
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 40,
+          borderBottom: '1px solid #E5E5E5',
+          background: '#fff',
+        }}
+      >
         <div className="site-header-inner">
           <MobileMenu
             lang={lang}

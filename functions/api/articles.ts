@@ -57,10 +57,28 @@ function canEdit(role: string): boolean {
   return role === 'admin' || role === 'editor';
 }
 
+let ensuredPlacementColumns = false;
+
+async function ensurePlacementColumns(db: D1Database) {
+  if (ensuredPlacementColumns) return;
+  try {
+    await db.prepare('ALTER TABLE articles ADD COLUMN is_featured INTEGER NOT NULL DEFAULT 0').run();
+  } catch {
+    // Column already exists
+  }
+  try {
+    await db.prepare('ALTER TABLE articles ADD COLUMN is_long_read INTEGER NOT NULL DEFAULT 0').run();
+  } catch {
+    // Column already exists
+  }
+  ensuredPlacementColumns = true;
+}
+
 export async function onRequestGet({ request, env }: PagesContext) {
   if (!env.DB) {
     return json({ ok: true, articles: [] });
   }
+  await ensurePlacementColumns(env.DB);
 
   const url = new URL(request.url);
   const category = (url.searchParams.get('category') || '').trim();
@@ -70,7 +88,7 @@ export async function onRequestGet({ request, env }: PagesContext) {
   if (slug) {
     const row = await env.DB.prepare(
       `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
-              body_en, body_fil, author_name, photo_url, status, created_at, updated_at
+              body_en, body_fil, author_name, photo_url, status, is_featured, is_long_read, created_at, updated_at
        FROM articles
        WHERE slug = ?`
     )
@@ -86,9 +104,9 @@ export async function onRequestGet({ request, env }: PagesContext) {
     }
     const { results } = await env.DB.prepare(
       `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
-              body_en, body_fil, author_name, photo_url, status, created_at, updated_at
+              body_en, body_fil, author_name, photo_url, status, is_featured, is_long_read, created_at, updated_at
        FROM articles
-       ORDER BY created_at DESC
+       ORDER BY is_featured DESC, created_at DESC
        LIMIT 100`
     ).all();
     return json({ ok: true, articles: results });
@@ -97,18 +115,18 @@ export async function onRequestGet({ request, env }: PagesContext) {
   const stmt = category
     ? env.DB.prepare(
         `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
-                body_en, body_fil, author_name, photo_url, status, created_at
+                body_en, body_fil, author_name, photo_url, status, is_featured, is_long_read, created_at
          FROM articles
          WHERE status = 'published' AND category = ?
-         ORDER BY created_at DESC
+         ORDER BY is_featured DESC, created_at DESC
          LIMIT 50`
       ).bind(category)
     : env.DB.prepare(
         `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
-                body_en, body_fil, author_name, photo_url, status, created_at
+                body_en, body_fil, author_name, photo_url, status, is_featured, is_long_read, created_at
          FROM articles
          WHERE status = 'published'
-         ORDER BY created_at DESC
+         ORDER BY is_featured DESC, created_at DESC
          LIMIT 50`
       );
 
@@ -190,9 +208,19 @@ export async function onRequestPost({ request, env }: PagesContext) {
   const authorName = (body.authorName || 'Civic Tech Newsroom').trim();
   const photoUrl = (body.photoUrl || '/images/congress-session.jpg').trim();
   const status = body.status === 'draft' ? 'draft' : 'published';
+  const isFeatured = Boolean((body as { isFeatured?: boolean }).isFeatured);
+  const isLongRead = Boolean((body as { isLongRead?: boolean }).isLongRead);
 
   if (!title || !deck || !content) {
     return json({ ok: false, error: 'Title, deck, and article body are required.' }, 400);
+  }
+
+  await ensurePlacementColumns(env.DB);
+  if (isFeatured) {
+    await env.DB.prepare('UPDATE articles SET is_featured = 0 WHERE is_featured = 1').run();
+  }
+  if (isLongRead) {
+    await env.DB.prepare('UPDATE articles SET is_long_read = 0 WHERE is_long_read = 1').run();
   }
 
   const baseSlug = slugify(title) || 'story';
@@ -202,8 +230,8 @@ export async function onRequestPost({ request, env }: PagesContext) {
   await env.DB.prepare(
     `INSERT INTO articles (
        slug, category, kicker_en, kicker_fil, title_en, title_fil,
-       deck_en, deck_fil, body_en, body_fil, author_name, author_email, photo_url, status
-     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+       deck_en, deck_fil, body_en, body_fil, author_name, author_email, photo_url, status, is_featured, is_long_read
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   )
     .bind(
       slug,
@@ -219,7 +247,9 @@ export async function onRequestPost({ request, env }: PagesContext) {
       authorName,
       user.email || user.userId,
       photoUrl,
-      status
+      status,
+      isFeatured ? 1 : 0,
+      isLongRead ? 1 : 0
     )
     .run();
 
@@ -248,6 +278,8 @@ export async function onRequestPatch({ request, env }: PagesContext) {
     content?: string;
     photoUrl?: string;
     status?: 'published' | 'draft';
+    isFeatured?: boolean;
+    isLongRead?: boolean;
   };
   try {
     body = (await request.json()) as typeof body;
@@ -262,17 +294,27 @@ export async function onRequestPatch({ request, env }: PagesContext) {
   const content = (body.content || '').trim();
   const photoUrl = (body.photoUrl || '/images/congress-session.jpg').trim();
   const status = body.status === 'draft' ? 'draft' : 'published';
+  const isFeatured = Boolean(body.isFeatured);
+  const isLongRead = Boolean(body.isLongRead);
   const kicker = (body.kicker || category.replace(/-/g, ' ')).trim();
 
   if (!slug || !title || !deck || !content) {
     return json({ ok: false, error: 'Slug, title, deck, and body are required.' }, 400);
   }
 
+  await ensurePlacementColumns(env.DB);
+  if (isFeatured) {
+    await env.DB.prepare('UPDATE articles SET is_featured = 0 WHERE is_featured = 1').run();
+  }
+  if (isLongRead) {
+    await env.DB.prepare('UPDATE articles SET is_long_read = 0 WHERE is_long_read = 1').run();
+  }
+
   await env.DB.prepare(
     `UPDATE articles
      SET category = ?, kicker_en = ?, kicker_fil = ?, title_en = ?, title_fil = ?,
          deck_en = ?, deck_fil = ?, body_en = ?, body_fil = ?, photo_url = ?,
-         status = ?, updated_at = datetime('now')
+         status = ?, is_featured = ?, is_long_read = ?, updated_at = datetime('now')
      WHERE slug = ?`
   )
     .bind(
@@ -287,6 +329,8 @@ export async function onRequestPatch({ request, env }: PagesContext) {
       content,
       photoUrl,
       status,
+      isFeatured ? 1 : 0,
+      isLongRead ? 1 : 0,
       slug
     )
     .run();

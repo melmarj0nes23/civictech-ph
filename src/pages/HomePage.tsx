@@ -1,7 +1,13 @@
-import { useState, type FormEvent, type MouseEvent } from 'react';
+import { useEffect, useState, type FormEvent, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
 import { SiteHeader } from '../components/SiteHeader';
-import { getArticlePhoto, type CategorySlug } from '../data/articles';
+import {
+  ARTICLES,
+  getArticlePhoto,
+  getCategoryBySlug,
+  type ArticleItem,
+  type CategorySlug,
+} from '../data/articles';
 import { DIRECTORY_ENTRIES } from '../data/directory';
 import { getLocalizedSummary } from '../data/directoryI18n';
 import {
@@ -38,8 +44,84 @@ export function HomePage({
   const [nlEmail, setNlEmail] = useState('');
   const [nlSubmitting, setNlSubmitting] = useState(false);
   const [nlSubscribed, setNlSubscribed] = useState<string | null>(null);
+  const [d1Stories, setD1Stories] = useState<
+    (ArticleItem & { photoUrl?: string; isLongRead?: boolean })[]
+  >([]);
+
+  useEffect(() => {
+    fetch('/api/articles')
+      .then((r) => (r.ok ? r.json() : null))
+      .then(
+        (
+          data: {
+            ok?: boolean;
+            articles?: Array<{
+              slug: string;
+              category: CategorySlug;
+              kicker_en: string;
+              kicker_fil: string;
+              title_en: string;
+              title_fil: string;
+              deck_en: string;
+              deck_fil: string;
+              body_en: string;
+              body_fil: string;
+              author_name: string;
+              photo_url: string;
+              is_long_read?: number;
+              created_at: string;
+            }>;
+          } | null
+        ) => {
+          if (!data?.ok || !data.articles) return;
+          setD1Stories(
+            data.articles.map((a) => ({
+              slug: a.slug,
+              category: a.category,
+              kicker: { en: a.kicker_en, fil: a.kicker_fil || a.kicker_en },
+              title: { en: a.title_en, fil: a.title_fil || a.title_en },
+              deck: { en: a.deck_en, fil: a.deck_fil || a.deck_en },
+              author: { en: a.author_name, fil: a.author_name },
+              date: { en: a.created_at.slice(0, 10), fil: a.created_at.slice(0, 10) },
+              readTime: { en: '4 min read', fil: '4 minutong pagbabasa' },
+              photoLabel: { en: a.title_en, fil: a.title_fil || a.title_en },
+              body: {
+                en: a.body_en.split(/\n\n+/),
+                fil: (a.body_fil || a.body_en).split(/\n\n+/),
+              },
+              photoUrl: a.photo_url,
+              isLongRead: Boolean(a.is_long_read),
+            }))
+          );
+        }
+      )
+      .catch(() => {
+        // fallback to static articles in plain Vite dev
+      });
+  }, []);
+
+  const d1Slugs = new Set(d1Stories.map((s) => s.slug));
+  const feedStories: (ArticleItem & { photoUrl?: string; isLongRead?: boolean })[] = [
+    ...d1Stories,
+    ...ARTICLES.filter((a) => !d1Slugs.has(a.slug)),
+  ];
+  const leadStory = feedStories[0] ?? ARTICLES[0];
+  const topStories = feedStories.slice(1, 5);
+  const latestStories = feedStories.slice(5, 9);
+  const longReadStory: ArticleItem & { photoUrl?: string; isLongRead?: boolean } =
+    feedStories.find((s) => s.isLongRead) ??
+    feedStories.find((s) => s.slug === 'last-mile-connectivity') ??
+    ARTICLES.find((a) => a.slug === 'last-mile-connectivity') ??
+    leadStory;
+  const opinionStories = [
+    ...feedStories.filter((s) => s.category === 'opinion'),
+    ...ARTICLES.filter(
+      (a) => a.category === 'opinion' && !feedStories.some((s) => s.slug === a.slug)
+    ),
+  ].slice(0, 3);
+
   const featuredTools = [
-    ...DIRECTORY_ENTRIES.filter((e) => e.kind === 'project' && e.website).slice(0, 3),
+    ...DIRECTORY_ENTRIES.filter((e) => e.kind === 'project' && e.website).slice(0, 1),
     ...DIRECTORY_ENTRIES.filter((e) => e.kind === 'cso' && e.website).slice(0, 1),
   ];
 
@@ -126,8 +208,8 @@ export function HomePage({
         >
           <article style={{ flex: '999 1 560px', minWidth: 0 }}>
             <a
-              href="/article"
-              onClick={handleOpenArticle('volunteers-national-budget')}
+              href={`/article/${leadStory.slug}`}
+              onClick={handleOpenArticle(leadStory.slug)}
               style={{ display: 'block' }}
             >
               <div
@@ -138,8 +220,8 @@ export function HomePage({
                 }}
               >
                 <img
-                  src={getArticlePhoto('volunteers-national-budget')}
-                  alt={t.home.leadPhoto}
+                  src={leadStory.photoUrl || getArticlePhoto(leadStory.slug)}
+                  alt={leadStory.title[lang]}
                 />
               </div>
             </a>
@@ -153,7 +235,7 @@ export function HomePage({
                 color: ACCENT,
               }}
             >
-              {t.nav.openData}
+              {getCategoryBySlug(leadStory.category)?.label[lang] ?? leadStory.kicker[lang]}
             </p>
             <h2
               className="hero-title"
@@ -166,8 +248,8 @@ export function HomePage({
                 letterSpacing: '-0.015em',
               }}
             >
-              <a href="/article" onClick={handleOpenArticle('volunteers-national-budget')}>
-                {t.home.leadTitle}
+              <a href={`/article/${leadStory.slug}`} onClick={handleOpenArticle(leadStory.slug)}>
+                {leadStory.title[lang]}
               </a>
             </h2>
             <p
@@ -180,12 +262,12 @@ export function HomePage({
                 maxWidth: 720,
               }}
             >
-              {t.home.leadDeck}
+              {leadStory.deck[lang]}
             </p>
             <p style={{ margin: '16px 0 0', fontSize: 13, color: '#555' }}>
               {t.home.byWord}{' '}
-              <span style={{ color: '#111', fontWeight: 600 }}>{t.home.authorPlaceholder}</span>{' '}
-              &nbsp;·&nbsp; {t.home.leadReadTime}
+              <span style={{ color: '#111', fontWeight: 600 }}>{leadStory.author[lang]}</span>{' '}
+              &nbsp;·&nbsp; {leadStory.readTime[lang]}
             </p>
           </article>
 
@@ -211,157 +293,52 @@ export function HomePage({
             >
               {t.home.topStories}
             </p>
-            <a
-              href="/article/transparent-canvassing"
-              onClick={handleOpenArticle('transparent-canvassing')}
-              style={{
-                display: 'flex',
-                gap: 16,
-                padding: '18px 0',
-                borderBottom: '1px solid #E5E5E5',
-              }}
-            >
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p
-                  style={{
-                    margin: '0 0 6px',
-                    fontSize: 11,
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: ACCENT,
-                  }}
-                >
-                  {t.nav.elections}
-                </p>
-                <p
-                  style={{
-                    margin: 0,
-                    fontFamily: 'Newsreader, Georgia, serif',
-                    fontSize: 20,
-                    lineHeight: 1.25,
-                    fontWeight: 500,
-                  }}
-                >
-                  {t.home.top1Title}
-                </p>
-              </div>
-              <div className="ph ph--photo" style={{ width: 96, height: 96, flex: 'none' }}>
-                <img src={getArticlePhoto('transparent-canvassing')} alt={t.home.top1Title} loading="lazy" />
-              </div>
-            </a>
-            <a
-              href="/article/foi-explained"
-              onClick={handleOpenArticle('foi-explained')}
-              style={{
-                display: 'flex',
-                gap: 16,
-                padding: '18px 0',
-                borderBottom: '1px solid #E5E5E5',
-              }}
-            >
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p
-                  style={{
-                    margin: '0 0 6px',
-                    fontSize: 11,
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: ACCENT,
-                  }}
-                >
-                  {t.nav.policy}
-                </p>
-                <p
-                  style={{
-                    margin: 0,
-                    fontFamily: 'Newsreader, Georgia, serif',
-                    fontSize: 20,
-                    lineHeight: 1.25,
-                    fontWeight: 500,
-                  }}
-                >
-                  {t.home.top2Title}
-                </p>
-              </div>
-              <div className="ph ph--photo" style={{ width: 96, height: 96, flex: 'none' }}>
-                <img src={getArticlePhoto('foi-explained')} alt={t.home.top2Title} loading="lazy" />
-              </div>
-            </a>
-            <a
-              href="/article/gov-ph-mobile"
-              onClick={handleOpenArticle('gov-ph-mobile')}
-              style={{
-                display: 'flex',
-                gap: 16,
-                padding: '18px 0',
-                borderBottom: '1px solid #E5E5E5',
-              }}
-            >
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p
-                  style={{
-                    margin: '0 0 6px',
-                    fontSize: 11,
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: ACCENT,
-                  }}
-                >
-                  {t.nav.digitalServices}
-                </p>
-                <p
-                  style={{
-                    margin: 0,
-                    fontFamily: 'Newsreader, Georgia, serif',
-                    fontSize: 20,
-                    lineHeight: 1.25,
-                    fontWeight: 500,
-                  }}
-                >
-                  {t.home.top3Title}
-                </p>
-              </div>
-              <div className="ph ph--photo" style={{ width: 96, height: 96, flex: 'none' }}>
-                <img src={getArticlePhoto('gov-ph-mobile')} alt={t.home.top3Title} loading="lazy" />
-              </div>
-            </a>
-            <a
-              href="/article/spotting-scam-texts"
-              onClick={handleOpenArticle('spotting-scam-texts')}
-              style={{ display: 'flex', gap: 16, padding: '18px 0' }}
-            >
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p
-                  style={{
-                    margin: '0 0 6px',
-                    fontSize: 11,
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: ACCENT,
-                  }}
-                >
-                  {t.nav.tools}
-                </p>
-                <p
-                  style={{
-                    margin: 0,
-                    fontFamily: 'Newsreader, Georgia, serif',
-                    fontSize: 20,
-                    lineHeight: 1.25,
-                    fontWeight: 500,
-                  }}
-                >
-                  {t.home.top4Title}
-                </p>
-              </div>
-              <div className="ph ph--photo" style={{ width: 96, height: 96, flex: 'none' }}>
-                <img src={getArticlePhoto('spotting-scam-texts')} alt={t.home.top4Title} loading="lazy" />
-              </div>
-            </a>
+            {topStories.map((story, idx) => (
+              <a
+                key={story.slug}
+                href={`/article/${story.slug}`}
+                onClick={handleOpenArticle(story.slug)}
+                style={{
+                  display: 'flex',
+                  gap: 16,
+                  padding: '18px 0',
+                  borderBottom: idx < topStories.length - 1 ? '1px solid #E5E5E5' : 'none',
+                }}
+              >
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p
+                    style={{
+                      margin: '0 0 6px',
+                      fontSize: 11,
+                      fontWeight: 600,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      color: ACCENT,
+                    }}
+                  >
+                    {getCategoryBySlug(story.category)?.label[lang] ?? story.kicker[lang]}
+                  </p>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontFamily: 'Newsreader, Georgia, serif',
+                      fontSize: 20,
+                      lineHeight: 1.25,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {story.title[lang]}
+                  </p>
+                </div>
+                <div className="ph ph--photo" style={{ width: 96, height: 96, flex: 'none' }}>
+                  <img
+                    src={story.photoUrl || getArticlePhoto(story.slug)}
+                    alt={story.title[lang]}
+                    loading="lazy"
+                  />
+                </div>
+              </a>
+            ))}
           </aside>
         </section>
 
@@ -403,154 +380,49 @@ export function HomePage({
               gap: 32,
             }}
           >
-            <article>
-              <a
-                href="/article/mapping-public-transport"
-                onClick={handleOpenArticle('mapping-public-transport')}
-                style={{ display: 'block' }}
-              >
-                <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
-                  <img src={getArticlePhoto('mapping-public-transport')} alt={t.home.latest1Photo} loading="lazy" />
-                </div>
-                <p
-                  style={{
-                    margin: '14px 0 6px',
-                    fontSize: 11,
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: ACCENT,
-                  }}
+            {latestStories.map((story) => (
+              <article key={story.slug}>
+                <a
+                  href={`/article/${story.slug}`}
+                  onClick={handleOpenArticle(story.slug)}
+                  style={{ display: 'block' }}
                 >
-                  {t.nav.openData}
-                </p>
-                <h3
-                  style={{
-                    margin: 0,
-                    fontFamily: 'Newsreader, Georgia, serif',
-                    fontSize: 23,
-                    lineHeight: 1.2,
-                    fontWeight: 500,
-                  }}
-                >
-                  {t.home.latest1Title}
-                </h3>
-                <p style={{ margin: '10px 0 0', fontSize: 15, lineHeight: 1.5, color: '#444' }}>
-                  {t.home.latest1Deck}
-                </p>
-              </a>
-            </article>
-            <article>
-              <a
-                href="/article/reading-bicam-report"
-                onClick={handleOpenArticle('reading-bicam-report')}
-                style={{ display: 'block' }}
-              >
-                <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
-                  <img src={getArticlePhoto('reading-bicam-report')} alt={t.home.latest2Photo} loading="lazy" />
-                </div>
-                <p
-                  style={{
-                    margin: '14px 0 6px',
-                    fontSize: 11,
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: ACCENT,
-                  }}
-                >
-                  {t.nav.budget}
-                </p>
-                <h3
-                  style={{
-                    margin: 0,
-                    fontFamily: 'Newsreader, Georgia, serif',
-                    fontSize: 23,
-                    lineHeight: 1.2,
-                    fontWeight: 500,
-                  }}
-                >
-                  {t.home.latest2Title}
-                </h3>
-                <p style={{ margin: '10px 0 0', fontSize: 15, lineHeight: 1.5, color: '#444' }}>
-                  {t.home.latest2Deck}
-                </p>
-              </a>
-            </article>
-            <article>
-              <a
-                href="/article/barangay-procurement"
-                onClick={handleOpenArticle('barangay-procurement')}
-                style={{ display: 'block' }}
-              >
-                <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
-                  <img src={getArticlePhoto('barangay-procurement')} alt={t.home.latest3Photo} loading="lazy" />
-                </div>
-                <p
-                  style={{
-                    margin: '14px 0 6px',
-                    fontSize: 11,
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: ACCENT,
-                  }}
-                >
-                  {t.nav.community}
-                </p>
-                <h3
-                  style={{
-                    margin: 0,
-                    fontFamily: 'Newsreader, Georgia, serif',
-                    fontSize: 23,
-                    lineHeight: 1.2,
-                    fontWeight: 500,
-                  }}
-                >
-                  {t.home.latest3Title}
-                </h3>
-                <p style={{ margin: '10px 0 0', fontSize: 15, lineHeight: 1.5, color: '#444' }}>
-                  {t.home.latest3Deck}
-                </p>
-              </a>
-            </article>
-            <article>
-              <a
-                href="/article/one-login-gov"
-                onClick={handleOpenArticle('one-login-gov')}
-                style={{ display: 'block' }}
-              >
-                <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
-                  <img src={getArticlePhoto('one-login-gov')} alt={t.home.latest4Photo} loading="lazy" />
-                </div>
-                <p
-                  style={{
-                    margin: '14px 0 6px',
-                    fontSize: 11,
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: ACCENT,
-                  }}
-                >
-                  {t.nav.digitalServices}
-                </p>
-                <h3
-                  style={{
-                    margin: 0,
-                    fontFamily: 'Newsreader, Georgia, serif',
-                    fontSize: 23,
-                    lineHeight: 1.2,
-                    fontWeight: 500,
-                  }}
-                >
-                  {t.home.latest4Title}
-                </h3>
-                <p style={{ margin: '10px 0 0', fontSize: 15, lineHeight: 1.5, color: '#444' }}>
-                  {t.home.latest4Deck}
-                </p>
-              </a>
-            </article>
+                  <div className="ph ph--photo" style={{ aspectRatio: '3 / 2' }}>
+                    <img
+                      src={story.photoUrl || getArticlePhoto(story.slug)}
+                      alt={story.title[lang]}
+                      loading="lazy"
+                    />
+                  </div>
+                  <p
+                    style={{
+                      margin: '14px 0 6px',
+                      fontSize: 11,
+                      fontWeight: 600,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      color: ACCENT,
+                    }}
+                  >
+                    {getCategoryBySlug(story.category)?.label[lang] ?? story.kicker[lang]}
+                  </p>
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontFamily: 'Newsreader, Georgia, serif',
+                      fontSize: 23,
+                      lineHeight: 1.2,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {story.title[lang]}
+                  </h3>
+                  <p style={{ margin: '10px 0 0', fontSize: 15, lineHeight: 1.5, color: '#444' }}>
+                    {story.deck[lang]}
+                  </p>
+                </a>
+              </article>
+            ))}
           </div>
         </section>
 
@@ -566,9 +438,18 @@ export function HomePage({
             alignItems: 'center',
           }}
         >
-          <div className="ph ph--photo" style={{ flex: '999 1 560px', minWidth: 0, aspectRatio: '21 / 9' }}>
-            <img src={getArticlePhoto('last-mile-connectivity')} alt={t.home.featurePhoto} loading="lazy" />
-          </div>
+          <a
+            href={`/article/${longReadStory.slug}`}
+            onClick={handleOpenArticle(longReadStory.slug)}
+            className="ph ph--photo"
+            style={{ flex: '999 1 560px', minWidth: 0, aspectRatio: '21 / 9', display: 'block' }}
+          >
+            <img
+              src={longReadStory.photoUrl || getArticlePhoto(longReadStory.slug)}
+              alt={longReadStory.title[lang]}
+              loading="lazy"
+            />
+          </a>
           <div style={{ flex: '1 1 340px', minWidth: 0 }}>
             <p
               style={{
@@ -594,10 +475,10 @@ export function HomePage({
               }}
             >
               <a
-                href="/article/last-mile-connectivity"
-                onClick={handleOpenArticle('last-mile-connectivity')}
+                href={`/article/${longReadStory.slug}`}
+                onClick={handleOpenArticle(longReadStory.slug)}
               >
-                {t.home.featureTitle}
+                {longReadStory.title[lang]}
               </a>
             </h2>
             <p
@@ -609,15 +490,12 @@ export function HomePage({
                 color: '#333',
               }}
             >
-              {t.home.featureDeck}
+              {longReadStory.deck[lang]}
             </p>
             <p style={{ margin: '16px 0 0', fontSize: 13, color: '#555' }}>
               {t.home.byWord}{' '}
-              <span style={{ color: '#111', fontWeight: 600 }}>{t.home.authorPlaceholder}</span>{' '}
-              &nbsp;·&nbsp; {t.home.photographsBy}{' '}
-              <span style={{ color: '#111', fontWeight: 600 }}>
-                {t.home.photographerPlaceholder}
-              </span>
+              <span style={{ color: '#111', fontWeight: 600 }}>{longReadStory.author[lang]}</span>{' '}
+              &nbsp;·&nbsp; {longReadStory.readTime[lang]}
             </p>
           </div>
         </section>
@@ -654,66 +532,39 @@ export function HomePage({
                 paddingTop: 16,
               }}
             >
-              <a
-                href="/article/open-data-habit"
-                onClick={handleOpenArticle('open-data-habit')}
-                style={{ display: 'block' }}
-              >
-                <p
-                  style={{
-                    margin: 0,
-                    fontFamily: 'Newsreader, Georgia, serif',
-                    fontStyle: 'italic',
-                    fontSize: 22,
-                    lineHeight: 1.3,
-                  }}
+              {opinionStories.map((story) => (
+                <a
+                  key={story.slug}
+                  href={`/article/${story.slug}`}
+                  onClick={handleOpenArticle(story.slug)}
+                  style={{ display: 'block' }}
                 >
-                  {t.home.opinion1}
-                </p>
-                <p style={{ margin: '10px 0 0', fontSize: 13, color: '#555' }}>
-                  {t.home.columnistPlaceholder}
-                </p>
-              </a>
-              <a
-                href="/article/volunteers-built-it"
-                onClick={handleOpenArticle('volunteers-built-it')}
-                style={{ display: 'block' }}
-              >
-                <p
-                  style={{
-                    margin: 0,
-                    fontFamily: 'Newsreader, Georgia, serif',
-                    fontStyle: 'italic',
-                    fontSize: 22,
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {t.home.opinion2}
-                </p>
-                <p style={{ margin: '10px 0 0', fontSize: 13, color: '#555' }}>
-                  {t.home.columnistPlaceholder}
-                </p>
-              </a>
-              <a
-                href="/article/ai-and-hearings"
-                onClick={handleOpenArticle('ai-and-hearings')}
-                style={{ display: 'block' }}
-              >
-                <p
-                  style={{
-                    margin: 0,
-                    fontFamily: 'Newsreader, Georgia, serif',
-                    fontStyle: 'italic',
-                    fontSize: 22,
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {t.home.opinion3}
-                </p>
-                <p style={{ margin: '10px 0 0', fontSize: 13, color: '#555' }}>
-                  {t.home.columnistPlaceholder}
-                </p>
-              </a>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontFamily: 'Newsreader, Georgia, serif',
+                      fontStyle: 'italic',
+                      fontSize: 22,
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {story.title[lang]}
+                  </p>
+                  <p
+                    style={{
+                      margin: '10px 0 0',
+                      fontSize: 14,
+                      lineHeight: 1.5,
+                      color: '#444',
+                    }}
+                  >
+                    {story.deck[lang]}
+                  </p>
+                  <p style={{ margin: '10px 0 0', fontSize: 13, color: '#555' }}>
+                    {story.author[lang]}
+                  </p>
+                </a>
+              ))}
             </div>
           </div>
           <aside aria-labelledby="tools" style={{ flex: '1 1 320px', minWidth: 0 }}>

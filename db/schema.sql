@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS articles (
   author_email TEXT NOT NULL DEFAULT '',
   photo_url TEXT NOT NULL DEFAULT '/images/congress-session.jpg',
   status TEXT NOT NULL DEFAULT 'published',
+  is_featured INTEGER NOT NULL DEFAULT 0,
+  is_long_read INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
