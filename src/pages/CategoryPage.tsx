@@ -130,7 +130,7 @@ export function CategoryPage({
           boxSizing: 'border-box',
         }}
       >
-        <div className="category-header" style={{ paddingBottom: 24, borderBottom: '2px solid #111', marginBottom: 32 }}>
+        <div className="category-header category-desk-band">
           <p
             style={{
               margin: '0 0 8px',
@@ -141,7 +141,7 @@ export function CategoryPage({
               color: ACCENT,
             }}
           >
-            civictech.ph · {isAll ? (lang === 'en' ? 'Archive' : 'Arkibo') : lang === 'en' ? 'Section' : 'Seksyon'}
+            civictech.ph · {isAll ? (lang === 'en' ? 'Archive' : 'Arkibo') : lang === 'en' ? 'Section' : 'Seksyon'} · {stories.length} {lang === 'en' ? (stories.length === 1 ? 'story' : 'stories') : 'artikulo'}
           </p>
           <h1
             className="directory-title category-title"
@@ -332,8 +332,11 @@ export function CategoryPage({
                         >
                           {story.title[lang]}
                         </p>
+                        <p style={{ margin: '6px 0 0', fontSize: 12, color: '#666' }}>
+                          {story.date[lang]} · {story.readTime[lang]}
+                        </p>
                       </div>
-                      <div className="ph ph--photo" style={{ width: 80, height: 80, flex: 'none' }}>
+                      <div className="ph ph--photo" style={{ width: 96, height: 64, flex: 'none' }}>
                         <img
                           src={story.photoUrl || getArticlePhoto(story.slug)}
                           alt={story.title[lang]}

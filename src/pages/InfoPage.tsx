@@ -51,45 +51,45 @@ export function InfoPage({
       />
 
       <main className="info-main" style={{ maxWidth: 740, margin: '0 auto', padding: '48px 24px 72px' }}>
-        <p
-          style={{
-            margin: '0 0 12px',
-            fontSize: 12,
-            fontWeight: 600,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            color: ACCENT,
-          }}
-        >
-          {page.kicker[lang]}
-        </p>
-        <h1
-          className="directory-title"
-          style={{
-            margin: 0,
-            fontFamily: 'Newsreader, Georgia, serif',
-            fontWeight: 500,
-            fontSize: 48,
-            lineHeight: 1.08,
-            letterSpacing: '-0.02em',
-          }}
-        >
-          {page.title[lang]}
-        </h1>
-        <p
-          className="article-deck"
-          style={{
-            margin: '18px 0 0',
-            fontFamily: 'Newsreader, Georgia, serif',
-            fontSize: 21,
-            lineHeight: 1.45,
-            color: '#333',
-            paddingBottom: 28,
-            borderBottom: '1px solid #E5E5E5',
-          }}
-        >
-          {page.deck[lang]}
-        </p>
+        <div className="category-desk-band" style={{ marginBottom: 32 }}>
+          <p
+            style={{
+              margin: '0 0 12px',
+              fontSize: 12,
+              fontWeight: 600,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: ACCENT,
+            }}
+          >
+            {page.kicker[lang]}
+          </p>
+          <h1
+            className="directory-title"
+            style={{
+              margin: 0,
+              fontFamily: 'Newsreader, Georgia, serif',
+              fontWeight: 500,
+              fontSize: 48,
+              lineHeight: 1.08,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            {page.title[lang]}
+          </h1>
+          <p
+            className="article-deck"
+            style={{
+              margin: '18px 0 0',
+              fontFamily: 'Newsreader, Georgia, serif',
+              fontSize: 21,
+              lineHeight: 1.45,
+              color: '#333',
+            }}
+          >
+            {page.deck[lang]}
+          </p>
+        </div>
 
         <div
           className="body info-body"

@@ -95,12 +95,11 @@ export function DirectoryPage({
         onOpenCivicTools={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       />
 
-      <main style={{ maxWidth: 1380, margin: '0 auto', padding: '40px 24px 64px' }}>
+      <main className="directory-main" style={{ maxWidth: 1380, margin: '0 auto', padding: '40px 24px 64px' }}>
         {/* Header block */}
         <div
+          className="category-desk-band"
           style={{
-            paddingBottom: 28,
-            borderBottom: '1px solid #E5E5E5',
             marginBottom: 28,
             display: 'flex',
             flexWrap: 'wrap',

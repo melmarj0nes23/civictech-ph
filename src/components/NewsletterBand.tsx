@@ -45,6 +45,7 @@ export function NewsletterBand({ lang }: NewsletterBandProps) {
         padding: '52px 24px',
         background: '#F4F6FA',
         border: '1px solid #E5E5E5',
+        borderTop: `3px solid ${ACCENT}`,
         textAlign: 'center',
       }}
     >

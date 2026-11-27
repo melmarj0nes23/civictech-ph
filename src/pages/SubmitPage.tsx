@@ -127,14 +127,14 @@ export function SubmitPage({
         onOpenCivicTools={onBackDirectory}
       />
 
-      <main style={{ maxWidth: 760, margin: '0 auto', padding: '40px 24px 72px' }}>
+      <main className="directory-main" style={{ maxWidth: 760, margin: '0 auto', padding: '40px 24px 72px' }}>
         <p style={{ margin: '0 0 20px', fontSize: 13 }}>
           <a href="/civictools" onClick={handleBackDirectory} style={{ color: ACCENT, fontWeight: 600 }}>
             {t.submit.backToDirectory}
           </a>
         </p>
 
-        <div style={{ paddingBottom: 24, borderBottom: '1px solid #E5E5E5', marginBottom: 28 }}>
+        <div className="category-desk-band" style={{ marginBottom: 28 }}>
           <p
             style={{
               margin: '0 0 10px',

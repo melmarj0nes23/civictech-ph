@@ -188,7 +188,10 @@ export function ArticlePage({
           {/* Byline + Date + Share */}
           <div
             style={{
-              margin: '20px 0 0',
+              margin: '22px 0 0',
+              padding: '14px 0',
+              borderTop: '1px solid #E5E5E5',
+              borderBottom: '1px solid #E5E5E5',
               display: 'flex',
               flexWrap: 'wrap',
               gap: '12px 20px',
@@ -212,6 +215,8 @@ export function ArticlePage({
               </span>
               <span aria-hidden="true">·</span>
               <span>{article.date[lang]}</span>
+              <span aria-hidden="true">·</span>
+              <span>{article.readTime[lang]}</span>
             </div>
 
             <div aria-label="Share" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -345,7 +350,7 @@ export function ArticlePage({
             <div className="ph ph--photo" style={{ aspectRatio: '16 / 9', width: '100%' }}>
               <img src={article.photoUrl || getArticlePhoto(article.slug)} alt={article.photoLabel[lang]} />
             </div>
-            {isLead && (
+            {(isLead || article.photoLabel[lang]) && (
               <figcaption
                 style={{
                   marginTop: 12,
@@ -357,7 +362,7 @@ export function ArticlePage({
                   color: '#555',
                 }}
               >
-                {t.article.heroCaption}
+                {isLead ? t.article.heroCaption : article.photoLabel[lang]}
               </figcaption>
             )}
           </figure>
@@ -376,6 +381,7 @@ export function ArticlePage({
           >
             <p>
               <span
+                className="article-dropcap"
                 style={{
                   float: 'left',
                   fontSize: 76,
@@ -464,6 +470,7 @@ export function ArticlePage({
                 margin: '40px 0 0',
                 padding: 24,
                 background: '#F4F6FA',
+                borderLeft: `3px solid ${ACCENT}`,
                 fontFamily: 'Inter, sans-serif',
               }}
             >

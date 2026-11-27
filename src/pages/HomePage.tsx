@@ -166,27 +166,21 @@ export function HomePage({
         }
       />
 
-      {/* Dateline */}
-      <div
-        className="home-dateline"
-        style={{
-          maxWidth: 1380,
-          margin: '0 auto',
-          padding: '14px 24px 0',
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          fontSize: 12,
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-          color: '#555',
-        }}
-      >
-        <span>{formatTodayDate(lang)}</span>
+      {/* Edition utility strip */}
+      <div className="edition-strip">
+        <div className="edition-strip-inner">
+          <span>{formatTodayDate(lang)}</span>
+          <div className="edition-strip-right" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <span>
+              {lang === 'en'
+                ? 'Philippine Civic Tech & Digital Government'
+                : 'Civic Tech at Digital na Pamahalaan ng Pilipinas'}
+            </span>
+          </div>
+        </div>
       </div>
 
-      <main style={{ maxWidth: 1380, margin: '0 auto', padding: '24px 24px 0' }}>
+      <main className="home-main" style={{ maxWidth: 1380, margin: '0 auto', padding: '24px 24px 0' }}>
         {/* Optional scrolling banner carousel */}
         {banners.length > 0 && (
           <section aria-label="Featured banners" style={{ marginBottom: 28 }}>
@@ -259,6 +253,7 @@ export function HomePage({
 
         {/* Lead + rail */}
         <section
+          className="home-lead-section"
           style={{
             display: 'flex',
             flexWrap: 'wrap',
@@ -275,7 +270,7 @@ export function HomePage({
                 fontWeight: 600,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
-                borderBottom: '2px solid #111',
+                borderBottom: `2px solid ${ACCENT}`,
                 paddingBottom: 10,
               }}
             >
@@ -309,9 +304,14 @@ export function HomePage({
                     />
                   </div>
                 </a>
+                {leadStory.photoLabel[lang] && (
+                  <p style={{ margin: '8px 0 0', fontSize: 12, color: '#666', lineHeight: 1.4 }}>
+                    {leadStory.photoLabel[lang]}
+                  </p>
+                )}
                 <p
                   style={{
-                    margin: '20px 0 8px',
+                    margin: '16px 0 8px',
                     fontSize: 12,
                     fontWeight: 600,
                     letterSpacing: '0.12em',
@@ -337,6 +337,7 @@ export function HomePage({
                   </a>
                 </h2>
                 <p
+                  className="home-lead-deck"
                   style={{
                     margin: '14px 0 0',
                     fontFamily: 'Newsreader, Georgia, serif',
@@ -359,6 +360,7 @@ export function HomePage({
 
           <aside
             aria-label={t.home.topStories}
+            className="home-top-rail"
             style={{
               flex: '1 1 320px',
               minWidth: 0,
@@ -373,7 +375,7 @@ export function HomePage({
                 fontWeight: 600,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
-                borderBottom: '2px solid #111',
+                borderBottom: `2px solid ${ACCENT}`,
                 paddingBottom: 10,
               }}
             >
@@ -410,15 +412,18 @@ export function HomePage({
                     style={{
                       margin: 0,
                       fontFamily: 'Newsreader, Georgia, serif',
-                      fontSize: 20,
+                      fontSize: 19,
                       lineHeight: 1.25,
                       fontWeight: 500,
                     }}
                   >
                     {story.title[lang]}
                   </p>
+                  <p style={{ margin: '6px 0 0', fontSize: 12, color: '#666' }}>
+                    {story.date[lang]} · {story.readTime[lang]}
+                  </p>
                 </div>
-                <div className="ph ph--photo" style={{ width: 96, height: 96, flex: 'none' }}>
+                <div className="ph ph--photo top-story-thumb">
                   <img
                     src={story.photoUrl || getArticlePhoto(story.slug)}
                     alt={story.title[lang]}
@@ -433,6 +438,7 @@ export function HomePage({
         {/* Latest */}
         <section
           aria-labelledby="latest"
+          className="home-section"
           style={{ padding: '40px 0', borderBottom: '1px solid #E5E5E5' }}
         >
           <div
@@ -462,6 +468,7 @@ export function HomePage({
             </a>
           </div>
           <div
+            className="home-latest-grid"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
@@ -513,7 +520,7 @@ export function HomePage({
                   <p style={{ margin: '10px 0 0', fontSize: 12, color: '#666' }}>
                     <span style={{ fontWeight: 600, color: '#222' }}>{story.author[lang]}</span>
                     {' · '}
-                    {story.readTime[lang]}
+                    {story.date[lang]}
                   </p>
                 </a>
               </article>
@@ -522,22 +529,12 @@ export function HomePage({
         </section>
 
         {/* Feature band */}
-        <section
-          aria-labelledby="feature"
-          style={{
-            padding: '40px 0',
-            borderBottom: '1px solid #E5E5E5',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 40,
-            alignItems: 'center',
-          }}
-        >
+        <section aria-labelledby="feature" className="long-read-band">
           <a
             href={`/article/${longReadStory.slug}`}
             onClick={handleOpenArticle(longReadStory.slug)}
             className="ph ph--photo"
-            style={{ flex: '999 1 560px', minWidth: 0, aspectRatio: '21 / 9', display: 'block' }}
+            style={{ flex: '999 1 520px', minWidth: 0, aspectRatio: '21 / 9', display: 'block' }}
           >
             <img
               src={longReadStory.photoUrl || getArticlePhoto(longReadStory.slug)}
@@ -551,9 +548,9 @@ export function HomePage({
                 margin: '0 0 10px',
                 fontSize: 12,
                 fontWeight: 600,
-                letterSpacing: '0.12em',
+                letterSpacing: '0.14em',
                 textTransform: 'uppercase',
-                color: ACCENT,
+                color: '#8AB4FF',
               }}
             >
               {t.home.longRead}
@@ -577,19 +574,20 @@ export function HomePage({
               </a>
             </h2>
             <p
+              className="home-longread-deck"
               style={{
                 margin: '14px 0 0',
                 fontFamily: 'Newsreader, Georgia, serif',
                 fontSize: 19,
                 lineHeight: 1.5,
-                color: '#333',
+                color: '#D7E0EC',
               }}
             >
               {longReadStory.deck[lang]}
             </p>
-            <p style={{ margin: '16px 0 0', fontSize: 13, color: '#555' }}>
+            <p style={{ margin: '16px 0 0', fontSize: 13, color: '#9FB1C8' }}>
               {t.home.byWord}{' '}
-              <span style={{ color: '#111', fontWeight: 600 }}>{longReadStory.author[lang]}</span>{' '}
+              <span style={{ color: '#fff', fontWeight: 600 }}>{longReadStory.author[lang]}</span>{' '}
               &nbsp;·&nbsp; {longReadStory.readTime[lang]}
             </p>
           </div>
@@ -597,6 +595,7 @@ export function HomePage({
 
         {/* Opinion + Tools */}
         <section
+          className="home-section home-opinion-section"
           style={{
             padding: '40px 0',
             display: 'flex',
@@ -620,6 +619,7 @@ export function HomePage({
               {t.nav.opinion}
             </h2>
             <div
+              className="home-opinion-grid"
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
@@ -639,8 +639,7 @@ export function HomePage({
                     key={story.slug}
                     href={`/article/${story.slug}`}
                     onClick={handleOpenArticle(story.slug)}
-                    className="story-card"
-                    style={{ display: 'block' }}
+                    className="story-card opinion-card"
                   >
                     <p
                       className="story-title"
@@ -708,7 +707,7 @@ export function HomePage({
                 alignItems: 'baseline',
                 borderBottom: '2px solid #111',
                 paddingBottom: 10,
-                marginBottom: 4,
+                marginBottom: 24,
               }}
             >
               <h2
@@ -731,7 +730,7 @@ export function HomePage({
                 {DIRECTORY_ENTRIES.length} {lang === 'en' ? 'entries →' : 'nakalista →'}
               </a>
             </div>
-            <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+            <ul className="civic-tools-panel" style={{ listStyle: 'none', margin: 0 }}>
               {featuredTools.map((entry, idx) => (
                 <li
                   key={entry.slug}

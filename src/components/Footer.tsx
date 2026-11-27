@@ -42,7 +42,7 @@ export function Footer({
     };
 
   return (
-    <footer style={{ borderTop: '1px solid #111', marginTop: 8 }}>
+    <footer style={{ borderTop: '2px solid #111', marginTop: 8 }}>
       <div
         style={{
           maxWidth: 1380,
