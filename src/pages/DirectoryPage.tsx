@@ -95,7 +95,7 @@ export function DirectoryPage({
         onOpenCivicTools={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       />
 
-      <main style={{ maxWidth: 1240, margin: '0 auto', padding: '40px 24px 64px' }}>
+      <main style={{ maxWidth: 1380, margin: '0 auto', padding: '40px 24px 64px' }}>
         {/* Header block */}
         <div
           style={{

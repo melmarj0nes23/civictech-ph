@@ -53,6 +53,48 @@ export function HomePage({
   const initialCached = readCachedD1Articles();
   const [d1Stories, setD1Stories] = useState<CachedArticleItem[]>(initialCached ?? []);
   const [loadingFeed, setLoadingFeed] = useState(initialCached === null);
+  const [banners, setBanners] = useState<Array<{ imageUrl: string; linkUrl?: string; alt?: string }>>(() => {
+    try {
+      const raw = window.localStorage.getItem('civictech_homepage_banners_v1');
+      const parsed = raw ? (JSON.parse(raw) as unknown) : null;
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  });
+  const [bannerIdx, setBannerIdx] = useState(0);
+
+  useEffect(() => {
+    fetch('/api/banners')
+      .then((r) => (r.ok ? r.json() : null))
+      .then(
+        (
+          data: {
+            ok?: boolean;
+            banners?: Array<{ imageUrl: string; linkUrl?: string; alt?: string }>;
+          } | null
+        ) => {
+          if (!data?.ok || !Array.isArray(data.banners)) return;
+          setBanners(data.banners);
+          try {
+            window.localStorage.setItem('civictech_homepage_banners_v1', JSON.stringify(data.banners));
+          } catch {
+            // ignore
+          }
+        }
+      )
+      .catch(() => {
+        // ignore
+      });
+  }, []);
+
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const id = window.setInterval(() => {
+      setBannerIdx((prev) => (prev + 1) % banners.length);
+    }, 5500);
+    return () => window.clearInterval(id);
+  }, [banners.length]);
 
   useEffect(() => {
     fetch('/api/articles')
@@ -128,7 +170,7 @@ export function HomePage({
       <div
         className="home-dateline"
         style={{
-          maxWidth: 1240,
+          maxWidth: 1380,
           margin: '0 auto',
           padding: '14px 24px 0',
           display: 'flex',
@@ -144,7 +186,131 @@ export function HomePage({
         <span>{formatTodayDate(lang)}</span>
       </div>
 
-      <main style={{ maxWidth: 1240, margin: '0 auto', padding: '24px 24px 0' }}>
+      <main style={{ maxWidth: 1380, margin: '0 auto', padding: '24px 24px 0' }}>
+        {/* Optional scrolling banner carousel */}
+        {banners.length > 0 && (
+          <section aria-label="Featured banners" style={{ marginBottom: 28 }}>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              {banners.length > 1 && (
+                <button
+                  type="button"
+                  aria-label="Previous banner"
+                  onClick={() =>
+                    setBannerIdx((prev) => (prev - 1 + banners.length) % banners.length)
+                  }
+                  style={{
+                    position: 'absolute',
+                    left: 12,
+                    zIndex: 2,
+                    width: 34,
+                    height: 34,
+                    borderRadius: '50%',
+                    border: '1px solid #D4D4D4',
+                    background: 'rgba(255,255,255,0.92)',
+                    color: '#111',
+                    fontSize: 16,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  ‹
+                </button>
+              )}
+
+              {(() => {
+                const active = banners[bannerIdx % banners.length];
+                const img = (
+                  <img
+                    src={active.imageUrl}
+                    alt={active.alt || 'Featured banner'}
+                    style={{
+                      width: '100%',
+                      maxHeight: 260,
+                      aspectRatio: '16 / 4',
+                      objectFit: 'cover',
+                      display: 'block',
+                      border: '1px solid #E5E5E5',
+                    }}
+                  />
+                );
+                return active.linkUrl ? (
+                  <a
+                    href={active.linkUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ display: 'block', width: '100%' }}
+                  >
+                    {img}
+                  </a>
+                ) : (
+                  <div style={{ width: '100%' }}>{img}</div>
+                );
+              })()}
+
+              {banners.length > 1 && (
+                <button
+                  type="button"
+                  aria-label="Next banner"
+                  onClick={() => setBannerIdx((prev) => (prev + 1) % banners.length)}
+                  style={{
+                    position: 'absolute',
+                    right: 12,
+                    zIndex: 2,
+                    width: 34,
+                    height: 34,
+                    borderRadius: '50%',
+                    border: '1px solid #D4D4D4',
+                    background: 'rgba(255,255,255,0.92)',
+                    color: '#111',
+                    fontSize: 16,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  ›
+                </button>
+              )}
+            </div>
+
+            {banners.length > 1 && (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: 6,
+                  marginTop: 10,
+                }}
+              >
+                {banners.map((_, i) => {
+                  const isCurrent = i === bannerIdx % banners.length;
+                  return (
+                    <button
+                      key={i}
+                      type="button"
+                      aria-label={`Go to banner ${i + 1}`}
+                      onClick={() => setBannerIdx(i)}
+                      style={{
+                        width: isCurrent ? 22 : 8,
+                        height: 6,
+                        borderRadius: 999,
+                        border: 'none',
+                        padding: 0,
+                        background: isCurrent ? ACCENT : '#D4D4D4',
+                        cursor: 'pointer',
+                        transition: 'width 0.2s ease',
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </section>
+        )}
+
         {/* Lead + rail */}
         <section
           style={{
@@ -156,6 +322,19 @@ export function HomePage({
           }}
         >
           <article className="story-card" style={{ flex: '999 1 560px', minWidth: 0 }}>
+            <p
+              style={{
+                margin: '0 0 18px',
+                fontSize: 12,
+                fontWeight: 600,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                borderBottom: '2px solid #111',
+                paddingBottom: 10,
+              }}
+            >
+              {lang === 'en' ? 'Headlines' : 'Mga Balita'}
+            </p>
             {loadingFeed ? (
               <div aria-busy="true" aria-label="Loading lead story">
                 <div style={{ aspectRatio: '16 / 9', width: '100%', background: '#F4F6FA' }} />

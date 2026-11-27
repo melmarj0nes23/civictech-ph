@@ -46,6 +46,11 @@ function ClerkProfileContent({
   const [teamLoading, setTeamLoading] = useState(false);
   const [teamNotice, setTeamNotice] = useState<string | null>(null);
   const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
+  const [showBanners, setShowBanners] = useState(false);
+  const [banners, setBanners] = useState<Array<{ imageUrl: string; linkUrl: string }>>([]);
+  const [bannersLoading, setBannersLoading] = useState(false);
+  const [bannersSaving, setBannersSaving] = useState(false);
+  const [bannersNotice, setBannersNotice] = useState<string | null>(null);
 
   const isEn = lang === 'en';
 
@@ -242,6 +247,75 @@ function ClerkProfileContent({
       setTeamNotice(isEn ? 'Could not reach users API.' : 'Hindi maabot ang users API.');
     } finally {
       setTeamLoading(false);
+    }
+  };
+
+  const loadBanners = async () => {
+    if (!isAdmin) return;
+    setBannersLoading(true);
+    setBannersNotice(null);
+    try {
+      const res = await fetch('/api/banners');
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        banners?: Array<{ imageUrl: string; linkUrl?: string }>;
+      };
+      if (res.ok && data.ok) {
+        setBanners(
+          (data.banners ?? []).map((b) => ({
+            imageUrl: b.imageUrl || '',
+            linkUrl: b.linkUrl || '',
+          }))
+        );
+      }
+    } catch {
+      setBannersNotice(isEn ? 'Could not load banners.' : 'Hindi ma-load ang mga banner.');
+    } finally {
+      setBannersLoading(false);
+    }
+  };
+
+  const handleSaveBanners = async (e: FormEvent) => {
+    e.preventDefault();
+    setBannersSaving(true);
+    setBannersNotice(null);
+    try {
+      const token = await getToken();
+      const cleaned = banners
+        .map((b) => ({ imageUrl: b.imageUrl.trim(), linkUrl: b.linkUrl.trim() }))
+        .filter((b) => Boolean(b.imageUrl));
+      const res = await fetch('/api/banners', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ banners: cleaned }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        banners?: Array<{ imageUrl: string; linkUrl?: string }>;
+        error?: string;
+      };
+      if (!res.ok || !data.ok) {
+        setBannersNotice(data.error || (isEn ? 'Could not save banners.' : 'Hindi ma-save ang mga banner.'));
+        return;
+      }
+      const next = (data.banners ?? []).map((b) => ({
+        imageUrl: b.imageUrl || '',
+        linkUrl: b.linkUrl || '',
+      }));
+      setBanners(next);
+      try {
+        window.localStorage.setItem('civictech_homepage_banners_v1', JSON.stringify(next));
+      } catch {
+        // ignore
+      }
+      setBannersNotice(isEn ? 'Homepage banners saved.' : 'Nai-save ang mga homepage banner.');
+    } catch {
+      setBannersNotice(isEn ? 'Network error saving banners.' : 'May error sa pag-save.');
+    } finally {
+      setBannersSaving(false);
     }
   };
 
@@ -774,7 +848,10 @@ function ClerkProfileContent({
 
       {/* Team roles (admin only) */}
       {isAdmin && (
-        <section className="profile-section" style={{ padding: '24px 0 0' }}>
+        <section
+          className="profile-section"
+          style={{ padding: '24px 0', borderBottom: '1px solid #E5E5E5' }}
+        >
           <div
             style={{
               display: 'flex',
@@ -951,6 +1028,215 @@ function ClerkProfileContent({
                 </div>
               )}
             </div>
+          )}
+        </section>
+      )}
+
+      {/* Homepage banners (admin only) */}
+      {isAdmin && (
+        <section className="profile-section" style={{ padding: '24px 0 0' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: 14,
+            }}
+          >
+            <div>
+              <h2
+                style={{
+                  margin: '0 0 4px',
+                  fontFamily: 'Newsreader, Georgia, serif',
+                  fontSize: 21,
+                  fontWeight: 500,
+                }}
+              >
+                {isEn ? 'Homepage banners' : 'Mga banner sa homepage'}
+              </h2>
+              <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: '#555' }}>
+                {isEn
+                  ? 'Paste direct image URLs for the scrolling banner under the header.'
+                  : 'Maglagay ng mga image URL para sa scrolling banner sa homepage.'}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                const next = !showBanners;
+                setShowBanners(next);
+                if (next && banners.length === 0 && !bannersLoading) {
+                  loadBanners();
+                }
+              }}
+              style={{
+                padding: 0,
+                border: 'none',
+                background: 'transparent',
+                color: ACCENT,
+                fontFamily: 'inherit',
+                fontSize: 13,
+                fontWeight: 600,
+                textDecoration: 'underline',
+                textUnderlineOffset: 3,
+                cursor: 'pointer',
+              }}
+            >
+              {showBanners
+                ? isEn
+                  ? 'Hide banners'
+                  : 'Itago ang mga banner'
+                : isEn
+                  ? 'Manage banners'
+                  : 'Pamahalaan ang mga banner'}
+            </button>
+          </div>
+
+          {showBanners && (
+            <form
+              onSubmit={handleSaveBanners}
+              style={{
+                marginTop: 18,
+                padding: 16,
+                border: '1px solid #E5E5E5',
+                background: '#FAFAFA',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 12,
+              }}
+            >
+              {bannersLoading ? (
+                <p style={{ margin: 0, fontSize: 13, color: '#666' }}>
+                  {isEn ? 'Loading banners…' : 'Nilo-load ang mga banner…'}
+                </p>
+              ) : (
+                <>
+                  {banners.map((b, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        padding: 12,
+                        border: '1px solid #E5E5E5',
+                        background: '#fff',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 8,
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: '#333' }}>
+                          {isEn ? `Banner #${idx + 1}` : `Banner #${idx + 1}`}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setBanners((prev) => prev.filter((_, i) => i !== idx))}
+                          style={{
+                            padding: 0,
+                            border: 'none',
+                            background: 'transparent',
+                            color: '#C62828',
+                            fontSize: 12,
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          {isEn ? 'Remove' : 'Tanggalin'}
+                        </button>
+                      </div>
+                      <input
+                        type="url"
+                        required
+                        value={b.imageUrl}
+                        onChange={(e) =>
+                          setBanners((prev) =>
+                            prev.map((item, i) => (i === idx ? { ...item, imageUrl: e.target.value } : item))
+                          )
+                        }
+                        placeholder="https://example.com/banner-image.jpg"
+                        style={{
+                          width: '100%',
+                          minHeight: 38,
+                          padding: '0 10px',
+                          border: '1px solid #D4D4D4',
+                          fontFamily: 'inherit',
+                          fontSize: 13,
+                          boxSizing: 'border-box',
+                        }}
+                      />
+                      <input
+                        type="url"
+                        value={b.linkUrl}
+                        onChange={(e) =>
+                          setBanners((prev) =>
+                            prev.map((item, i) => (i === idx ? { ...item, linkUrl: e.target.value } : item))
+                          )
+                        }
+                        placeholder={isEn ? 'Optional click link (https://…)' : 'Opsyonal na link (https://…)'}
+                        style={{
+                          width: '100%',
+                          minHeight: 38,
+                          padding: '0 10px',
+                          border: '1px solid #D4D4D4',
+                          fontFamily: 'inherit',
+                          fontSize: 13,
+                          boxSizing: 'border-box',
+                        }}
+                      />
+                    </div>
+                  ))}
+
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center' }}>
+                    <button
+                      type="button"
+                      onClick={() => setBanners((prev) => [...prev, { imageUrl: '', linkUrl: '' }])}
+                      style={{
+                        minHeight: 38,
+                        padding: '0 14px',
+                        border: '1px solid #111',
+                        background: '#fff',
+                        color: '#111',
+                        fontFamily: 'inherit',
+                        fontSize: 13,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      + {isEn ? 'Add banner' : 'Magdagdag ng banner'}
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={bannersSaving}
+                      style={{
+                        minHeight: 38,
+                        padding: '0 18px',
+                        border: 'none',
+                        background: ACCENT,
+                        color: '#fff',
+                        fontFamily: 'inherit',
+                        fontSize: 13,
+                        fontWeight: 600,
+                        cursor: bannersSaving ? 'wait' : 'pointer',
+                      }}
+                    >
+                      {bannersSaving
+                        ? isEn
+                          ? 'Saving…'
+                          : 'Sine-save…'
+                        : isEn
+                          ? 'Save banners'
+                          : 'I-save ang mga banner'}
+                    </button>
+                    {bannersNotice && (
+                      <span style={{ fontSize: 12, fontWeight: 600, color: ACCENT }}>
+                        {bannersNotice}
+                      </span>
+                    )}
+                  </div>
+                </>
+              )}
+            </form>
           )}
         </section>
       )}

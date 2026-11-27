@@ -62,7 +62,7 @@ a:hover .ph--photo img {
 
 /* Utility bar (Homepage) */
 .utility-bar-inner {
-  max-width: 1240px;
+  max-width: 1380px;
   margin: 0 auto;
   padding: 10px 24px;
   display: flex;
@@ -95,7 +95,7 @@ a:hover .ph--photo img {
 
 /* Unified GovInsider-style desktop header + mobile burger layout */
 .site-header-inner {
-  max-width: 1240px;
+  max-width: 1380px;
   margin: 0 auto;
   padding: 16px 24px;
   display: flex;
@@ -188,7 +188,7 @@ a:hover .ph--photo img {
 
 /* Compact header (Article & Civic Tools) */
 .compact-header-inner {
-  max-width: 1240px;
+  max-width: 1380px;
   margin: 0 auto;
   padding: 12px 24px;
   display: flex;

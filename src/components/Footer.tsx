@@ -45,7 +45,7 @@ export function Footer({
     <footer style={{ borderTop: '1px solid #111', marginTop: 8 }}>
       <div
         style={{
-          maxWidth: 1240,
+          maxWidth: 1380,
           margin: '0 auto',
           padding: '36px 24px 48px',
           display: 'flex',

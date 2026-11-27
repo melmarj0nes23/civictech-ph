@@ -157,7 +157,7 @@ export function ArticlePage({
 
       <article>
         {/* GovInsider-style centered 960px header + 16:9 hero */}
-        <div style={{ maxWidth: 960, margin: '0 auto', padding: '36px 24px 0' }}>
+        <div style={{ maxWidth: 1020, margin: '0 auto', padding: '36px 24px 0' }}>
           <p
             style={{
               margin: '0 0 14px',
@@ -364,7 +364,7 @@ export function ArticlePage({
         </div>
 
         {/* Reading column aligned to hero image width (960px) */}
-        <div style={{ maxWidth: 960, margin: '0 auto', padding: '36px 24px 0' }}>
+        <div style={{ maxWidth: 1020, margin: '0 auto', padding: '36px 24px 0' }}>
           <div
             className="body"
             style={{
@@ -561,7 +561,7 @@ export function ArticlePage({
       <section
         aria-labelledby="related"
         style={{
-          maxWidth: 960,
+          maxWidth: 1020,
           margin: '48px auto 0',
           padding: '40px 24px 0',
           borderTop: '1px solid #E5E5E5',
@@ -629,7 +629,7 @@ export function ArticlePage({
         </div>
       </section>
 
-      <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 24px' }}>
+      <div style={{ maxWidth: 1380, margin: '0 auto', padding: '0 24px' }}>
         <NewsletterBand lang={lang} />
       </div>
 

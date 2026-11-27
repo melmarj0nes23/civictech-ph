@@ -123,7 +123,7 @@ export function CategoryPage({
         className="category-main"
         style={{
           width: '100%',
-          maxWidth: 1240,
+          maxWidth: 1380,
           margin: '0 auto',
           padding: '40px 24px 72px',
           flex: '1 0 auto',
