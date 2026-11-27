@@ -692,6 +692,11 @@ a:hover .ph--photo img {
     flex: none;
   }
 
+  .profile-desktop-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
   .site-header-inner {
     padding: 8px 16px;
     flex-wrap: nowrap;
@@ -855,7 +860,7 @@ a:hover .ph--photo img {
   }
 
   .profile-section {
-    padding: 18px 0 !important;
+    padding: 16px !important;
     gap: 12px !important;
   }
 
@@ -867,6 +872,21 @@ a:hover .ph--photo img {
     width: 100%;
     justify-content: center;
     box-sizing: border-box;
+  }
+
+  .profile-desktop-only {
+    display: none;
+  }
+
+  .profile-nl-header {
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+  }
+
+  .profile-nl-actions {
+    flex: none;
+    flex-direction: column;
+    align-items: flex-end;
   }
 
   .civic-tool-mobile-only {
@@ -937,6 +957,17 @@ a:hover .ph--photo img {
   }
 }
 
+.profile-desktop-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.profile-reader-stack {
+  max-width: 720px;
+}
+
 .site-brand-logo {
   height: 26px;
   width: auto;
@@ -946,6 +977,22 @@ a:hover .ph--photo img {
 @media (min-width: 769px) {
   .civic-tool-mobile-only {
     display: none;
+  }
+
+  .profile-mobile-only {
+    display: none;
+  }
+
+  .profile-cta {
+    width: 170px;
+    justify-content: center;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .profile-desktop-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+    gap: 36px;
   }
 
   .site-brand-logo {

@@ -83,6 +83,25 @@ interface RichBodyProps {
   dropCap?: boolean;
 }
 
+export function slugifyHeading(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export function extractHeadings(blocks: string[]): { id: string; text: string }[] {
+  return blocks
+    .map((b) => b.trim())
+    .filter((b) => b.startsWith('## '))
+    .map((b) => {
+      const text = b.slice(3).trim();
+      return { id: slugifyHeading(text), text };
+    })
+    .filter((h) => Boolean(h.id));
+}
+
 export function RichBody({ blocks, dropCap = false }: RichBodyProps) {
   let usedDropCap = false;
 
@@ -115,9 +134,10 @@ export function RichBody({ blocks, dropCap = false }: RichBodyProps) {
           );
         }
         if (block.startsWith('## ')) {
+          const headingText = block.slice(3).trim();
           return (
-            <h2 key={idx} className="rich-h2">
-              {renderInline(block.slice(3).trim())}
+            <h2 key={idx} id={slugifyHeading(headingText)} className="rich-h2">
+              {renderInline(headingText)}
             </h2>
           );
         }

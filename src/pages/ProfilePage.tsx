@@ -2,7 +2,8 @@ import { useAuth, useClerk, useUser } from '@clerk/react';
 import { useEffect, useState, type FormEvent, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
 import { SiteHeader } from '../components/SiteHeader';
-import type { CategorySlug } from '../data/articles';
+import { ARTICLES, type CategorySlug } from '../data/articles';
+import { mapD1RowToArticle, type CachedArticleItem, type D1ApiArticle } from '../data/articlesCache';
 import type { Lang } from '../data/i18n';
 import type { InfoPageSlug } from '../data/infoPages';
 
@@ -483,67 +484,17 @@ function ClerkProfileContent({
         </button>
       </div>
 
-      {/* Newsroom Studio (admin / editor only) */}
-      {canPublish && onOpenWrite && (
-        <section
-          className="profile-section"
-          style={{
-            padding: '24px 0',
-            borderBottom: '1px solid #E5E5E5',
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: 16,
-          }}
-        >
-          <div style={{ maxWidth: 460 }}>
-            <h2
-              style={{
-                margin: '0 0 4px',
-                fontFamily: 'Newsreader, Georgia, serif',
-                fontSize: 21,
-                fontWeight: 500,
-              }}
-            >
-              {isEn ? 'Newsroom Studio' : 'Newsroom Studio'}
-            </h2>
-            <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: '#555' }}>
-              {isEn
-                ? `Signed in as ${role}. Write and publish articles.`
-                : `Naka-sign in bilang ${role}. Sumulat at mag-publish ng artikulo.`}
-            </p>
-          </div>
-          <a
-            href="/write"
-            className="profile-cta"
-            onClick={(e: MouseEvent<HTMLAnchorElement>) => {
-              e.preventDefault();
-              onOpenWrite();
-            }}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              minHeight: 40,
-              padding: '0 18px',
-              background: ACCENT,
-              color: '#fff',
-              fontSize: 13,
-              fontWeight: 600,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {isEn ? 'Write & manage articles →' : 'Sumulat at pamahalaan ang artikulo →'}
-          </a>
-        </section>
-      )}
+      <div className={canPublish || isAdmin ? 'profile-desktop-grid' : 'profile-reader-stack'} style={{ marginTop: 28 }}>
+        <div className="profile-col-account" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
       {/* Newsletter (Cloudflare D1) */}
       <section
         className="profile-section"
         style={{
-          padding: '24px 0',
-          borderBottom: '1px solid #E5E5E5',
+          padding: '20px 22px',
+          border: '1px solid #E5E5E5',
+          borderTop: `2px solid ${ACCENT}`,
+          background: '#fff',
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'space-between',
@@ -551,7 +502,7 @@ function ClerkProfileContent({
           gap: 16,
         }}
       >
-        <div style={{ maxWidth: 460 }}>
+        <div style={{ flex: '1 1 180px', minWidth: 0 }}>
           <h2
             style={{
               margin: '0 0 4px',
@@ -578,6 +529,7 @@ function ClerkProfileContent({
           disabled={nlBusy}
           onClick={handleToggleNewsletter}
           style={{
+            flex: 'none',
             minHeight: 40,
             padding: '0 18px',
             border: nlActive ? '1px solid #D4D4D4' : canPublish ? `1px solid ${ACCENT}` : 'none',
@@ -608,8 +560,10 @@ function ClerkProfileContent({
       <section
         className="profile-section"
         style={{
-          padding: isAdmin ? '24px 0' : '24px 0 0',
-          borderBottom: isAdmin ? '1px solid #E5E5E5' : 'none',
+          padding: '20px 22px',
+          border: '1px solid #E5E5E5',
+          borderTop: `2px solid ${ACCENT}`,
+          background: '#fff',
         }}
       >
         <div
@@ -874,12 +828,82 @@ function ClerkProfileContent({
           </form>
         )}
       </section>
+        </div>
+
+        {(canPublish || isAdmin) && (
+          <div className="profile-col-workspace" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            {/* Newsroom Studio (admin / editor only) */}
+            {canPublish && onOpenWrite && (
+              <section
+                className="profile-section"
+                style={{
+                  padding: '20px 22px',
+                  border: '1px solid #E5E5E5',
+                  borderTop: `2px solid ${ACCENT}`,
+                  background: '#fff',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: 16,
+                }}
+              >
+                <div style={{ maxWidth: 420 }}>
+                  <h2
+                    style={{
+                      margin: '0 0 4px',
+                      fontFamily: 'Newsreader, Georgia, serif',
+                      fontSize: 21,
+                      fontWeight: 500,
+                    }}
+                  >
+                    Newsroom Studio
+                  </h2>
+                  <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: '#555' }}>
+                    {isEn
+                      ? `Signed in as ${role}. Write and publish articles.`
+                      : `Naka-sign in bilang ${role}. Sumulat at mag-publish ng artikulo.`}
+                  </p>
+                </div>
+                <a
+                  href="/write"
+                  className="profile-cta"
+                  onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+                    e.preventDefault();
+                    onOpenWrite();
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    minHeight: 40,
+                    padding: '0 18px',
+                    background: ACCENT,
+                    color: '#fff',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  <span className="profile-desktop-only">
+                    {isEn ? 'Manage articles →' : 'Pamahalaan ang artikulo →'}
+                  </span>
+                  <span className="profile-mobile-only">
+                    {isEn ? 'Write & manage articles →' : 'Sumulat at pamahalaan ang artikulo →'}
+                  </span>
+                </a>
+              </section>
+            )}
 
       {/* Team roles (admin only) */}
       {isAdmin && (
         <section
           className="profile-section"
-          style={{ padding: '24px 0', borderBottom: '1px solid #E5E5E5' }}
+          style={{
+            padding: '20px 22px',
+            border: '1px solid #E5E5E5',
+            borderTop: `2px solid ${ACCENT}`,
+            background: '#fff',
+          }}
         >
           <div
             style={{
@@ -918,15 +942,18 @@ function ClerkProfileContent({
                 }
               }}
               style={{
-                padding: 0,
-                border: 'none',
-                background: 'transparent',
-                color: ACCENT,
+                flex: 'none',
+                width: 170,
+                minHeight: 36,
+                padding: '0 14px',
+                border: '1px solid #D4D4D4',
+                background: '#fff',
+                color: '#111',
                 fontFamily: 'inherit',
                 fontSize: 13,
                 fontWeight: 600,
-                textDecoration: 'underline',
-                textUnderlineOffset: 3,
+                whiteSpace: 'nowrap',
+                textAlign: 'center',
                 cursor: 'pointer',
               }}
             >
@@ -1063,7 +1090,15 @@ function ClerkProfileContent({
 
       {/* Homepage banners (admin only) */}
       {isAdmin && (
-        <section className="profile-section" style={{ padding: '24px 0 0' }}>
+        <section
+          className="profile-section"
+          style={{
+            padding: '20px 22px',
+            border: '1px solid #E5E5E5',
+            borderTop: `2px solid ${ACCENT}`,
+            background: '#fff',
+          }}
+        >
           <div
             style={{
               display: 'flex',
@@ -1073,7 +1108,7 @@ function ClerkProfileContent({
               gap: 14,
             }}
           >
-            <div>
+            <div style={{ flex: '1 1 240px', minWidth: 0 }}>
               <h2
                 style={{
                   margin: '0 0 4px',
@@ -1101,15 +1136,18 @@ function ClerkProfileContent({
                 }
               }}
               style={{
-                padding: 0,
-                border: 'none',
-                background: 'transparent',
-                color: ACCENT,
+                flex: 'none',
+                width: 170,
+                minHeight: 36,
+                padding: '0 14px',
+                border: '1px solid #D4D4D4',
+                background: '#fff',
+                color: '#111',
                 fontFamily: 'inherit',
                 fontSize: 13,
                 fontWeight: 600,
-                textDecoration: 'underline',
-                textUnderlineOffset: 3,
+                whiteSpace: 'nowrap',
+                textAlign: 'center',
                 cursor: 'pointer',
               }}
             >
@@ -1269,7 +1307,408 @@ function ClerkProfileContent({
           )}
         </section>
       )}
+      {/* Newsletter Studio (admin / editor) */}
+      {canPublish && (
+        <NewsletterStudioCard
+          isEn={isEn}
+          getToken={getToken}
+          defaultOpen={new URLSearchParams(window.location.search).get('panel') === 'newsletter'}
+        />
+      )}
+          </div>
+        )}
+      </div>
     </>
+  );
+}
+
+function NewsletterStudioCard({
+  isEn,
+  getToken,
+  defaultOpen,
+}: {
+  isEn: boolean;
+  getToken: () => Promise<string | null>;
+  defaultOpen: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  const [loading, setLoading] = useState(false);
+  const [activeCount, setActiveCount] = useState<number | null>(null);
+  const [configured, setConfigured] = useState(false);
+  const [stories, setStories] = useState<CachedArticleItem[]>(ARTICLES);
+  const [selectedSlugs, setSelectedSlugs] = useState<string[]>(() =>
+    ARTICLES.slice(0, 3).map((a) => a.slug)
+  );
+  const [subject, setSubject] = useState('Civic Tech PH Weekly Briefing');
+  const [intro, setIntro] = useState(
+    'Here are the latest stories on Philippine open data, public budgets, and digital government.'
+  );
+  const [testEmail, setTestEmail] = useState('');
+  const [sending, setSending] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  const loadStudio = async () => {
+    setLoading(true);
+    try {
+      const token = await getToken();
+      const [statsRes, artRes] = await Promise.all([
+        fetch('/api/newsletter/send', {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }),
+        fetch('/api/articles'),
+      ]);
+      if (statsRes.ok) {
+        const stats = (await statsRes.json()) as {
+          activeCount?: number;
+          configured?: boolean;
+        };
+        setActiveCount(stats.activeCount ?? 0);
+        setConfigured(Boolean(stats.configured));
+      }
+      if (artRes.ok) {
+        const artData = (await artRes.json()) as { ok?: boolean; articles?: D1ApiArticle[] };
+        if (artData.ok && artData.articles) {
+          const d1 = artData.articles.map(mapD1RowToArticle);
+          const d1Slugs = new Set(d1.map((s) => s.slug));
+          const merged = [...d1, ...ARTICLES.filter((a) => !d1Slugs.has(a.slug))];
+          setStories(merged);
+          setSelectedSlugs(merged.slice(0, 3).map((a) => a.slug));
+        }
+      }
+    } catch {
+      // ignore on plain Vite dev
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (defaultOpen) {
+      loadStudio();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultOpen]);
+
+  const toggleSlug = (slug: string) => {
+    setSelectedSlugs((prev) =>
+      prev.includes(slug) ? prev.filter((s) => s !== slug) : prev.length < 5 ? [...prev, slug] : prev
+    );
+  };
+
+  const buildIssuePayload = () => {
+    const origin = window.location.origin;
+    const picked = stories.filter((s) => selectedSlugs.includes(s.slug));
+    const itemsHtml = picked
+      .map(
+        (s) =>
+          `<tr><td style="padding:16px 0;border-bottom:1px solid #E5E5E5;">
+            <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#0B3D91;">${s.kicker.en}</p>
+            <h3 style="margin:0 0 6px;font-family:Georgia,serif;font-size:20px;line-height:1.25;color:#111;"><a href="${origin}/article/${s.slug}" style="color:#111;text-decoration:none;">${s.title.en}</a></h3>
+            <p style="margin:0;font-size:14px;line-height:1.5;color:#444;">${s.deck.en}</p>
+          </td></tr>`
+      )
+      .join('');
+    const html = `<div style="background:#F7F8FA;padding:32px 16px;font-family:Inter,system-ui,sans-serif;color:#111;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#fff;border:1px solid #E5E5E5;border-top:4px solid #0B3D91;">
+        <tr><td style="padding:24px 32px;border-bottom:1px solid #E5E5E5;">
+          <p style="margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#0B3D91;">Civic Tech PH Briefing</p>
+          <h1 style="margin:0;font-family:Georgia,serif;font-size:26px;font-weight:600;color:#111;">${subject}</h1>
+        </td></tr>
+        <tr><td style="padding:20px 32px 8px;font-size:15px;line-height:1.6;color:#222;">
+          <p style="margin:0;">${intro}</p>
+        </td></tr>
+        <tr><td style="padding:0 32px 24px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${itemsHtml}</table>
+        </td></tr>
+        <tr><td style="padding:16px 32px;background:#F7F8FA;border-top:1px solid #E5E5E5;font-size:12px;color:#666;">
+          Civic Tech by BetterGov.ph · <a href="${origin}/profile" style="color:#0B3D91;">Manage subscription</a>
+        </td></tr>
+      </table>
+    </div>`;
+    const text = `${subject}\n\n${intro}\n\n${picked
+      .map((s) => `- ${s.title.en}: ${origin}/article/${s.slug}`)
+      .join('\n')}`;
+    return { subject, html, text };
+  };
+
+  const handleSend = async (isTest: boolean) => {
+    setNotice(null);
+    if (isTest && !testEmail.trim()) {
+      setNotice(isEn ? 'Enter a test email address first.' : 'Maglagay muna ng test email.');
+      return;
+    }
+    setSending(true);
+    try {
+      const token = await getToken();
+      const payload = buildIssuePayload();
+      const res = await fetch('/api/newsletter/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          ...payload,
+          ...(isTest ? { testEmail: testEmail.trim() } : {}),
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        sent?: number;
+        error?: string;
+      };
+      if (!res.ok || !data.ok) {
+        setNotice(data.error || (isEn ? 'Could not send newsletter.' : 'Hindi maipadala ang newsletter.'));
+        return;
+      }
+      setNotice(
+        isTest
+          ? isEn
+            ? `Test email sent to ${testEmail.trim()}.`
+            : `Naipadala ang test email sa ${testEmail.trim()}.`
+          : isEn
+            ? `Broadcast sent to ${data.sent ?? 0} subscriber(s).`
+            : `Naipadala sa ${data.sent ?? 0} subscriber.`
+      );
+    } catch {
+      setNotice(isEn ? 'Network error sending newsletter.' : 'May error sa pagpapadala.');
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleDownloadCsv = async () => {
+    setNotice(null);
+    try {
+      const token = await getToken();
+      const res = await fetch('/api/newsletter/send?format=csv', {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (!res.ok) {
+        setNotice(isEn ? 'Could not export CSV.' : 'Hindi ma-export ang CSV.');
+        return;
+      }
+      const csv = await res.text();
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'civictech-subscribers.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      setNotice(isEn ? 'Network error exporting CSV.' : 'May error sa pag-export.');
+    }
+  };
+
+  return (
+    <section
+      className="profile-section"
+      style={{
+        border: '1px solid #E5E5E5',
+        borderTop: `2px solid ${ACCENT}`,
+        background: '#fff',
+        padding: '20px 22px',
+      }}
+    >
+      <div
+        className="profile-nl-header"
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 12,
+        }}
+      >
+        <div style={{ flex: '1 1 160px', minWidth: 0 }}>
+          <h2
+            style={{
+              margin: '0 0 4px',
+              fontFamily: 'Newsreader, Georgia, serif',
+              fontSize: 21,
+              fontWeight: 500,
+            }}
+          >
+            {isEn ? 'Newsletter Studio' : 'Studio ng Newsletter'}
+          </h2>
+          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: '#555' }}>
+            {activeCount !== null
+              ? `${activeCount} ${isEn ? 'active subscribers' : 'aktibong subscriber'}`
+              : isEn
+                ? 'Compose & send issues or export subscribers.'
+                : 'Gumawa at magpadala ng isyu o mag-export ng subscribers.'}
+          </p>
+        </div>
+        <div className="profile-nl-actions" style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            onClick={handleDownloadCsv}
+            style={{
+              width: 170,
+              minHeight: 36,
+              padding: '0 14px',
+              border: '1px solid #D4D4D4',
+              background: '#fff',
+              color: '#111',
+              fontFamily: 'inherit',
+              fontSize: 13,
+              fontWeight: 600,
+              whiteSpace: 'nowrap',
+              textAlign: 'center',
+              cursor: 'pointer',
+            }}
+          >
+            {isEn ? 'Export CSV' : 'I-export ang CSV'}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              const next = !open;
+              setOpen(next);
+              if (next && activeCount === null && !loading) loadStudio();
+            }}
+            style={{
+              width: 170,
+              minHeight: 36,
+              padding: '0 14px',
+              border: '1px solid #D4D4D4',
+              background: '#fff',
+              color: '#111',
+              fontFamily: 'inherit',
+              fontSize: 13,
+              fontWeight: 600,
+              whiteSpace: 'nowrap',
+              textAlign: 'center',
+              cursor: 'pointer',
+            }}
+          >
+            {open
+              ? isEn
+                ? 'Hide studio'
+                : 'Itago'
+              : isEn
+                ? 'Compose issue'
+                : 'Gumawa ng isyu'}
+          </button>
+        </div>
+      </div>
+
+      {open && (
+        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid #EFEFEF', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {loading ? (
+            <p style={{ margin: 0, fontSize: 13, color: '#666' }}>
+              {isEn ? 'Loading subscribers & stories…' : 'Nilo-load…'}
+            </p>
+          ) : (
+            <>
+              {!configured && (
+                <p style={{ margin: 0, fontSize: 12, color: '#991B1B' }}>
+                  {isEn
+                    ? 'RESEND_API_KEY is not configured yet on this environment.'
+                    : 'Hindi pa naka-configure ang RESEND_API_KEY.'}
+                </p>
+              )}
+              <div>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
+                  {isEn ? 'Email Subject' : 'Pamagat ng Email'}
+                </label>
+                <input
+                  type="text"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  style={{ width: '100%', padding: '8px 10px', border: '1px solid #D4D4D4', fontFamily: 'inherit', fontSize: 13, boxSizing: 'border-box' }}
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
+                  {isEn ? 'Intro Note' : 'Pambungad'}
+                </label>
+                <textarea
+                  rows={2}
+                  value={intro}
+                  onChange={(e) => setIntro(e.target.value)}
+                  style={{ width: '100%', padding: '8px 10px', border: '1px solid #D4D4D4', fontFamily: 'inherit', fontSize: 13, boxSizing: 'border-box' }}
+                />
+              </div>
+              <div>
+                <p style={{ margin: '0 0 6px', fontSize: 12, fontWeight: 600 }}>
+                  {isEn ? 'Select up to 5 stories to include:' : 'Pumili ng hanggang 5 artikulo:'}
+                </p>
+                <div style={{ maxHeight: 160, overflowY: 'auto', border: '1px solid #E5E5E5', padding: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {stories.slice(0, 20).map((s) => (
+                    <label key={s.slug} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        checked={selectedSlugs.includes(s.slug)}
+                        onChange={() => toggleSlug(s.slug)}
+                      />
+                      <span>{s.title.en}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+                <input
+                  type="email"
+                  value={testEmail}
+                  onChange={(e) => setTestEmail(e.target.value)}
+                  placeholder="test@example.com"
+                  style={{ flex: '1 1 200px', padding: '8px 10px', border: '1px solid #D4D4D4', fontFamily: 'inherit', fontSize: 13 }}
+                />
+                <button
+                  type="button"
+                  disabled={sending}
+                  onClick={() => handleSend(true)}
+                  style={{
+                    minHeight: 36,
+                    padding: '0 14px',
+                    border: '1px solid #111',
+                    background: '#fff',
+                    color: '#111',
+                    fontFamily: 'inherit',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: sending ? 'wait' : 'pointer',
+                  }}
+                >
+                  {isEn ? 'Send test' : 'Magpadala ng test'}
+                </button>
+                <button
+                  type="button"
+                  disabled={sending}
+                  onClick={() => handleSend(false)}
+                  style={{
+                    minHeight: 36,
+                    padding: '0 16px',
+                    border: 'none',
+                    background: ACCENT,
+                    color: '#fff',
+                    fontFamily: 'inherit',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: sending ? 'wait' : 'pointer',
+                  }}
+                >
+                  {sending
+                    ? isEn
+                      ? 'Sending…'
+                      : 'Ipinapadala…'
+                    : isEn
+                      ? `Send to ${activeCount ?? 0} subscribers`
+                      : `Ipadala sa ${activeCount ?? 0} subscriber`}
+                </button>
+              </div>
+              {notice && (
+                <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: ACCENT }}>
+                  {notice}
+                </p>
+              )}
+            </>
+          )}
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -1307,9 +1746,9 @@ export function ProfilePage({
         className="info-main"
         style={{
           width: '100%',
-          maxWidth: 740,
+          maxWidth: 1120,
           margin: '0 auto',
-          padding: '56px 24px 104px',
+          padding: '44px 24px 88px',
           flex: '1 0 auto',
           boxSizing: 'border-box',
         }}

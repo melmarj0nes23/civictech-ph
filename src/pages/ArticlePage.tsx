@@ -1,12 +1,12 @@
 import { useEffect, useState, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
 import { NewsletterBand } from '../components/NewsletterBand';
-import { RichBody } from '../components/RichBody';
+import { extractHeadings, RichBody } from '../components/RichBody';
 import { SiteHeader } from '../components/SiteHeader';
+import { slugifyAuthor } from './AuthorPage';
 import {
   ARTICLES,
   getArticleBySlug,
-  getArticlePhoto,
   type CategorySlug,
 } from '../data/articles';
 import { parseVideoEmbed, resolveArticleImage } from '../data/videoEmbed';
@@ -118,6 +118,14 @@ export function ArticlePage({
     .map((w) => w[0]?.toUpperCase() ?? '')
     .join('');
 
+  const authorSlug = slugifyAuthor(article.author[lang]);
+  const handleAuthorClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    window.history.pushState(null, '', `/author/${authorSlug}`);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    window.scrollTo({ top: 0 });
+  };
+
   const handleOpenCivicTools = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     onOpenCivicTools();
@@ -209,7 +217,13 @@ export function ArticlePage({
             >
               <span>
                 {t.home.byWord}{' '}
-                <span style={{ color: ACCENT, fontWeight: 600 }}>{article.author[lang]}</span>
+                <a
+                  href={`/author/${authorSlug}`}
+                  onClick={handleAuthorClick}
+                  style={{ color: ACCENT, fontWeight: 600, textDecoration: 'underline', textUnderlineOffset: '3px' }}
+                >
+                  {article.author[lang]}
+                </a>
               </span>
               <span aria-hidden="true">·</span>
               <span>{article.date[lang]}</span>
@@ -407,6 +421,98 @@ export function ArticlePage({
               color: '#1A1A1A',
             }}
           >
+            {(article.eventDate || article.eventLocation || article.eventUrl) && (
+              <div
+                style={{
+                  margin: '0 0 28px',
+                  padding: '18px 20px',
+                  background: '#F4F6FA',
+                  border: '1px solid #D9E2F2',
+                  borderLeft: `4px solid ${ACCENT}`,
+                  fontFamily: 'Inter, system-ui, sans-serif',
+                }}
+              >
+                <p
+                  style={{
+                    margin: '0 0 8px',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: ACCENT,
+                  }}
+                >
+                  {lang === 'en' ? 'Event Details' : 'Detalye ng Kaganapan'}
+                </p>
+                {article.eventDate && (
+                  <p style={{ margin: '0 0 4px', fontSize: 14, color: '#111' }}>
+                    <strong>{lang === 'en' ? 'When:' : 'Kailan:'}</strong> {article.eventDate}
+                  </p>
+                )}
+                {article.eventLocation && (
+                  <p style={{ margin: '0 0 10px', fontSize: 14, color: '#111' }}>
+                    <strong>{lang === 'en' ? 'Where:' : 'Saan:'}</strong> {article.eventLocation}
+                  </p>
+                )}
+                {article.eventUrl && (
+                  <a
+                    href={article.eventUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      display: 'inline-block',
+                      padding: '8px 16px',
+                      background: ACCENT,
+                      color: '#fff',
+                      fontSize: 13,
+                      fontWeight: 600,
+                    }}
+                  >
+                    {lang === 'en' ? 'Register / RSVP →' : 'Magparehistro →'}
+                  </a>
+                )}
+              </div>
+            )}
+
+            {(() => {
+              const toc = extractHeadings(article.body[lang]);
+              if (toc.length < 2) return null;
+              return (
+                <nav
+                  aria-label={lang === 'en' ? 'In this story' : 'Sa artikulong ito'}
+                  style={{
+                    margin: '0 0 28px',
+                    padding: '16px 20px',
+                    background: '#FAFAFA',
+                    border: '1px solid #E5E5E5',
+                    fontFamily: 'Inter, system-ui, sans-serif',
+                  }}
+                >
+                  <p
+                    style={{
+                      margin: '0 0 8px',
+                      fontSize: 11,
+                      fontWeight: 700,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      color: ACCENT,
+                    }}
+                  >
+                    {lang === 'en' ? 'In this story' : 'Sa artikulong ito'}
+                  </p>
+                  <ol style={{ margin: 0, paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {toc.map((h) => (
+                      <li key={h.id} style={{ fontSize: 14, lineHeight: 1.4 }}>
+                        <a href={`#${h.id}`} style={{ color: '#111', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                          {h.text}
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                </nav>
+              );
+            })()}
+
             <RichBody blocks={article.body[lang]} dropCap />
 
             {article.quote && (
@@ -561,7 +667,15 @@ export function ArticlePage({
                 {authorInitials || 'CT'}
               </div>
               <div>
-                <p style={{ margin: 0, fontWeight: 600, fontSize: 15 }}>{article.author[lang]}</p>
+                <p style={{ margin: 0, fontWeight: 600, fontSize: 15 }}>
+                  <a
+                    href={`/author/${authorSlug}`}
+                    onClick={handleAuthorClick}
+                    style={{ color: '#111', textDecoration: 'underline', textUnderlineOffset: '3px' }}
+                  >
+                    {article.author[lang]}
+                  </a>
+                </p>
                 <p style={{ margin: '4px 0 0', fontSize: 14, lineHeight: 1.5, color: '#555' }}>
                   {article.authorBio ||
                     (lang === 'en'
@@ -614,7 +728,11 @@ export function ArticlePage({
               style={{ display: 'block' }}
             >
               <div className="ph ph--photo" style={{ aspectRatio: '16 / 9' }}>
-                <img src={getArticlePhoto(story.slug)} alt={story.photoLabel[lang]} loading="lazy" />
+                <img
+                  src={resolveArticleImage((story as CachedArticleItem).photoUrl, story.slug)}
+                  alt={story.photoLabel[lang]}
+                  loading="lazy"
+                />
               </div>
               <p
                 style={{

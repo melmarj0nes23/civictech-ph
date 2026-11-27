@@ -76,6 +76,21 @@ async function ensurePlacementColumns(db: D1Database) {
   } catch {
     // Column already exists
   }
+  try {
+    await db.prepare("ALTER TABLE articles ADD COLUMN event_date TEXT NOT NULL DEFAULT ''").run();
+  } catch {
+    // Column already exists
+  }
+  try {
+    await db.prepare("ALTER TABLE articles ADD COLUMN event_location TEXT NOT NULL DEFAULT ''").run();
+  } catch {
+    // Column already exists
+  }
+  try {
+    await db.prepare("ALTER TABLE articles ADD COLUMN event_url TEXT NOT NULL DEFAULT ''").run();
+  } catch {
+    // Column already exists
+  }
   ensuredPlacementColumns = true;
 }
 
@@ -93,7 +108,8 @@ export async function onRequestGet({ request, env }: PagesContext) {
   if (slug) {
     const row = await env.DB.prepare(
       `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
-              body_en, body_fil, author_name, author_bio, photo_url, status, is_featured, is_long_read, created_at, updated_at
+              body_en, body_fil, author_name, author_bio, photo_url, status, is_featured, is_long_read,
+              event_date, event_location, event_url, created_at, updated_at
        FROM articles
        WHERE slug = ?`
     )
@@ -109,7 +125,8 @@ export async function onRequestGet({ request, env }: PagesContext) {
     }
     const { results } = await env.DB.prepare(
       `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
-              body_en, body_fil, author_name, author_bio, photo_url, status, is_featured, is_long_read, created_at, updated_at
+              body_en, body_fil, author_name, author_bio, photo_url, status, is_featured, is_long_read,
+              event_date, event_location, event_url, created_at, updated_at
        FROM articles
        ORDER BY is_featured DESC, created_at DESC
        LIMIT 100`
@@ -120,7 +137,8 @@ export async function onRequestGet({ request, env }: PagesContext) {
   const stmt = category
     ? env.DB.prepare(
         `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
-                body_en, body_fil, author_name, author_bio, photo_url, status, is_featured, is_long_read, created_at
+                body_en, body_fil, author_name, author_bio, photo_url, status, is_featured, is_long_read,
+                event_date, event_location, event_url, created_at
          FROM articles
          WHERE status = 'published' AND category = ?
          ORDER BY is_featured DESC, created_at DESC
@@ -128,7 +146,8 @@ export async function onRequestGet({ request, env }: PagesContext) {
       ).bind(category)
     : env.DB.prepare(
         `SELECT slug, category, kicker_en, kicker_fil, title_en, title_fil, deck_en, deck_fil,
-                body_en, body_fil, author_name, author_bio, photo_url, status, is_featured, is_long_read, created_at
+                body_en, body_fil, author_name, author_bio, photo_url, status, is_featured, is_long_read,
+                event_date, event_location, event_url, created_at
          FROM articles
          WHERE status = 'published'
          ORDER BY is_featured DESC, created_at DESC
@@ -216,6 +235,9 @@ export async function onRequestPost({ request, env }: PagesContext) {
   const status = body.status === 'draft' ? 'draft' : 'published';
   const isFeatured = Boolean((body as { isFeatured?: boolean }).isFeatured);
   const isLongRead = Boolean((body as { isLongRead?: boolean }).isLongRead);
+  const eventDate = String((body as { eventDate?: string }).eventDate || '').trim();
+  const eventLocation = String((body as { eventLocation?: string }).eventLocation || '').trim();
+  const eventUrl = String((body as { eventUrl?: string }).eventUrl || '').trim();
 
   if (!title || !deck || !content) {
     return json({ ok: false, error: 'Title, deck, and article body are required.' }, 400);
@@ -236,8 +258,9 @@ export async function onRequestPost({ request, env }: PagesContext) {
   await env.DB.prepare(
     `INSERT INTO articles (
        slug, category, kicker_en, kicker_fil, title_en, title_fil,
-       deck_en, deck_fil, body_en, body_fil, author_name, author_email, author_bio, photo_url, status, is_featured, is_long_read
-     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+       deck_en, deck_fil, body_en, body_fil, author_name, author_email, author_bio, photo_url, status,
+       is_featured, is_long_read, event_date, event_location, event_url
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   )
     .bind(
       slug,
@@ -256,7 +279,10 @@ export async function onRequestPost({ request, env }: PagesContext) {
       photoUrl,
       status,
       isFeatured ? 1 : 0,
-      isLongRead ? 1 : 0
+      isLongRead ? 1 : 0,
+      eventDate,
+      eventLocation,
+      eventUrl
     )
     .run();
 
@@ -289,6 +315,9 @@ export async function onRequestPatch({ request, env }: PagesContext) {
     isLongRead?: boolean;
     authorBio?: string;
     syncAuthorBio?: string;
+    eventDate?: string;
+    eventLocation?: string;
+    eventUrl?: string;
   };
   try {
     body = (await request.json()) as typeof body;
@@ -316,6 +345,9 @@ export async function onRequestPatch({ request, env }: PagesContext) {
   const isFeatured = Boolean(body.isFeatured);
   const isLongRead = Boolean(body.isLongRead);
   const authorBio = typeof body.authorBio === 'string' ? body.authorBio.trim() : null;
+  const eventDate = typeof body.eventDate === 'string' ? body.eventDate.trim() : '';
+  const eventLocation = typeof body.eventLocation === 'string' ? body.eventLocation.trim() : '';
+  const eventUrl = typeof body.eventUrl === 'string' ? body.eventUrl.trim() : '';
   const kicker = (body.kicker || category.replace(/-/g, ' ')).trim();
 
   if (!slug || !title || !deck || !content) {
@@ -334,6 +366,7 @@ export async function onRequestPatch({ request, env }: PagesContext) {
      SET category = ?, kicker_en = ?, kicker_fil = ?, title_en = ?, title_fil = ?,
          deck_en = ?, deck_fil = ?, body_en = ?, body_fil = ?, photo_url = ?,
          status = ?, is_featured = ?, is_long_read = ?,
+         event_date = ?, event_location = ?, event_url = ?,
          author_bio = COALESCE(?, author_bio), updated_at = datetime('now')
      WHERE slug = ?`
   )
@@ -351,6 +384,9 @@ export async function onRequestPatch({ request, env }: PagesContext) {
       status,
       isFeatured ? 1 : 0,
       isLongRead ? 1 : 0,
+      eventDate,
+      eventLocation,
+      eventUrl,
       authorBio,
       slug
     )

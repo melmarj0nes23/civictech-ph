@@ -240,6 +240,18 @@ export function CategoryPage({
                       >
                         {story.deck[lang]}
                       </p>
+                      {(story.eventDate || story.eventLocation) && (
+                        <p
+                          style={{
+                            margin: '8px 0 0',
+                            fontSize: 13,
+                            fontWeight: 600,
+                            color: ACCENT,
+                          }}
+                        >
+                          {[story.eventDate, story.eventLocation].filter(Boolean).join(' · ')}
+                        </p>
+                      )}
                       <p className="category-story-meta" style={{ margin: '12px 0 0', fontSize: 13, color: '#555' }}>
                         <span style={{ fontWeight: 600, color: '#222' }}>{story.author[lang]}</span>
                         {' · '}

@@ -11,7 +11,9 @@ import { INFO_PAGES, type InfoPageSlug } from './data/infoPages';
 import { applyDocumentSeo, ROUTE_SEO } from './data/seo';
 import { ArticlePage } from './pages/ArticlePage';
 import { AuthPage } from './pages/AuthPage';
+import { AuthorPage } from './pages/AuthorPage';
 import { CategoryPage } from './pages/CategoryPage';
+import { ContactPage } from './pages/ContactPage';
 import { DirectoryPage } from './pages/DirectoryPage';
 import { HomePage } from './pages/HomePage';
 import { InfoPage } from './pages/InfoPage';
@@ -29,6 +31,8 @@ type RouteState =
   | { kind: 'sso-callback' }
   | { kind: 'category'; slug: CategorySlug | 'all' }
   | { kind: 'article'; slug: string }
+  | { kind: 'author'; slug: string }
+  | { kind: 'contact' }
   | { kind: 'info'; slug: InfoPageSlug };
 
 function getRouteFromPath(): RouteState {
@@ -36,6 +40,7 @@ function getRouteFromPath(): RouteState {
   if (path === '/sso-callback') return { kind: 'sso-callback' };
   if (path === '/profile') return { kind: 'profile' };
   if (path === '/write') return { kind: 'write' };
+  if (path === '/contact') return { kind: 'contact' };
   if (path === '/login') return { kind: 'auth', mode: 'login' };
   if (path === '/signup') return { kind: 'auth', mode: 'signup' };
   if (path === '/civictools/submit') return { kind: 'submit' };
@@ -51,6 +56,9 @@ function getRouteFromPath(): RouteState {
   if (path === '/article') return { kind: 'article', slug: 'volunteers-national-budget' };
   if (path.startsWith('/article/')) {
     return { kind: 'article', slug: path.slice('/article/'.length) };
+  }
+  if (path.startsWith('/author/')) {
+    return { kind: 'author', slug: path.slice('/author/'.length) };
   }
   if (path === '/category') return { kind: 'category', slug: 'all' };
   if (path.startsWith('/category/')) {
@@ -121,6 +129,42 @@ export function App() {
             fil: `${cat.label.fil} — Civic Tech ng BetterGov.ph`,
           },
           description: cat.description,
+          type: 'website',
+        },
+        lang
+      );
+      return;
+    }
+    if (route.kind === 'contact') {
+      applyDocumentSeo(
+        {
+          path: '/contact',
+          title: {
+            en: 'Contact & News Tips — Civic Tech by BetterGov.ph',
+            fil: 'Makipag-ugnayan — Civic Tech ng BetterGov.ph',
+          },
+          description: {
+            en: 'Send a story tip, correction, or inquiry to the Civic Tech PH editorial team.',
+            fil: 'Magpadala ng tip sa balita, pagwawasto, o tanong sa patnugutan ng Civic Tech PH.',
+          },
+          type: 'website',
+        },
+        lang
+      );
+      return;
+    }
+    if (route.kind === 'author') {
+      applyDocumentSeo(
+        {
+          path: `/author/${route.slug}`,
+          title: {
+            en: 'Author Archive — Civic Tech by BetterGov.ph',
+            fil: 'Arkibo ng May-akda — Civic Tech ng BetterGov.ph',
+          },
+          description: {
+            en: 'Stories and reporting from Civic Tech PH contributors.',
+            fil: 'Mga artikulo at ulat mula sa mga tagapag-ambag ng Civic Tech PH.',
+          },
           type: 'website',
         },
         lang
@@ -333,6 +377,36 @@ export function App() {
         onOpenCivicTools={() => navigate({ kind: 'civictools' })}
         onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
         onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
+        onOpenInfo={(slug) => navigate({ kind: 'info', slug })}
+      />
+    );
+  }
+
+  if (route.kind === 'contact') {
+    return (
+      <ContactPage
+        lang={lang}
+        onLangChange={handleLangChange}
+        onBackHome={() => navigate({ kind: 'home' })}
+        onOpenCivicTools={() => navigate({ kind: 'civictools' })}
+        onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
+        onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
+        onOpenInfo={(slug) => navigate({ kind: 'info', slug })}
+      />
+    );
+  }
+
+  if (route.kind === 'author') {
+    return (
+      <AuthorPage
+        authorSlug={route.slug}
+        lang={lang}
+        onLangChange={handleLangChange}
+        onBackHome={() => navigate({ kind: 'home' })}
+        onOpenCivicTools={() => navigate({ kind: 'civictools' })}
+        onOpenSubmit={(hash) => navigate({ kind: 'submit' }, hash)}
+        onOpenCategory={(slug) => navigate({ kind: 'category', slug })}
+        onOpenArticle={(slug) => navigate({ kind: 'article', slug })}
         onOpenInfo={(slug) => navigate({ kind: 'info', slug })}
       />
     );

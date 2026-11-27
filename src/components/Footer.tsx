@@ -126,7 +126,16 @@ export function Footer({
             >
               {t.footer.facebookGroup}
             </a>
-            <a href="/" onClick={handleBackHome} style={{ color: '#555' }}>
+            <a
+              href="/contact"
+              onClick={(e) => {
+                e.preventDefault();
+                window.history.pushState(null, '', '/contact');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+                window.scrollTo({ top: 0 });
+              }}
+              style={{ color: '#555' }}
+            >
               {t.footer.contact}
             </a>
           </div>

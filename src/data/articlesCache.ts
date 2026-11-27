@@ -16,6 +16,9 @@ export interface D1ApiArticle {
   photo_url: string;
   is_featured?: number;
   is_long_read?: number;
+  event_date?: string;
+  event_location?: string;
+  event_url?: string;
   created_at: string;
 }
 
@@ -23,6 +26,9 @@ export interface CachedArticleItem extends ArticleItem {
   photoUrl?: string;
   isLongRead?: boolean;
   authorBio?: string;
+  eventDate?: string;
+  eventLocation?: string;
+  eventUrl?: string;
 }
 
 const CACHE_KEY = 'civictech_d1_articles_v1';
@@ -45,6 +51,9 @@ export function mapD1RowToArticle(a: D1ApiArticle): CachedArticleItem {
     photoUrl: a.photo_url,
     isLongRead: Boolean(a.is_long_read),
     authorBio: a.author_bio || '',
+    eventDate: a.event_date || '',
+    eventLocation: a.event_location || '',
+    eventUrl: a.event_url || '',
   };
 }
 

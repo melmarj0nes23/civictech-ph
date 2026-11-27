@@ -23,6 +23,9 @@ interface D1ArticleRow {
   status: 'published' | 'draft';
   is_featured?: number;
   is_long_read?: number;
+  event_date?: string;
+  event_location?: string;
+  event_url?: string;
   created_at: string;
 }
 
@@ -60,6 +63,9 @@ function WriteStudio({
   const [status, setStatus] = useState<'published' | 'draft'>('published');
   const [isFeatured, setIsFeatured] = useState(false);
   const [isLongRead, setIsLongRead] = useState(false);
+  const [eventDate, setEventDate] = useState('');
+  const [eventLocation, setEventLocation] = useState('');
+  const [eventUrl, setEventUrl] = useState('');
   const [saving, setSaving] = useState(false);
   const [importing, setImporting] = useState(false);
   const [mobileTab, setMobileTab] = useState<'add' | 'edit'>('add');
@@ -123,6 +129,9 @@ function WriteStudio({
     setStatus('published');
     setIsFeatured(false);
     setIsLongRead(false);
+    setEventDate('');
+    setEventLocation('');
+    setEventUrl('');
     setNotice(null);
     setMobileTab('add');
   };
@@ -138,6 +147,9 @@ function WriteStudio({
     setStatus(art.status === 'draft' ? 'draft' : 'published');
     setIsFeatured(Boolean(art.is_featured));
     setIsLongRead(Boolean(art.is_long_read));
+    setEventDate(art.event_date || '');
+    setEventLocation(art.event_location || '');
+    setEventUrl(art.event_url || '');
     setNotice(null);
     setMobileTab('add');
   };
@@ -176,6 +188,9 @@ function WriteStudio({
           status,
           isFeatured,
           isLongRead,
+          eventDate: category === 'events' ? eventDate : '',
+          eventLocation: category === 'events' ? eventLocation : '',
+          eventUrl: category === 'events' ? eventUrl : '',
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {
@@ -594,6 +609,59 @@ function WriteStudio({
               />
             </div>
           </div>
+
+          {category === 'events' && (
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))',
+                gap: 16,
+                padding: 16,
+                background: '#F4F6FA',
+                border: '1px solid #D9E2F2',
+              }}
+            >
+              <div>
+                <label htmlFor="write-event-date" style={labelStyle}>
+                  {isEn ? 'Event Date & Time' : 'Petsa at Oras ng Kaganapan'}
+                </label>
+                <input
+                  id="write-event-date"
+                  type="text"
+                  value={eventDate}
+                  onChange={(e) => setEventDate(e.target.value)}
+                  placeholder="Dec 12, 2026 · 2:00 PM PHT"
+                  style={inputStyle}
+                />
+              </div>
+              <div>
+                <label htmlFor="write-event-location" style={labelStyle}>
+                  {isEn ? 'Location / Venue' : 'Lokasyon / Lugar'}
+                </label>
+                <input
+                  id="write-event-location"
+                  type="text"
+                  value={eventLocation}
+                  onChange={(e) => setEventLocation(e.target.value)}
+                  placeholder="Makati City / Online (Zoom)"
+                  style={inputStyle}
+                />
+              </div>
+              <div>
+                <label htmlFor="write-event-url" style={labelStyle}>
+                  {isEn ? 'Registration / RSVP URL' : 'URL ng Pagpaparehistro'}
+                </label>
+                <input
+                  id="write-event-url"
+                  type="url"
+                  value={eventUrl}
+                  onChange={(e) => setEventUrl(e.target.value)}
+                  placeholder="https://lu.ma/civictech-ph"
+                  style={inputStyle}
+                />
+              </div>
+            </div>
+          )}
 
           <div>
             <label htmlFor="write-title" style={labelStyle}>
