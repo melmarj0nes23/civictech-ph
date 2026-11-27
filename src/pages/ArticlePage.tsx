@@ -67,6 +67,12 @@ export function ArticlePage({
   const article: CachedArticleItem = d1Article ?? staticArticle;
 
   useEffect(() => {
+    if (d1Article) {
+      document.title = `${d1Article.title[lang]} — Civic Tech`;
+    }
+  }, [d1Article, lang]);
+
+  useEffect(() => {
     const onScroll = () => {
       const doc = document.documentElement;
       const scrollTop = window.scrollY || doc.scrollTop;
