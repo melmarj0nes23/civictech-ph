@@ -645,7 +645,16 @@ export function ProfilePage({
   onOpenWrite,
 }: ProfilePageProps) {
   return (
-    <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        fontFamily: 'Inter, system-ui, sans-serif',
+        color: '#111',
+        background: '#fff',
+      }}
+    >
       <SiteHeader
         lang={lang}
         onLangChange={onLangChange}
@@ -654,7 +663,17 @@ export function ProfilePage({
         onOpenCivicTools={onOpenCivicTools}
       />
 
-      <main className="info-main" style={{ maxWidth: 740, margin: '0 auto', padding: '48px 24px 72px' }}>
+      <main
+        className="info-main"
+        style={{
+          width: '100%',
+          maxWidth: 740,
+          margin: '0 auto',
+          padding: '56px 24px 104px',
+          flex: '1 0 auto',
+          boxSizing: 'border-box',
+        }}
+      >
         {HAS_CLERK ? (
           <ClerkProfileContent
             lang={lang}
