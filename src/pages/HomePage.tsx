@@ -79,7 +79,7 @@ export function HomePage({
           padding: '14px 24px 0',
           display: 'flex',
           flexWrap: 'wrap',
-          justifyContent: 'flex-end',
+          justifyContent: 'flex-start',
           alignItems: 'center',
           fontSize: 12,
           letterSpacing: '0.08em',
