@@ -65,6 +65,7 @@ export function ArticlePage({
         onBackHome={onBackHome}
         onOpenCategory={onOpenCategory}
         onOpenCivicTools={onOpenCivicTools}
+        activeCategory={article.category}
       />
 
       <article>

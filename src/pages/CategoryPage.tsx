@@ -52,6 +52,7 @@ export function CategoryPage({
         onBackHome={onBackHome}
         onOpenCategory={onOpenCategory}
         onOpenCivicTools={onOpenCivicTools}
+        activeCategory={category.slug}
       />
 
       <main style={{ maxWidth: 1240, margin: '0 auto', padding: '40px 24px 64px' }}>

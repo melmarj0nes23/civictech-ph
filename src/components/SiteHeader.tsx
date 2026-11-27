@@ -1,7 +1,8 @@
-import type { MouseEvent } from 'react';
+import { useState, type MouseEvent } from 'react';
 import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
 import { MobileAuthButton, MobileMenu } from './MobileMenu';
+import { SearchModal } from './SearchModal';
 
 const ACCENT = '#0B3D91';
 
@@ -12,6 +13,7 @@ interface SiteHeaderProps {
   onOpenCategory: (slug: CategorySlug) => void;
   onOpenCivicTools: () => void;
   onSubscribe?: () => void;
+  activeCategory?: CategorySlug;
 }
 
 export function SiteHeader({
@@ -21,8 +23,17 @@ export function SiteHeader({
   onOpenCategory,
   onOpenCivicTools,
   onSubscribe,
+  activeCategory,
 }: SiteHeaderProps) {
+  const [searchOpen, setSearchOpen] = useState(false);
   const t = TRANSLATIONS[lang];
+
+  const handleOpenArticle = (slug: string) => {
+    const path = slug === 'volunteers-national-budget' ? '/article' : `/article/${slug}`;
+    window.history.pushState(null, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    window.scrollTo({ top: 0 });
+  };
 
   const handleBackHome = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -34,27 +45,24 @@ export function SiteHeader({
     onOpenCategory(slug);
   };
 
-  const handleCivicTools = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    onOpenCivicTools();
-  };
-
   const handleSwitchLang = (next: Lang) => (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     onLangChange(next);
   };
 
   return (
-    <header style={{ borderBottom: '1px solid #E5E5E5', background: '#fff' }}>
-      <div className="site-header-inner">
-        <MobileMenu
-          lang={lang}
-          onLangChange={onLangChange}
-          onOpenCategory={onOpenCategory}
-          onSubscribe={onSubscribe ?? onBackHome}
-          onOpenCivicTools={onOpenCivicTools}
-          onBackHome={onBackHome}
-        />
+    <>
+      <header style={{ borderBottom: '1px solid #E5E5E5', background: '#fff' }}>
+        <div className="site-header-inner">
+          <MobileMenu
+            lang={lang}
+            onLangChange={onLangChange}
+            onOpenCategory={onOpenCategory}
+            onSubscribe={onSubscribe ?? onBackHome}
+            onOpenSearch={() => setSearchOpen(true)}
+            onOpenCivicTools={onOpenCivicTools}
+            onBackHome={onBackHome}
+          />
 
         {/* Brand */}
         <div className="site-brand">
@@ -95,24 +103,34 @@ export function SiteHeader({
 
         {/* Desktop Categories */}
         <nav aria-label="Sections" className="site-nav">
-          {CATEGORIES.map((cat) => (
-            <a
-              key={cat.slug}
-              href={`/category/${cat.slug}`}
-              onClick={handleCategory(cat.slug)}
-            >
-              {cat.label[lang]}
-            </a>
-          ))}
+          {CATEGORIES.map((cat) => {
+            const isActive = activeCategory === cat.slug;
+            return (
+              <a
+                key={cat.slug}
+                href={`/category/${cat.slug}`}
+                onClick={handleCategory(cat.slug)}
+                aria-current={isActive ? 'page' : undefined}
+                style={{
+                  color: isActive ? ACCENT : undefined,
+                  fontWeight: isActive ? 600 : undefined,
+                  borderBottom: isActive ? `2px solid ${ACCENT}` : '2px solid transparent',
+                }}
+              >
+                {cat.label[lang]}
+              </a>
+            );
+          })}
         </nav>
 
         {/* Desktop Right Actions (GovInsider layout: Search, Language, Login / Sign Up) */}
         <div className="site-actions">
-          <a
-            href="/civictools"
-            onClick={handleCivicTools}
+          <button
+            type="button"
+            onClick={() => setSearchOpen(true)}
             className="site-search-link"
-            aria-label={lang === 'en' ? 'Search Civic Tools directory' : 'Maghanap sa Civic Tools'}
+            style={{ background: 'transparent', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit' }}
+            aria-label={lang === 'en' ? 'Open search' : 'Buksan ang paghahanap'}
           >
             <svg
               width="16"
@@ -129,7 +147,7 @@ export function SiteHeader({
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
             <span>{lang === 'en' ? 'Search' : 'Hanapin'}</span>
-          </a>
+          </button>
 
           <button
             type="button"
@@ -176,5 +194,14 @@ export function SiteHeader({
         <MobileAuthButton lang={lang} />
       </div>
     </header>
+
+    <SearchModal
+      open={searchOpen}
+      lang={lang}
+      onClose={() => setSearchOpen(false)}
+      onOpenArticle={handleOpenArticle}
+      onOpenCivicTools={onOpenCivicTools}
+    />
+  </>
   );
 }

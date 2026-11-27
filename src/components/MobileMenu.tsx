@@ -9,6 +9,7 @@ interface MobileMenuProps {
   onLangChange: (lang: Lang) => void;
   onOpenCategory: (slug: CategorySlug) => void;
   onSubscribe: () => void;
+  onOpenSearch?: () => void;
   onOpenCivicTools?: () => void;
   onBackHome?: () => void;
 }
@@ -38,6 +39,7 @@ export function MobileMenu({
   onLangChange,
   onOpenCategory,
   onSubscribe,
+  onOpenSearch,
   onOpenCivicTools,
   onBackHome,
 }: MobileMenuProps) {
@@ -204,8 +206,8 @@ export function MobileMenu({
               </button>
             </div>
 
-            {/* Subscribe CTA */}
-            <div>
+            {/* Subscribe CTA + Search */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <a
                 href="/#newsletter"
                 onClick={handleSubscribe}
@@ -224,6 +226,46 @@ export function MobileMenu({
               >
                 {t.subscribe}
               </a>
+              {onOpenSearch && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    onOpenSearch();
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8,
+                    width: '100%',
+                    minHeight: 42,
+                    border: '1px solid #D4D4D4',
+                    background: '#fff',
+                    color: '#111',
+                    fontWeight: 600,
+                    fontSize: 13,
+                    cursor: 'pointer',
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                  {lang === 'en' ? 'Search articles & tools' : 'Maghanap ng artikulo at tool'}
+                </button>
+              )}
             </div>
 
             {/* Language switcher */}
