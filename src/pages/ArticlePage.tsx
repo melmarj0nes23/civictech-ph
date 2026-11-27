@@ -119,7 +119,7 @@ export function ArticlePage({
 
       <article>
         {/* Headline block */}
-        <div style={{ maxWidth: 860, margin: '0 auto', padding: '56px 24px 32px', textAlign: 'center' }}>
+        <div style={{ maxWidth: 860, margin: '0 auto', padding: '28px 24px 28px', textAlign: 'center' }}>
           <p
             style={{
               margin: '0 0 16px',
