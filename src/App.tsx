@@ -1,3 +1,4 @@
+import { AuthenticateWithRedirectCallback } from '@clerk/react';
 import { useEffect, useState } from 'react';
 import {
   CATEGORIES,
@@ -21,12 +22,14 @@ type RouteState =
   | { kind: 'civictools' }
   | { kind: 'submit' }
   | { kind: 'auth'; mode: 'login' | 'signup' }
+  | { kind: 'sso-callback' }
   | { kind: 'category'; slug: CategorySlug }
   | { kind: 'article'; slug: string }
   | { kind: 'info'; slug: InfoPageSlug };
 
 function getRouteFromPath(): RouteState {
   const path = window.location.pathname.replace(/\/+$/, '') || '/';
+  if (path === '/sso-callback') return { kind: 'sso-callback' };
   if (path === '/login') return { kind: 'auth', mode: 'login' };
   if (path === '/signup') return { kind: 'auth', mode: 'signup' };
   if (path === '/civictools/submit') return { kind: 'submit' };
@@ -66,6 +69,7 @@ export function App() {
   const [lang, setLang] = useState<Lang>(getInitialLang);
 
   useEffect(() => {
+    if (route.kind === 'sso-callback') return;
     if (route.kind === 'info') {
       const info = INFO_PAGES[route.slug];
       applyDocumentSeo(
@@ -163,6 +167,7 @@ export function App() {
     let targetPath = '/';
     if (next.kind === 'civictools') targetPath = '/civictools';
     else if (next.kind === 'submit') targetPath = '/civictools/submit';
+    else if (next.kind === 'sso-callback') targetPath = '/sso-callback';
     else if (next.kind === 'auth') targetPath = next.mode === 'login' ? '/login' : '/signup';
     else if (next.kind === 'info') targetPath = `/${next.slug}`;
     else if (next.kind === 'category') targetPath = `/category/${next.slug}`;
@@ -186,6 +191,24 @@ export function App() {
       window.scrollTo({ top: 0 });
     }
   };
+
+  if (route.kind === 'sso-callback') {
+    return (
+      <div
+        style={{
+          minHeight: '60vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: 'Inter, system-ui, sans-serif',
+          fontSize: 14,
+          color: '#555',
+        }}
+      >
+        <AuthenticateWithRedirectCallback signInForceRedirectUrl="/" signUpForceRedirectUrl="/" />
+      </div>
+    );
+  }
 
   if (route.kind === 'auth') {
     return (
