@@ -73,7 +73,6 @@ export function HomePage({
           color: '#555',
         }}
       >
-        <span>{t.dateLabel}</span>
         <span>
           {t.byPrefix}{' '}
           <a
@@ -86,6 +85,7 @@ export function HomePage({
           </a>{' '}
           · {t.taglineSuffix}
         </span>
+        <span>{t.dateLabel}</span>
       </div>
 
       <main style={{ maxWidth: 1240, margin: '0 auto', padding: '24px 24px 0' }}>
