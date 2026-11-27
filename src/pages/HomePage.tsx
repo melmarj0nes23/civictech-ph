@@ -55,7 +55,7 @@ export function HomePage({
         }
       />
 
-      {/* Dateline & newsroom subtitle */}
+      {/* Dateline */}
       <div
         className="home-dateline"
         style={{
@@ -64,27 +64,14 @@ export function HomePage({
           padding: '14px 24px 0',
           display: 'flex',
           flexWrap: 'wrap',
-          justifyContent: 'space-between',
+          justifyContent: 'flex-end',
           alignItems: 'center',
-          gap: '6px 16px',
           fontSize: 12,
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
           color: '#555',
         }}
       >
-        <span>
-          {t.byPrefix}{' '}
-          <a
-            href="https://bettergov.ph"
-            target="_blank"
-            rel="noreferrer"
-            style={{ color: ACCENT, fontWeight: 600 }}
-          >
-            BetterGov.ph
-          </a>{' '}
-          · {t.taglineSuffix}
-        </span>
         <span>{t.dateLabel}</span>
       </div>
 
