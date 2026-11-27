@@ -1,6 +1,6 @@
 import { useMemo, useState, type FormEvent, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
-import { MobileMenu } from '../components/MobileMenu';
+import { MobileAuthButton, MobileMenu } from '../components/MobileMenu';
 import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { DIRECTORY_ENTRIES } from '../data/directory';
 import { SECTOR_LABELS, TRANSLATIONS, type Lang } from '../data/i18n';
@@ -207,6 +207,7 @@ export function SubmitPage({
               {t.subscribe}
             </a>
           </div>
+          <MobileAuthButton lang={lang} />
         </div>
       </header>
 

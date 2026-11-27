@@ -1,6 +1,6 @@
 import type { MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
-import { MobileMenu } from '../components/MobileMenu';
+import { MobileAuthButton, MobileMenu } from '../components/MobileMenu';
 import {
   ARTICLES,
   CATEGORIES,
@@ -151,6 +151,7 @@ export function ArticlePage({
               {t.subscribe}
             </a>
           </div>
+          <MobileAuthButton lang={lang} />
         </div>
       </header>
 

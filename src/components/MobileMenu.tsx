@@ -13,6 +13,26 @@ interface MobileMenuProps {
   onBackHome?: () => void;
 }
 
+interface MobileAuthButtonProps {
+  lang: Lang;
+  onClick?: () => void;
+}
+
+export function MobileAuthButton({ lang, onClick }: MobileAuthButtonProps) {
+  return (
+    <a
+      href="/"
+      className="mobile-auth-btn"
+      onClick={(e) => {
+        e.preventDefault();
+        onClick?.();
+      }}
+    >
+      {lang === 'en' ? 'Login / Sign up' : 'Mag-login'}
+    </a>
+  );
+}
+
 export function MobileMenu({
   lang,
   onLangChange,

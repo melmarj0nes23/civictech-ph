@@ -1,6 +1,6 @@
 import { useMemo, useState, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
-import { MobileMenu } from '../components/MobileMenu';
+import { MobileAuthButton, MobileMenu } from '../components/MobileMenu';
 import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { DIRECTORY_ENTRIES } from '../data/directory';
 import { getLocalizedSummary } from '../data/directoryI18n';
@@ -174,6 +174,7 @@ export function DirectoryPage({
               {t.subscribe}
             </a>
           </div>
+          <MobileAuthButton lang={lang} />
         </div>
       </header>
 

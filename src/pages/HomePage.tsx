@@ -1,6 +1,6 @@
 import type { MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
-import { MobileMenu } from '../components/MobileMenu';
+import { MobileAuthButton, MobileMenu } from '../components/MobileMenu';
 import { CATEGORIES, getArticlePhoto, type CategorySlug } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
 import type { InfoPageSlug } from '../data/infoPages';
@@ -120,6 +120,7 @@ export function HomePage({
               {t.subscribe}
             </a>
           </div>
+          <MobileAuthButton lang={lang} />
         </div>
       </div>
 
