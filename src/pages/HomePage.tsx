@@ -4,7 +4,13 @@ import { SiteHeader } from '../components/SiteHeader';
 import { getArticlePhoto, type CategorySlug } from '../data/articles';
 import { DIRECTORY_ENTRIES } from '../data/directory';
 import { getLocalizedSummary } from '../data/directoryI18n';
-import { SECTOR_LABELS, STATUS_LABELS, TRANSLATIONS, type Lang } from '../data/i18n';
+import {
+  formatTodayDate,
+  SECTOR_LABELS,
+  STATUS_LABELS,
+  TRANSLATIONS,
+  type Lang,
+} from '../data/i18n';
 import type { InfoPageSlug } from '../data/infoPages';
 
 const ACCENT = '#0B3D91';
@@ -87,7 +93,7 @@ export function HomePage({
           color: '#555',
         }}
       >
-        <span>{t.dateLabel}</span>
+        <span>{formatTodayDate(lang)}</span>
       </div>
 
       <main style={{ maxWidth: 1240, margin: '0 auto', padding: '24px 24px 0' }}>

@@ -467,3 +467,42 @@ export const TRANSLATIONS: Record<Lang, TranslationSchema> = {
   en,
   fil,
 };
+
+const WEEKDAYS_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const WEEKDAYS_FIL = ['Linggo', 'Lunes', 'Martes', 'Miyerkules', 'Huwebes', 'Biyernes', 'Sabado'];
+const MONTHS_EN = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+];
+const MONTHS_FIL = [
+  'Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo',
+  'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'Nobyembre', 'Disyembre',
+];
+
+export function formatTodayDate(lang: Lang, date: Date = new Date()): string {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Manila',
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    weekday: 'short',
+  }).formatToParts(date);
+
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((p) => p.type === type)?.value ?? '';
+
+  const year = get('year');
+  const monthIdx = Math.max(0, Number(get('month')) - 1);
+  const day = get('day');
+  const weekdayShort = get('weekday');
+  const weekdayIdx = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(weekdayShort);
+
+  if (lang === 'fil') {
+    const wd = weekdayIdx >= 0 ? WEEKDAYS_FIL[weekdayIdx] : '';
+    const mo = MONTHS_FIL[monthIdx] ?? '';
+    return `${wd}, ${day} ${mo} ${year}`;
+  }
+  const wd = weekdayIdx >= 0 ? WEEKDAYS_EN[weekdayIdx] : '';
+  const mo = MONTHS_EN[monthIdx] ?? '';
+  return `${wd}, ${day} ${mo} ${year}`;
+}
