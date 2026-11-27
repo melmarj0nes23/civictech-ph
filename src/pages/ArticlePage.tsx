@@ -197,140 +197,162 @@ export function ArticlePage({
           </figcaption>
         </figure>
 
-        {/* Body + rail */}
+        {/* Share bar underneath hero image */}
         <div
+          aria-label="Share"
           style={{
             maxWidth: 1240,
             margin: '0 auto',
-            padding: '48px 24px 0',
+            padding: '18px 24px 0',
             display: 'flex',
-            flexWrap: 'wrap',
-            gap: '32px 56px',
-            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 10,
           }}
         >
-          <aside aria-label="Share" className="share-rail">
-            <button
-              type="button"
-              aria-label={t.article.shareFb}
-              onClick={handleShareFb}
-              style={{
-                width: 44,
-                height: 44,
-                border: '1px solid #DADADA',
-                background: '#fff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                color: '#111',
-              }}
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: '#555',
+              marginRight: 4,
+            }}
+          >
+            {lang === 'en' ? 'Share' : 'Ibahagi'}
+          </span>
+          <button
+            type="button"
+            aria-label={t.article.shareFb}
+            onClick={handleShareFb}
+            style={{
+              width: 40,
+              height: 40,
+              border: '1px solid #DADADA',
+              background: '#fff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#111',
+            }}
+          >
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              aria-hidden="true"
             >
+              <path d="M15 3h-2.5A3.5 3.5 0 0 0 9 6.5V10H6.5v3.5H9V21h3.5v-7.5H15l.5-3.5h-3V7a1 1 0 0 1 1-1H15z" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            aria-label={t.article.shareX}
+            onClick={handleShareX}
+            style={{
+              width: 40,
+              height: 40,
+              border: '1px solid #DADADA',
+              background: '#fff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#111',
+            }}
+          >
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              aria-hidden="true"
+            >
+              <path d="M4 4l16 16M20 4L4 20" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            aria-label={t.article.shareCopy}
+            onClick={handleCopyLink}
+            title={copied ? (lang === 'en' ? 'Link copied' : 'Nakopya ang link') : t.article.shareCopy}
+            style={{
+              width: 40,
+              height: 40,
+              border: `1px solid ${copied ? ACCENT : '#DADADA'}`,
+              background: copied ? '#F4F6FA' : '#fff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: copied ? ACCENT : '#111',
+            }}
+          >
+            {copied ? (
               <svg
-                width="18"
-                height="18"
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            ) : (
+              <svg
+                width="17"
+                height="17"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.6"
                 aria-hidden="true"
               >
-                <path d="M15 3h-2.5A3.5 3.5 0 0 0 9 6.5V10H6.5v3.5H9V21h3.5v-7.5H15l.5-3.5h-3V7a1 1 0 0 1 1-1H15z" />
+                <path d="M10 14a4 4 0 0 0 5.6 0l3-3a4 4 0 0 0-5.6-5.6l-1 1" />
+                <path d="M14 10a4 4 0 0 0-5.6 0l-3 3a4 4 0 0 0 5.6 5.6l1-1" />
               </svg>
-            </button>
-            <button
-              type="button"
-              aria-label={t.article.shareX}
-              onClick={handleShareX}
-              style={{
-                width: 44,
-                height: 44,
-                border: '1px solid #DADADA',
-                background: '#fff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                color: '#111',
-              }}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                aria-hidden="true"
-              >
-                <path d="M4 4l16 16M20 4L4 20" />
-              </svg>
-            </button>
-            <button
-              type="button"
-              aria-label={t.article.shareCopy}
-              onClick={handleCopyLink}
-              title={copied ? (lang === 'en' ? 'Link copied' : 'Nakopya ang link') : t.article.shareCopy}
-              style={{
-                width: 44,
-                height: 44,
-                border: `1px solid ${copied ? ACCENT : '#DADADA'}`,
-                background: copied ? '#F4F6FA' : '#fff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                color: copied ? ACCENT : '#111',
-              }}
-            >
-              {copied ? (
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              ) : (
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  aria-hidden="true"
-                >
-                  <path d="M10 14a4 4 0 0 0 5.6 0l3-3a4 4 0 0 0-5.6-5.6l-1 1" />
-                  <path d="M14 10a4 4 0 0 0-5.6 0l-3 3a4 4 0 0 0 5.6 5.6l1-1" />
-                </svg>
-              )}
-            </button>
-            {copied && (
-              <span
-                role="status"
-                style={{
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: ACCENT,
-                  textAlign: 'center',
-                }}
-              >
-                {lang === 'en' ? 'Copied' : 'Nakopya'}
-              </span>
             )}
-          </aside>
+          </button>
+          {copied && (
+            <span
+              role="status"
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                color: ACCENT,
+              }}
+            >
+              {lang === 'en' ? 'Copied' : 'Nakopya'}
+            </span>
+          )}
+        </div>
 
+        {/* Body + Related */}
+        <div
+          style={{
+            maxWidth: 1240,
+            margin: '0 auto',
+            padding: '28px 24px 0',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '32px 56px',
+            justifyContent: 'space-between',
+          }}
+        >
           <div
             className="body"
             style={{
-              flex: '0 1 680px',
+              flex: '1 1 600px',
               minWidth: 0,
               fontFamily: 'Newsreader, Georgia, serif',
               fontSize: 20,
