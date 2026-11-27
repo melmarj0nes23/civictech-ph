@@ -1,4 +1,4 @@
-import { useMemo, useState, type MouseEvent } from 'react';
+import { useEffect, useMemo, useState, type MouseEvent } from 'react';
 import { Footer } from '../components/Footer';
 import { SiteHeader } from '../components/SiteHeader';
 import { type CategorySlug } from '../data/articles';
@@ -36,9 +36,21 @@ export function DirectoryPage({
 }: DirectoryPageProps) {
   const t = TRANSLATIONS[lang];
   const [search, setSearch] = useState('');
-  const [kindFilter, setKindFilter] = useState<EntryKind | 'all'>('all');
+  const [kindFilter, setKindFilter] = useState<EntryKind | 'all'>(() => {
+    const k = new URLSearchParams(window.location.search).get('kind');
+    return k === 'project' || k === 'cso' ? k : 'all';
+  });
   const [sectorFilter, setSectorFilter] = useState<Sector | 'all'>('all');
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  useEffect(() => {
+    const syncKindFromUrl = () => {
+      const k = new URLSearchParams(window.location.search).get('kind');
+      setKindFilter(k === 'project' || k === 'cso' ? k : 'all');
+    };
+    window.addEventListener('popstate', syncKindFromUrl);
+    return () => window.removeEventListener('popstate', syncKindFromUrl);
+  }, []);
 
   const handleOpenSubmit = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();

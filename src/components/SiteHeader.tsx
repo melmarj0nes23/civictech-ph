@@ -120,8 +120,7 @@ export function SiteHeader({
           top: 0,
           zIndex: 40,
           borderBottom: '1px solid #E5E5E5',
-          background: 'rgba(255, 255, 255, 0.96)',
-          backdropFilter: 'blur(8px)',
+          background: '#fff',
         }}
       >
         <div className="site-header-inner">

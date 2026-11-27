@@ -1,4 +1,5 @@
 import { useEffect, useState, type MouseEvent } from 'react';
+import { createPortal } from 'react-dom';
 import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { TRANSLATIONS, type Lang } from '../data/i18n';
 
@@ -44,6 +45,7 @@ export function MobileMenu({
   onBackHome,
 }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const t = TRANSLATIONS[lang];
 
   useEffect(() => {
@@ -69,7 +71,7 @@ export function MobileMenu({
   const handleLang = (next: Lang) => (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     onLangChange(next);
-    setOpen(false);
+    setLangOpen(false);
   };
 
   const handleSubscribe = (e: MouseEvent<HTMLAnchorElement>) => {
@@ -78,10 +80,12 @@ export function MobileMenu({
     onSubscribe();
   };
 
-  const handleCivicTools = (e: MouseEvent<HTMLAnchorElement>) => {
+  const handleNavigatePath = (path: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setOpen(false);
-    onOpenCivicTools?.();
+    window.history.pushState(null, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    window.scrollTo({ top: 0 });
   };
 
   const handleHome = (e: MouseEvent<HTMLAnchorElement>) => {
@@ -115,18 +119,19 @@ export function MobileMenu({
         </svg>
       </button>
 
-      {open && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={lang === 'en' ? 'Mobile navigation' : 'Nabigasyon sa mobile'}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 1000,
-            display: 'flex',
-          }}
-        >
+      {open &&
+        createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={lang === 'en' ? 'Mobile navigation' : 'Nabigasyon sa mobile'}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 1000,
+              display: 'flex',
+            }}
+          >
           <div
             onClick={() => setOpen(false)}
             style={{
@@ -206,8 +211,158 @@ export function MobileMenu({
               </button>
             </div>
 
-            {/* Subscribe CTA + Search */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {/* Search -> Language -> Subscribe */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 10,
+                paddingBottom: 16,
+                borderBottom: '1px solid #E5E5E5',
+              }}
+            >
+              {onOpenSearch && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    onOpenSearch();
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8,
+                    width: '100%',
+                    minHeight: 40,
+                    border: 'none',
+                    background: 'transparent',
+                    color: '#111',
+                    fontFamily: 'inherit',
+                    fontWeight: 500,
+                    fontSize: 14,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                  {lang === 'en' ? 'Search' : 'Hanapin'}
+                </button>
+              )}
+
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setLangOpen((prev) => !prev)}
+                  aria-expanded={langOpen}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    minHeight: 44,
+                    padding: '0 14px',
+                    border: '1px solid #D4D4D4',
+                    background: '#fff',
+                    color: '#111',
+                    fontFamily: 'inherit',
+                    fontSize: 14,
+                    cursor: 'pointer',
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  <span>
+                    <strong style={{ fontWeight: 600 }}>
+                      {lang === 'en' ? 'Language:' : 'Wika:'}
+                    </strong>{' '}
+                    {lang === 'en' ? t.english : t.filipino}
+                  </span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                    style={{
+                      transform: langOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: 'transform 150ms ease',
+                    }}
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                {langOpen && (
+                  <div
+                    style={{
+                      border: '1px solid #D4D4D4',
+                      borderTop: 'none',
+                      background: '#fff',
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={handleLang('en')}
+                      aria-pressed={lang === 'en'}
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        textAlign: 'left',
+                        padding: '10px 14px',
+                        border: 'none',
+                        borderBottom: '1px solid #F0F0F0',
+                        background: lang === 'en' ? '#F4F6FA' : '#fff',
+                        color: lang === 'en' ? ACCENT : '#111',
+                        fontFamily: 'inherit',
+                        fontWeight: lang === 'en' ? 600 : 400,
+                        fontSize: 14,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {t.english}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleLang('fil')}
+                      aria-pressed={lang === 'fil'}
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        textAlign: 'left',
+                        padding: '10px 14px',
+                        border: 'none',
+                        background: lang === 'fil' ? '#F4F6FA' : '#fff',
+                        color: lang === 'fil' ? ACCENT : '#111',
+                        fontFamily: 'inherit',
+                        fontWeight: lang === 'fil' ? 600 : 400,
+                        fontSize: 14,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {t.filipino}
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <a
                 href="/#newsletter"
                 onClick={handleSubscribe}
@@ -226,108 +381,20 @@ export function MobileMenu({
               >
                 {t.subscribe}
               </a>
-              {onOpenSearch && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    onOpenSearch();
-                  }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 8,
-                    width: '100%',
-                    minHeight: 42,
-                    border: '1px solid #D4D4D4',
-                    background: '#fff',
-                    color: '#111',
-                    fontWeight: 600,
-                    fontSize: 13,
-                    cursor: 'pointer',
-                    boxSizing: 'border-box',
-                  }}
-                >
-                  <svg
-                    width="15"
-                    height="15"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                  </svg>
-                  {lang === 'en' ? 'Search articles & tools' : 'Maghanap ng artikulo at tool'}
-                </button>
-              )}
-            </div>
-
-            {/* Language switcher */}
-            <div style={{ borderBottom: '1px solid #E5E5E5', paddingBottom: 16 }}>
-              <p
-                style={{
-                  margin: '0 0 10px',
-                  fontSize: 11,
-                  fontWeight: 600,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  color: '#555',
-                }}
-              >
-                {lang === 'en' ? 'Language' : 'Wika'}
-              </p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                <button
-                  type="button"
-                  onClick={handleLang('en')}
-                  aria-pressed={lang === 'en'}
-                  style={{
-                    minHeight: 40,
-                    border: lang === 'en' ? `1px solid ${ACCENT}` : '1px solid #D4D4D4',
-                    background: lang === 'en' ? '#F4F6FA' : '#fff',
-                    color: lang === 'en' ? ACCENT : '#111',
-                    fontWeight: lang === 'en' ? 600 : 500,
-                    fontSize: 13,
-                    cursor: 'pointer',
-                  }}
-                >
-                  {t.english}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleLang('fil')}
-                  aria-pressed={lang === 'fil'}
-                  style={{
-                    minHeight: 40,
-                    border: lang === 'fil' ? `1px solid ${ACCENT}` : '1px solid #D4D4D4',
-                    background: lang === 'fil' ? '#F4F6FA' : '#fff',
-                    color: lang === 'fil' ? ACCENT : '#111',
-                    fontWeight: lang === 'fil' ? 600 : 500,
-                    fontSize: 13,
-                    cursor: 'pointer',
-                  }}
-                >
-                  {t.filipino}
-                </button>
-              </div>
             </div>
 
             {/* Article categories */}
             <nav aria-label={lang === 'en' ? 'Categories' : 'Mga Kategorya'}>
               <p
                 style={{
-                  margin: '0 0 8px',
-                  fontSize: 11,
-                  fontWeight: 600,
-                  letterSpacing: '0.12em',
+                  margin: '0 0 6px',
+                  paddingBottom: 8,
+                  borderBottom: '1px solid #111',
+                  fontSize: 13,
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
                   textTransform: 'uppercase',
-                  color: '#555',
+                  color: ACCENT,
                 }}
               >
                 {lang === 'en' ? 'Categories' : 'Mga Kategorya'}
@@ -353,29 +420,71 @@ export function MobileMenu({
             </nav>
 
             {onOpenCivicTools && (
-              <div>
-                <a
-                  href="/civictools"
-                  onClick={handleCivicTools}
+              <nav
+                aria-label={lang === 'en' ? 'Directory' : 'Direktoryo'}
+                style={{ marginTop: 12 }}
+              >
+                <p
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '12px 14px',
-                    background: '#F4F6FA',
-                    fontSize: 14,
-                    fontWeight: 600,
+                    margin: '0 0 6px',
+                    paddingBottom: 8,
+                    borderBottom: '1px solid #111',
+                    fontSize: 13,
+                    fontWeight: 700,
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
                     color: ACCENT,
                   }}
                 >
-                  <span>{t.directory.title}</span>
-                  <span aria-hidden="true">→</span>
-                </a>
-              </div>
+                  {lang === 'en' ? 'Directory' : 'Direktoryo'}
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <a
+                    href="/civictools?kind=project"
+                    onClick={handleNavigatePath('/civictools?kind=project')}
+                    style={{
+                      padding: '11px 0',
+                      borderBottom: '1px solid #F0F0F0',
+                      fontSize: 15,
+                      fontWeight: 500,
+                      color: '#111',
+                    }}
+                  >
+                    {lang === 'en' ? 'Civic Tech Tools' : 'Mga Civic Tech Tool'}
+                  </a>
+                  <a
+                    href="/civictools?kind=cso"
+                    onClick={handleNavigatePath('/civictools?kind=cso')}
+                    style={{
+                      padding: '11px 0',
+                      borderBottom: '1px solid #F0F0F0',
+                      fontSize: 15,
+                      fontWeight: 500,
+                      color: '#111',
+                    }}
+                  >
+                    {lang === 'en' ? 'CSO Listing' : 'Listahan ng mga CSO'}
+                  </a>
+                  <a
+                    href="/civictools/submit"
+                    onClick={handleNavigatePath('/civictools/submit')}
+                    style={{
+                      padding: '11px 0',
+                      borderBottom: '1px solid #F0F0F0',
+                      fontSize: 15,
+                      fontWeight: 500,
+                      color: '#111',
+                    }}
+                  >
+                    {lang === 'en' ? 'Submit Project' : 'Mag-submit ng Proyekto'}
+                  </a>
+                </div>
+              </nav>
             )}
           </div>
-        </div>
-      )}
+        </div>,
+          document.body
+        )}
     </>
   );
 }
