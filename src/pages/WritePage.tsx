@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { Footer } from '../components/Footer';
 import { RichBody } from '../components/RichBody';
 import { SiteHeader } from '../components/SiteHeader';
-import { ARTICLES, CATEGORIES, getArticlePhoto, type CategorySlug } from '../data/articles';
+import { CATEGORIES, type CategorySlug } from '../data/articles';
 import { clearCachedD1Articles } from '../data/articlesCache';
 import type { Lang } from '../data/i18n';
 import type { InfoPageSlug } from '../data/infoPages';
@@ -67,9 +67,9 @@ function WriteStudio({
   const [eventLocation, setEventLocation] = useState('');
   const [eventUrl, setEventUrl] = useState('');
   const [saving, setSaving] = useState(false);
-  const [importing, setImporting] = useState(false);
   const [mobileTab, setMobileTab] = useState<'add' | 'edit'>('add');
   const [bodyTab, setBodyTab] = useState<'write' | 'preview'>('write');
+  const [archiveCategory, setArchiveCategory] = useState<string>('all');
   const bodyRef = useRef<HTMLTextAreaElement>(null);
   const [notice, setNotice] = useState<{ text: string; isError: boolean } | null>(null);
 
@@ -257,63 +257,6 @@ function WriteStudio({
         text: isEn ? 'Network error deleting article.' : 'May error sa pagtanggal.',
         isError: true,
       });
-    }
-  };
-
-  const handleImportStarter = async () => {
-    setNotice(null);
-    setImporting(true);
-    try {
-      const token = await getToken();
-      const seedArticles = ARTICLES.map((a) => ({
-        slug: a.slug,
-        category: a.category,
-        kicker_en: a.kicker.en,
-        kicker_fil: a.kicker.fil,
-        title_en: a.title.en,
-        title_fil: a.title.fil,
-        deck_en: a.deck.en,
-        deck_fil: a.deck.fil,
-        body_en: a.body.en.join('\n\n'),
-        body_fil: a.body.fil.join('\n\n'),
-        author_name: a.author.en,
-        photo_url: getArticlePhoto(a.slug),
-      }));
-      const res = await fetch('/api/articles', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({ seedArticles }),
-      });
-      const data = (await res.json().catch(() => ({}))) as {
-        ok?: boolean;
-        imported?: number;
-        error?: string;
-      };
-      if (!res.ok || !data.ok) {
-        setNotice({
-          text: data.error || (isEn ? 'Could not import starter articles.' : 'Hindi ma-import ang mga artikulo.'),
-          isError: true,
-        });
-        return;
-      }
-      setNotice({
-        text: isEn
-          ? `Imported ${data.imported ?? seedArticles.length} starter articles into D1!`
-          : `Na-import ang ${data.imported ?? seedArticles.length} na artikulo sa D1!`,
-        isError: false,
-      });
-      clearCachedD1Articles();
-      await loadArticles();
-    } catch {
-      setNotice({
-        text: isEn ? 'Network error importing starter articles.' : 'May error sa pag-import.',
-        isError: true,
-      });
-    } finally {
-      setImporting(false);
     }
   };
 
@@ -521,7 +464,7 @@ function WriteStudio({
         <form
           onSubmit={handleSave}
           className={mobileTab === 'edit' ? 'write-mobile-hidden' : undefined}
-          style={{ flex: '2 1 480px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 18 }}
+          style={{ flex: '2.4 1 560px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 18 }}
         >
           <div
             style={{
@@ -931,10 +874,10 @@ function WriteStudio({
           </div>
         </form>
 
-        {/* Published / Draft D1 articles list */}
+        {/* Published / Draft articles list */}
         <aside
           className={mobileTab === 'add' ? 'write-aside write-mobile-hidden' : 'write-aside'}
-          style={{ flex: '1 1 280px', minWidth: 0 }}
+          style={{ flex: '1 1 320px', minWidth: 0 }}
         >
           <div className="write-aside-inner">
             <h2
@@ -949,50 +892,59 @@ function WriteStudio({
                 flex: 'none',
               }}
             >
-              {isEn ? `D1 Articles (${articles.length})` : `Mga Artikulo sa D1 (${articles.length})`}
+              {isEn ? `Newsroom Archive (${articles.length})` : `Arkibo ng Newsroom (${articles.length})`}
             </h2>
-            {role === 'admin' && (
-              <button
-                type="button"
-                disabled={importing}
-                onClick={handleImportStarter}
-                style={{
-                  width: '100%',
-                  minHeight: 38,
-                  marginBottom: 14,
-                  padding: '0 12px',
-                  border: '1px solid #111',
-                  background: '#fff',
-                  color: '#111',
-                  fontSize: 12,
-                  fontWeight: 600,
-                  cursor: importing ? 'wait' : 'pointer',
-                  flex: 'none',
-                }}
-              >
-                {importing
-                  ? isEn
-                    ? 'Importing…'
-                    : 'Ini-import…'
-                  : isEn
-                    ? `Import ${ARTICLES.length} starter articles`
-                    : `I-import ang ${ARTICLES.length} starter articles`}
-              </button>
+            {articles.length > 0 && (
+              <div style={{ marginBottom: 14, flex: 'none' }}>
+                <select
+                  aria-label={isEn ? 'Filter archive by category' : 'Salain ayon sa kategorya'}
+                  value={archiveCategory}
+                  onChange={(e) => setArchiveCategory(e.target.value)}
+                  style={{
+                    width: '100%',
+                    minHeight: 38,
+                    padding: '0 10px',
+                    border: '1px solid #D4D4D4',
+                    background: '#fff',
+                    color: '#111',
+                    fontFamily: 'inherit',
+                    fontSize: 13,
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <option value="all">
+                    {isEn ? `All categories (${articles.length})` : `Lahat ng kategorya (${articles.length})`}
+                  </option>
+                  {CATEGORIES.map((cat) => {
+                    const count = articles.filter((a) => a.category === cat.slug).length;
+                    if (count === 0) return null;
+                    return (
+                      <option key={cat.slug} value={cat.slug}>
+                        {cat.label[lang]} ({count})
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
             )}
             {loadingList ? (
               <p style={{ fontSize: 13, color: '#666' }}>{isEn ? 'Loading…' : 'Nilo-load…'}</p>
             ) : articles.length === 0 ? (
               <p style={{ fontSize: 13, color: '#666', lineHeight: 1.5 }}>
                 {isEn
-                  ? 'No articles in D1 yet. Publish your first story on the left!'
-                  : 'Wala pang artikulo sa D1. Mag-publish gamit ang form sa kaliwa!'}
+                  ? 'No articles yet. Publish your first story on the left!'
+                  : 'Wala pang artikulo. Mag-publish gamit ang form sa kaliwa!'}
               </p>
             ) : (
               <div
                 className="write-aside-list"
                 style={{ display: 'flex', flexDirection: 'column', gap: 12 }}
               >
-                {articles.map((art) => (
+                {(archiveCategory === 'all'
+                  ? articles
+                  : articles.filter((a) => a.category === archiveCategory)
+                ).map((art) => (
                   <div
                     key={art.slug}
                     style={{
@@ -1112,7 +1064,7 @@ export function WritePage({
         onOpenCivicTools={onOpenCivicTools}
       />
 
-      <main style={{ maxWidth: 1120, margin: '0 auto', padding: '40px 24px 72px' }}>
+      <main style={{ maxWidth: 1380, margin: '0 auto', padding: '40px 24px 72px' }}>
         {HAS_CLERK ? (
           <WriteStudio
             lang={lang}

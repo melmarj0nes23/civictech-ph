@@ -126,6 +126,8 @@ export function HomePage({
     feedStories.find((s) => s.slug === 'last-mile-connectivity') ??
     ARTICLES.find((a) => a.slug === 'last-mile-connectivity') ??
     leadStory;
+  const videoStories = feedStories.filter((s) => s.category === 'videos').slice(0, 3);
+  const eventStories = feedStories.filter((s) => s.category === 'events').slice(0, 3);
   const opinionStories = [
     ...feedStories.filter((s) => s.category === 'opinion'),
     ...ARTICLES.filter(
@@ -592,6 +594,250 @@ export function HomePage({
             </p>
           </div>
         </section>
+
+        {/* Videos */}
+        {videoStories.length > 0 && (
+          <section
+            className="home-section"
+            style={{ padding: '40px 0', borderBottom: '1px solid #E5E5E5' }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+                borderBottom: '2px solid #111',
+                paddingBottom: 10,
+                marginBottom: 24,
+              }}
+            >
+              <h2
+                style={{
+                  margin: 0,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {lang === 'en' ? 'Videos' : 'Mga Video'}
+              </h2>
+              <a
+                href="/category/videos"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onOpenCategory('videos');
+                }}
+                style={{ fontSize: 12, fontWeight: 600, color: ACCENT }}
+              >
+                {t.home.viewAll} →
+              </a>
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+                gap: 28,
+              }}
+            >
+              {videoStories.map((story) => (
+                <a
+                  key={story.slug}
+                  href={`/article/${story.slug}`}
+                  onClick={handleOpenArticle(story.slug)}
+                  className="story-card"
+                  style={{ display: 'block' }}
+                >
+                  <div
+                    className="ph ph--photo"
+                    style={{ aspectRatio: '16 / 9', position: 'relative' }}
+                  >
+                    <img
+                      src={resolveArticleImage(story.photoUrl, story.slug)}
+                      alt={story.title[lang]}
+                      loading="lazy"
+                    />
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        position: 'absolute',
+                        left: 10,
+                        bottom: 10,
+                        background: 'rgba(13, 27, 42, 0.9)',
+                        color: '#fff',
+                        fontSize: 10,
+                        fontWeight: 700,
+                        letterSpacing: '0.1em',
+                        padding: '5px 9px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      ▶ {lang === 'en' ? 'Watch' : 'Panoorin'}
+                    </span>
+                  </div>
+                  <p
+                    style={{
+                      margin: '12px 0 6px',
+                      fontSize: 11,
+                      fontWeight: 600,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      color: ACCENT,
+                    }}
+                  >
+                    {story.kicker[lang]}
+                  </p>
+                  <h3
+                    className="story-title"
+                    style={{
+                      margin: 0,
+                      fontFamily: 'Newsreader, Georgia, serif',
+                      fontSize: 22,
+                      lineHeight: 1.24,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {story.title[lang]}
+                  </h3>
+                  <p
+                    style={{
+                      margin: '8px 0 0',
+                      fontSize: 14,
+                      lineHeight: 1.48,
+                      color: '#555',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {story.deck[lang]}
+                  </p>
+                  <p style={{ margin: '8px 0 0', fontSize: 12, color: '#666' }}>
+                    {story.date[lang]}
+                  </p>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Events */}
+        {eventStories.length > 0 && (
+          <section
+            className="home-section"
+            style={{ padding: '40px 0', borderBottom: '1px solid #E5E5E5' }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+                borderBottom: '2px solid #111',
+                paddingBottom: 10,
+                marginBottom: 24,
+              }}
+            >
+              <h2
+                style={{
+                  margin: 0,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {lang === 'en' ? 'Events' : 'Mga Event'}
+              </h2>
+              <a
+                href="/category/events"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onOpenCategory('events');
+                }}
+                style={{ fontSize: 12, fontWeight: 600, color: ACCENT }}
+              >
+                {t.home.viewAll} →
+              </a>
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+                gap: 28,
+              }}
+            >
+              {eventStories.map((story) => {
+                const meta = [story.eventDate, story.eventLocation].filter(Boolean).join(' · ');
+                return (
+                  <a
+                    key={story.slug}
+                    href={`/article/${story.slug}`}
+                    onClick={handleOpenArticle(story.slug)}
+                    className="story-card"
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      background: '#F4F6FA',
+                      borderTop: `2px solid ${ACCENT}`,
+                    }}
+                  >
+                    <div className="ph ph--photo" style={{ aspectRatio: '16 / 9' }}>
+                      <img
+                        src={resolveArticleImage(story.photoUrl, story.slug)}
+                        alt={story.title[lang]}
+                        loading="lazy"
+                      />
+                    </div>
+                    <div style={{ padding: '16px 18px 18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                      <p
+                        style={{
+                          margin: '0 0 6px',
+                          fontSize: 11,
+                          fontWeight: 700,
+                          letterSpacing: '0.1em',
+                          textTransform: 'uppercase',
+                          color: ACCENT,
+                        }}
+                      >
+                        {meta || story.kicker[lang]}
+                      </p>
+                      <h3
+                        className="story-title"
+                        style={{
+                          margin: 0,
+                          fontFamily: 'Newsreader, Georgia, serif',
+                          fontSize: 22,
+                          lineHeight: 1.24,
+                          fontWeight: 500,
+                        }}
+                      >
+                        {story.title[lang]}
+                      </h3>
+                      <p
+                        style={{
+                          margin: '8px 0 14px',
+                          fontSize: 14,
+                          lineHeight: 1.48,
+                          color: '#555',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        {story.deck[lang]}
+                      </p>
+                      <span style={{ marginTop: 'auto', fontSize: 12, fontWeight: 600, color: ACCENT }}>
+                        {lang === 'en' ? 'Event details →' : 'Detalye ng event →'}
+                      </span>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         {/* Opinion + Tools */}
         <section
