@@ -130,7 +130,7 @@ export function AuthorPage({
           width: '100%',
           maxWidth: 1020,
           margin: '0 auto',
-          padding: '40px 24px 72px',
+          padding: '40px 24px 32px',
           flex: '1 0 auto',
           boxSizing: 'border-box',
         }}
@@ -207,7 +207,7 @@ export function AuthorPage({
                 key={story.slug}
                 style={{
                   padding: idx === 0 ? '0 0 24px' : '24px 0',
-                  borderBottom: '1px solid #E5E5E5',
+                  borderBottom: idx === matching.length - 1 ? 'none' : '1px solid #E5E5E5',
                 }}
               >
                 <a
@@ -268,9 +268,19 @@ export function AuthorPage({
             ))
           )}
         </div>
-
-        <NewsletterBand lang={lang} />
       </main>
+
+      <div
+        style={{
+          width: '100%',
+          maxWidth: 1380,
+          margin: '32px auto 48px',
+          padding: '0 24px',
+          boxSizing: 'border-box',
+        }}
+      >
+        <NewsletterBand lang={lang} />
+      </div>
 
       <Footer
         lang={lang}

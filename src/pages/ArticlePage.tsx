@@ -6,7 +6,6 @@ import { SiteHeader } from '../components/SiteHeader';
 import { slugifyAuthor } from './AuthorPage';
 import {
   ARTICLES,
-  getArticleBySlug,
   type CategorySlug,
 } from '../data/articles';
 import { parseVideoEmbed, resolveArticleImage } from '../data/videoEmbed';
@@ -45,28 +44,43 @@ export function ArticlePage({
   onOpenInfo,
 }: ArticlePageProps) {
   const t = TRANSLATIONS[lang];
-  const staticArticle = getArticleBySlug(articleSlug);
+  const staticArticle = ARTICLES.find((a) => a.slug === articleSlug) ?? null;
   const [d1Article, setD1Article] = useState<CachedArticleItem | null>(
     () => readCachedD1Articles()?.find((a) => a.slug === articleSlug) ?? null
   );
+  const [loading, setLoading] = useState<boolean>(() => !staticArticle && !d1Article);
   const [readProgress, setReadProgress] = useState(0);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    setD1Article(readCachedD1Articles()?.find((a) => a.slug === articleSlug) ?? null);
+    let ignore = false;
+    const cached = readCachedD1Articles()?.find((a) => a.slug === articleSlug) ?? null;
+    setD1Article(cached);
+    setLoading(!staticArticle && !cached);
+
     fetch(`/api/articles?slug=${encodeURIComponent(articleSlug)}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((data: { ok?: boolean; article?: D1ApiArticle | null } | null) => {
+        if (ignore) return;
         const a = data?.article;
-        if (!a) return;
-        setD1Article(mapD1RowToArticle(a));
+        if (a) {
+          setD1Article(mapD1RowToArticle(a));
+        }
       })
       .catch(() => {
         // ignore in local Vite dev
+      })
+      .finally(() => {
+        if (!ignore) setLoading(false);
       });
-  }, [articleSlug]);
 
-  const article: CachedArticleItem = d1Article ?? staticArticle;
+    return () => {
+      ignore = true;
+    };
+  }, [articleSlug, staticArticle]);
+
+  const matchedD1 = d1Article?.slug === articleSlug ? d1Article : null;
+  const article: CachedArticleItem | null = matchedD1 ?? staticArticle;
 
   useEffect(() => {
     if (d1Article) {
@@ -103,9 +117,81 @@ export function ArticlePage({
 
   const handleShareX = () => {
     const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent(article.title[lang]);
+    const text = encodeURIComponent(article?.title[lang] ?? '');
     window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'noopener,noreferrer');
   };
+
+  if (!article) {
+    return (
+      <div style={{ fontFamily: 'Inter, system-ui, sans-serif', color: '#111', background: '#fff' }}>
+        <SiteHeader
+          lang={lang}
+          onLangChange={onLangChange}
+          onBackHome={onBackHome}
+          onOpenCategory={onOpenCategory}
+          onOpenCivicTools={onOpenCivicTools}
+        />
+        <main style={{ maxWidth: 740, margin: '48px auto 72px', padding: '0 20px', minHeight: '50vh' }}>
+          {loading ? (
+            <div aria-busy="true" aria-label="Loading article">
+              <div style={{ height: 14, width: 120, background: '#F4F6FA', marginBottom: 16 }} />
+              <div style={{ height: 38, width: '90%', background: '#F4F6FA', marginBottom: 12 }} />
+              <div style={{ height: 38, width: '65%', background: '#F4F6FA', marginBottom: 20 }} />
+              <div style={{ height: 20, width: '80%', background: '#F4F6FA', marginBottom: 28 }} />
+              <div style={{ width: '100%', aspectRatio: '16 / 9', background: '#F4F6FA', marginBottom: 28 }} />
+              <div style={{ height: 16, width: '100%', background: '#F4F6FA', marginBottom: 10 }} />
+              <div style={{ height: 16, width: '94%', background: '#F4F6FA', marginBottom: 10 }} />
+              <div style={{ height: 16, width: '82%', background: '#F4F6FA' }} />
+            </div>
+          ) : (
+            <div style={{ padding: '40px 0', textAlign: 'center' }}>
+              <h1
+                style={{
+                  fontFamily: "'Newsreader', Georgia, serif",
+                  fontSize: 32,
+                  fontWeight: 600,
+                  margin: '0 0 12px',
+                }}
+              >
+                {lang === 'en' ? 'Article not found' : 'Hindi nahanap ang artikulo'}
+              </h1>
+              <p style={{ color: '#555', fontSize: 16, margin: '0 0 24px' }}>
+                {lang === 'en'
+                  ? 'This story may have been moved or removed.'
+                  : 'Maaaring nailipat o nabura na ang artikulong ito.'}
+              </p>
+              <button
+                type="button"
+                onClick={onBackHome}
+                style={{
+                  background: ACCENT,
+                  color: '#fff',
+                  border: 'none',
+                  padding: '10px 20px',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                }}
+              >
+                {lang === 'en' ? 'Back to home' : 'Bumalik sa homepage'}
+              </button>
+            </div>
+          )}
+        </main>
+        <div style={{ maxWidth: 1380, margin: '0 auto', padding: '0 24px' }}>
+          <NewsletterBand lang={lang} />
+        </div>
+        <Footer
+          lang={lang}
+          onBackHome={onBackHome}
+          onOpenCivicTools={onOpenCivicTools}
+          onOpenSubmit={onOpenSubmit}
+          onOpenInfo={onOpenInfo}
+        />
+      </div>
+    );
+  }
+
   const isLead = article.slug === 'volunteers-national-budget';
   const otherArticles = ARTICLES.filter((a) => a.slug !== article.slug);
   const sameCategory = otherArticles.filter((a) => a.category === article.category);

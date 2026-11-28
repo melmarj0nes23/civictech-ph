@@ -1,11 +1,12 @@
 import { AuthenticateWithRedirectCallback } from '@clerk/react';
 import { useEffect, useState } from 'react';
 import {
+  ARTICLES,
   CATEGORIES,
-  getArticleBySlug,
   getCategoryBySlug,
   type CategorySlug,
 } from './data/articles';
+import { readCachedD1Articles } from './data/articlesCache';
 import type { Lang } from './data/i18n';
 import { INFO_PAGES, type InfoPageSlug } from './data/infoPages';
 import { applyDocumentSeo, ROUTE_SEO } from './data/seo';
@@ -172,20 +173,31 @@ export function App() {
       return;
     }
     if (route.kind === 'article') {
-      const art = getArticleBySlug(route.slug);
+      const cached = readCachedD1Articles()?.find((a) => a.slug === route.slug);
+      const art = cached ?? ARTICLES.find((a) => a.slug === route.slug);
       applyDocumentSeo(
-        {
-          path:
-            art.slug === 'volunteers-national-budget'
-              ? '/article'
-              : `/article/${art.slug}`,
-          title: {
-            en: `${art.title.en} — Civic Tech`,
-            fil: `${art.title.fil} — Civic Tech`,
-          },
-          description: art.deck,
-          type: 'article',
-        },
+        art
+          ? {
+              path:
+                art.slug === 'volunteers-national-budget'
+                  ? '/article'
+                  : `/article/${art.slug}`,
+              title: {
+                en: `${art.title.en} — Civic Tech`,
+                fil: `${art.title.fil} — Civic Tech`,
+              },
+              description: art.deck,
+              type: 'article',
+            }
+          : {
+              path: `/article/${route.slug}`,
+              title: {
+                en: 'Civic Tech — By BetterGov.ph',
+                fil: 'Civic Tech — Ng BetterGov.ph',
+              },
+              description: ROUTE_SEO.home.description,
+              type: 'article',
+            },
         lang
       );
       return;
