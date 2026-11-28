@@ -8,10 +8,10 @@ function isSafeUrl(raw: string): boolean {
   return /^https?:\/\//i.test(trimmed);
 }
 
-/** Parse inline Markdown (**bold**, *italic*, `code`, [label](url)) into React nodes without HTML injection. */
+/** Parse inline Markdown (**bold**, *italic*, `code`, [label](url)) and bare URLs into React nodes without HTML injection. */
 function renderInline(text: string): ReactNode[] {
   const nodes: ReactNode[] = [];
-  const pattern = /(\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*|`([^`]+)`)/g;
+  const pattern = /(\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*|`([^`]+)`|(https?:\/\/[^\s<]+))/g;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
   let key = 0;
@@ -66,6 +66,32 @@ function renderInline(text: string): ReactNode[] {
           {match[6]}
         </code>
       );
+    } else if (match[7] !== undefined) {
+      const rawUrl = match[7];
+      const trailingMatch = rawUrl.match(/[.,;:!?)\]}]+$/);
+      const trailing = trailingMatch ? trailingMatch[0] : '';
+      const href = trailing ? rawUrl.slice(0, -trailing.length) : rawUrl;
+      if (isSafeUrl(href)) {
+        nodes.push(
+          <a
+            key={key++}
+            href={href}
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              color: ACCENT,
+              textDecoration: 'underline',
+              textUnderlineOffset: '3px',
+              wordBreak: 'break-word',
+            }}
+          >
+            {href}
+          </a>
+        );
+        if (trailing) nodes.push(trailing);
+      } else {
+        nodes.push(rawUrl);
+      }
     }
 
     lastIndex = pattern.lastIndex;
@@ -76,6 +102,17 @@ function renderInline(text: string): ReactNode[] {
   }
 
   return nodes.map((n, i) => <Fragment key={i}>{n}</Fragment>);
+}
+
+/** Preserve single line breaks within a paragraph as <br /> elements. */
+function renderLines(text: string): ReactNode[] {
+  const lines = text.split('\n');
+  return lines.map((line, i) => (
+    <Fragment key={i}>
+      {i > 0 && <br />}
+      {renderInline(line)}
+    </Fragment>
+  ));
 }
 
 interface RichBodyProps {
@@ -196,12 +233,12 @@ export function RichBody({ blocks, dropCap = false }: RichBodyProps) {
               >
                 {firstChar}
               </span>
-              {renderInline(rest)}
+              {renderLines(rest)}
             </p>
           );
         }
 
-        return <p key={idx}>{renderInline(block)}</p>;
+        return <p key={idx}>{renderLines(block)}</p>;
       })}
     </>
   );

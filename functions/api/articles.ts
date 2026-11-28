@@ -47,10 +47,28 @@ function json(data: unknown, status = 200) {
 
 function slugify(text: string): string {
   return text
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 72);
+}
+
+async function findUniqueSlug(db: D1Database, baseSlug: string): Promise<string> {
+  const { results } = await db
+    .prepare('SELECT slug FROM articles WHERE slug = ? OR slug LIKE ?')
+    .bind(baseSlug, `${baseSlug}-%`)
+    .all<{ slug: string }>();
+
+  const taken = new Set(results.map((r) => r.slug));
+  if (!taken.has(baseSlug)) return baseSlug;
+
+  let suffix = 2;
+  while (taken.has(`${baseSlug}-${suffix}`)) {
+    suffix += 1;
+  }
+  return `${baseSlug}-${suffix}`;
 }
 
 function canEdit(role: string): boolean {
@@ -252,7 +270,7 @@ export async function onRequestPost({ request, env }: PagesContext) {
   }
 
   const baseSlug = slugify(title) || 'story';
-  const slug = `${baseSlug}-${Date.now().toString(36)}`;
+  const slug = await findUniqueSlug(env.DB, baseSlug);
   const kicker = (body.kicker || category.replace(/-/g, ' ')).trim();
 
   await env.DB.prepare(
