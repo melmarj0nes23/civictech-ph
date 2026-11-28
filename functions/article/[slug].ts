@@ -29,6 +29,48 @@ declare class HTMLRewriter {
   transform(response: Response): Response;
 }
 
+const DIRECT_VIDEO_RE = /\.(mp4|webm|ogg|mov)(\?.*)?$/i;
+
+function resolveOgImage(rawPhoto: string, origin: string): string {
+  const trimmed = (rawPhoto || '/images/congress-session.jpg').trim();
+  try {
+    const parsed = new URL(trimmed);
+    const host = parsed.hostname.replace(/^www\./i, '').toLowerCase();
+
+    if (host === 'youtu.be') {
+      const id = parsed.pathname.split('/').filter(Boolean)[0];
+      if (id && /^[a-zA-Z0-9_-]{6,20}$/.test(id)) {
+        return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+      }
+    }
+
+    if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'youtube-nocookie.com') {
+      const vParam = parsed.searchParams.get('v');
+      const parts = parsed.pathname.split('/').filter(Boolean);
+      const pathId =
+        parts[0] === 'embed' || parts[0] === 'shorts' || parts[0] === 'live'
+          ? parts[1]
+          : undefined;
+      const id = vParam || pathId;
+      if (id && /^[a-zA-Z0-9_-]{6,20}$/.test(id)) {
+        return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+      }
+    }
+
+    if (host === 'vimeo.com' || host === 'player.vimeo.com' || DIRECT_VIDEO_RE.test(parsed.pathname)) {
+      return `${origin}/images/congress-session.jpg`;
+    }
+
+    if (parsed.protocol === 'https:' || parsed.protocol === 'http:') {
+      return trimmed;
+    }
+  } catch {
+    // Relative path
+  }
+
+  return `${origin}${trimmed.startsWith('/') ? trimmed : `/${trimmed}`}`;
+}
+
 export async function onRequestGet(context: PagesContext) {
   const { request, env, params, next } = context;
   const rawSlug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
@@ -61,10 +103,7 @@ export async function onRequestGet(context: PagesContext) {
   }
 
   const reqUrl = new URL(request.url);
-  const rawPhoto = (article.photo_url || '/images/congress-session.jpg').trim();
-  const absoluteImage = /^https?:\/\//i.test(rawPhoto)
-    ? rawPhoto
-    : `${reqUrl.origin}${rawPhoto.startsWith('/') ? rawPhoto : `/${rawPhoto}`}`;
+  const absoluteImage = resolveOgImage(article.photo_url, reqUrl.origin);
   const pageTitle = `${article.title_en} — Civic Tech`;
   const canonicalUrl = `${reqUrl.origin}/article/${slug}`;
 
