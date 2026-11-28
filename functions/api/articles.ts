@@ -56,19 +56,27 @@ function slugify(text: string): string {
 }
 
 async function findUniqueSlug(db: D1Database, baseSlug: string): Promise<string> {
-  const { results } = await db
-    .prepare('SELECT slug FROM articles WHERE slug = ? OR slug LIKE ?')
-    .bind(baseSlug, `${baseSlug}-%`)
-    .all<{ slug: string }>();
+  try {
+    const existing = await db
+      .prepare('SELECT slug FROM articles WHERE slug = ?')
+      .bind(baseSlug)
+      .first<{ slug: string }>();
+    if (!existing) return baseSlug;
 
-  const taken = new Set(results.map((r) => r.slug));
-  if (!taken.has(baseSlug)) return baseSlug;
+    const { results } = await db
+      .prepare('SELECT slug FROM articles WHERE slug LIKE ?')
+      .bind(`${baseSlug}-%`)
+      .all<{ slug: string }>();
 
-  let suffix = 2;
-  while (taken.has(`${baseSlug}-${suffix}`)) {
-    suffix += 1;
+    const taken = new Set((results ?? []).map((r) => r.slug));
+    let suffix = 2;
+    while (taken.has(`${baseSlug}-${suffix}`)) {
+      suffix += 1;
+    }
+    return `${baseSlug}-${suffix}`;
+  } catch {
+    return `${baseSlug}-${Date.now().toString(36)}`;
   }
-  return `${baseSlug}-${suffix}`;
 }
 
 function canEdit(role: string): boolean {
@@ -261,50 +269,55 @@ export async function onRequestPost({ request, env }: PagesContext) {
     return json({ ok: false, error: 'Title, deck, and article body are required.' }, 400);
   }
 
-  await ensurePlacementColumns(env.DB);
-  if (isFeatured) {
-    await env.DB.prepare('UPDATE articles SET is_featured = 0 WHERE is_featured = 1').run();
-  }
-  if (isLongRead) {
-    await env.DB.prepare('UPDATE articles SET is_long_read = 0 WHERE is_long_read = 1').run();
-  }
+  try {
+    await ensurePlacementColumns(env.DB);
+    if (isFeatured) {
+      await env.DB.prepare('UPDATE articles SET is_featured = 0 WHERE is_featured = 1').run();
+    }
+    if (isLongRead) {
+      await env.DB.prepare('UPDATE articles SET is_long_read = 0 WHERE is_long_read = 1').run();
+    }
 
-  const baseSlug = slugify(title) || 'story';
-  const slug = await findUniqueSlug(env.DB, baseSlug);
-  const kicker = (body.kicker || category.replace(/-/g, ' ')).trim();
+    const baseSlug = slugify(title) || 'story';
+    const slug = await findUniqueSlug(env.DB, baseSlug);
+    const kicker = (body.kicker || category.replace(/-/g, ' ')).trim();
 
-  await env.DB.prepare(
-    `INSERT INTO articles (
-       slug, category, kicker_en, kicker_fil, title_en, title_fil,
-       deck_en, deck_fil, body_en, body_fil, author_name, author_email, author_bio, photo_url, status,
-       is_featured, is_long_read, event_date, event_location, event_url
-     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-  )
-    .bind(
-      slug,
-      category,
-      kicker,
-      kicker,
-      title,
-      title,
-      deck,
-      deck,
-      content,
-      content,
-      authorName,
-      user.email || user.userId,
-      authorBio,
-      photoUrl,
-      status,
-      isFeatured ? 1 : 0,
-      isLongRead ? 1 : 0,
-      eventDate,
-      eventLocation,
-      eventUrl
+    await env.DB.prepare(
+      `INSERT INTO articles (
+         slug, category, kicker_en, kicker_fil, title_en, title_fil,
+         deck_en, deck_fil, body_en, body_fil, author_name, author_email, author_bio, photo_url, status,
+         is_featured, is_long_read, event_date, event_location, event_url
+       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     )
-    .run();
+      .bind(
+        slug,
+        category,
+        kicker,
+        kicker,
+        title,
+        title,
+        deck,
+        deck,
+        content,
+        content,
+        authorName,
+        user.email || user.userId,
+        authorBio,
+        photoUrl,
+        status,
+        isFeatured ? 1 : 0,
+        isLongRead ? 1 : 0,
+        eventDate,
+        eventLocation,
+        eventUrl
+      )
+      .run();
 
-  return json({ ok: true, slug, status }, 201);
+    return json({ ok: true, slug, status }, 201);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Failed to save article.';
+    return json({ ok: false, error: message }, 500);
+  }
 }
 
 export async function onRequestPatch({ request, env }: PagesContext) {
